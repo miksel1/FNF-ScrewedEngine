@@ -3532,7 +3532,6 @@ class PlayState extends MusicBeatState
 				#end
 				isDead = true;
 				return true;
-				}
 			}
 		}
 		return false;
