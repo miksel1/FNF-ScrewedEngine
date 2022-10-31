@@ -180,5 +180,6 @@ class Rating
 	public function increase(blah:Int = 1)
 	{
 		Reflect.setField(PlayState.instance, counter, Reflect.field(PlayState.instance, counter) + blah);
+		PlayState.instance.totals += blah;
 	}
 }

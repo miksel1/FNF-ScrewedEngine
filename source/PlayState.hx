@@ -1,9 +1,11 @@
 package;
 
+import lime.system.System;
 import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
 #end
+import Shaders;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -122,6 +124,8 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	#end
 
+	var judgementCounter:FlxText;
+
 	public var BF_X:Float = 770;
 	public var BF_Y:Float = 100;
 	public var DAD_X:Float = 100;
@@ -195,6 +199,7 @@ class PlayState extends MusicBeatState
 	public var goods:Int = 0;
 	public var bads:Int = 0;
 	public var shits:Int = 0;
+	public var totals:Int = 0;
 
 	private var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
@@ -370,6 +375,31 @@ class PlayState extends MusicBeatState
 			'NOTE_UP',
 			'NOTE_RIGHT'
 		];
+
+		the3DWorldEffect = new WiggleEffect();
+		the3DWorldEffect.effectType = WiggleEffectType.FLAG;
+		the3DWorldEffect.waveAmplitude = 0.1;
+		the3DWorldEffect.waveFrequency = 5;
+		the3DWorldEffect.waveSpeed = 2.25;
+
+		the3DWorldEffectWavy = new WiggleEffect();
+		the3DWorldEffectWavy.effectType = WiggleEffectType.WAVY;
+		the3DWorldEffectWavy.waveAmplitude = 0.2;
+		the3DWorldEffectWavy.waveFrequency = 3;
+		the3DWorldEffectWavy.waveSpeed = 1.25;
+
+		screenshader.waveAmplitude = 1;
+		screenshader.waveFrequency = 2;
+		screenshader.waveSpeed = 1;
+		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+		screenshader.shader.uampmul.value[0] = 0;
+
+		#if windows
+		screenshader.waveAmplitude = 1;
+        screenshader.waveFrequency = 2;
+        screenshader.waveSpeed = 1;
+        screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+		#end
 
 		//Ratings
 		ratingsData.push(new Rating('sick')); //default rating
@@ -1226,7 +1256,7 @@ class PlayState extends MusicBeatState
 			watermarkTxt.visible = false;
 			screwYouTxt.visible = false;
 		}
-		if(ClientPrefs.crazycounter) {
+		if(ClientPrefs.crazyCounter) { // theoyeah engine?
 			judgementCounter = new FlxText(20, 0, 0, '', 20);
 			judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			judgementCounter.scrollFactor.set();
@@ -1267,7 +1297,7 @@ class PlayState extends MusicBeatState
 
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
-		
+
 		#if LUA_ALLOWED
 		for (notetype in noteTypeMap.keys())
 		{
@@ -1473,7 +1503,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		Paths.clearUnusedMemory();
-		
+
 		CustomFadeTransition.nextCamera = camOther;
 	}
 
@@ -1498,7 +1528,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public function initLuaShader(name:String, ?glslVersion:Int = 120)
+	public function initLuaShader(name:String, glslVersion:Int = 120)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -1514,7 +1544,7 @@ class PlayState extends MusicBeatState
 
 		for(mod in Paths.getGlobalMods())
 			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-		
+
 		for (folder in foldersToCheck)
 		{
 			if(FileSystem.exists(folder))
@@ -1699,6 +1729,10 @@ class PlayState extends MusicBeatState
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
 			return;
+		}
+
+		if(ClientPrefs.crazyCounter) {
+			judgementCounter.visible = false;
 		}
 
 		var video:MP4Handler = new MP4Handler();
@@ -2158,10 +2192,10 @@ class PlayState extends MusicBeatState
 
 		var introAlts:Array<String> = introAssets.get('default');
 		if (isPixelStage) introAlts = introAssets.get('pixel');
-		
+
 		for (asset in introAlts)
 			Paths.image(asset);
-		
+
 		Paths.sound('intro3' + introSoundsSuffix);
 		Paths.sound('intro2' + introSoundsSuffix);
 		Paths.sound('intro1' + introSoundsSuffix);
@@ -2343,7 +2377,7 @@ class PlayState extends MusicBeatState
 	{
 		insert(members.indexOf(boyfriendGroup), obj);
 	}
-	public function addBehindDad (obj:FlxObject)
+	public function addBehindDad(obj:FlxObject)
 	{
 		insert(members.indexOf(dadGroup), obj);
 	}
@@ -2385,7 +2419,6 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-
 		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
 		{
 			if(scoreTxtTween != null) {
@@ -3124,6 +3157,10 @@ class PlayState extends MusicBeatState
 			} else {
 				boyfriendIdleTime = 0;
 			}
+		}
+
+		if(ClientPrefs.crazyCounter) {
+			judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nTotal hit: ${totals}\nCombo: ${combo}\n';
 		}
 
 		super.update(elapsed);

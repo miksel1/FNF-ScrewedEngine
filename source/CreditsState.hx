@@ -105,11 +105,11 @@ class CreditsState extends MusicBeatState
 			['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								'https://twitter.com/evilsk8r',			'5ABD4B'],
 			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',		'378FC7']
 		];
-		
-		for(i in pisspoop){
+
+		for(i in pisspoop) {
 			creditsStuff.push(i);
 		}
-	
+
 		for (i in 0...creditsStuff.length)
 		{
 			var isSelectable:Bool = !unselectableCheck(i);
@@ -139,7 +139,7 @@ class CreditsState extends MusicBeatState
 			}
 			else optionText.alignment = CENTERED;
 		}
-		
+
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.xAdd = -10;

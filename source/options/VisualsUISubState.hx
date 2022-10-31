@@ -47,7 +47,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			false);
 		addOption(option);
-		
+
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",
 			'timeBarType',
@@ -88,7 +88,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		addOption(option);
-		
+
 		#if !mobile
 		var option:Option = new Option('FPS Counter',
 			'If unchecked, hides FPS Counter.',
@@ -98,7 +98,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		option.onChange = onChangeFPSCounter;
 		#end
-		
+
+		var option:Option = new Option('Judgement Counter',
+			'If checked, a counter at the left side',
+			'crazyCounter',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Pause Screen Song:',
 			"What song do you prefer for the Pause Screen?",
 			'pauseMusic',
