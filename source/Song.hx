@@ -65,7 +65,6 @@ class Song
 			songJson.player3 = null;
 		}
 
-
 		if(songJson.playerArrowSkin == null && songJson.arrowSkin != null) songJson.playerArrowSkin = songJson.arrowSkin;
 		if(songJson.events == null)
 		{
