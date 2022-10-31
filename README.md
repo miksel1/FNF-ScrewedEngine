@@ -1,15 +1,10 @@
-# Friday Night Funkin' - Psych Engine
+# Friday Night Funkin' - Screwed Engine
 Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
 
-## Installation:
-You must have [the most up-to-date version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
-
-Follow a Friday Night Funkin' source code compilation tutorial, after this you will need to install LuaJIT.
-
-To install LuaJIT do this: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit` on a Command prompt/PowerShell
-
-...Or if you don't want your mod to be able to run .lua scripts, delete the "LUA_ALLOWED" line on Project.xml
-
+## How to compile:
+Please, keep in mind that you can not seem to compile FNF on Windows 7.
+Just watch longestsoloever's video, ive used his tutorial and ive been successful with it. 
+https://www.youtube.com/watch?v=4IuC8ti6_4o
 
 If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then re-install linc_luajit.
 
@@ -17,7 +12,12 @@ If you want video support on your mod, simply do `haxelib install hxCodec` on a 
 
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
-## Credits:
+## Screwed Engine Credits:
+* Wither362 - Basically making everything on the engine.
+* miksel1 - The one who broke most of the code at the beginning
+* not capcha - Helping with Freeplay Sections
+
+## Psych Engine Credits:
 * Shadow Mario - Programmer
 * RiverOaken - Artist
 * Yoshubs - Assistant Programmer
@@ -44,6 +44,18 @@ _____________________________________
 ## Mod Support
 * Probably one of the main points of this engine, you can code in .lua files outside of the source code, making your own weeks without even messing with the source!
 * Comes with a Mod Organizing/Disabling Menu.
+
+## D&B Features
+* Adds multiple features from mods like Strident Crisis like:
+### Freeplay Sections:
+   * Explains itself, Freeplay Sections from Bambi's Purgatory.
+### "Screw you!" text:
+   * Once again, self-explainable.
+### 7 events:
+   * Upon pressing 7 on any song, by default it goes to the chart editor.
+   * You can change it in the chart editor.
+   
+* I may've forgotten a few...
 
 
 ## Atleast one change to every week:
