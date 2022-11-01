@@ -95,7 +95,7 @@ class ChartingState extends MusicBeatState
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
 		['Set Property', "Value 1: Variable name\nValue 2: New value"],
-		['Kill Shaders', "Value 1: Camera\nClears all the shaders of the specified camera"],
+		//['Kill Shaders', "Value 1: Camera\nClears all the shaders of the specified camera"],
 		['Rainbow Eyesore', "Value 1: Step to end at\nValue 2: Speed"],
 		['Popup', "Value 1: Title\nValue 2: Message\nMakes a window popup with a message in it."],
 		['Popup (No Pause)', "Value 1: Title\nValue 2: Message\nSame as popup but without a pause."],
@@ -1073,6 +1073,8 @@ class ChartingState extends MusicBeatState
 		tab_group_event.name = 'Events';
 
 		var pressing7Events:Array<String> = ['---', 'None', 'Game Over', 'Go to Song', 'Close Game', 'Play Video'];
+		if(_song.event7 == null || !pressing7Events.contains(_song.event7)) // fix crash
+			_song.event7 = pressing7Events[0];
 
 		event7DropDown = new FlxUIDropDownMenuCustom(160, 300, FlxUIDropDownMenuCustom.makeStrIdLabelArray(pressing7Events, true), function(pressed:String) {
 			trace('event pressed 1');
