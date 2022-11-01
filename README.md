@@ -46,16 +46,25 @@ _____________________________________
 * Probably one of the main points of this engine, you can code in .lua files outside of the source code, making your own weeks without even messing with the source!
 * Comes with a Mod Organizing/Disabling Menu.
 
-## D&B Features
+## D&B Features:
 * Adds multiple features from mods like Strident Crisis like:
 ### Freeplay Sections:
    * Explains itself, Freeplay Sections from Bambi's Purgatory.
-### "Screw you!" text:
+   * Currently not implemented.
+   * Icons will be remade soon.
+![](https://media.discordapp.net/attachments/936741759210389555/1036927810561900574/unknown.png)
+![](https://media.discordapp.net/attachments/936741759210389555/1036927810004066304/unknown.png)
+### "Screw you!" text and credits:
    * Once again, self-explainable.
+![](https://media.discordapp.net/attachments/1025448192491388998/1036759283724976232/unknown.png)
+![](https://steamuserimages-a.akamaihd.net/ugc/1867331664966091046/04CE86873FABC69324CC5CD3D45B6B45BE1837CB)
 ### 7 events:
    * Upon pressing 7 on any song, by default it goes to the chart editor.
    * You can change it in the chart editor.
-   
+### Shaders:
+   * WIP! Currently they dont work.
+### Eyesores:
+   * That rainbowy thing from Polygonized and Glitch, added into Psych! (Currently broken due to the shaders not working.)
 * I may've forgotten a few...
 
 
