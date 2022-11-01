@@ -52,12 +52,14 @@ _____________________________________
    * Explains itself, Freeplay Sections from Bambi's Purgatory.
    * Currently not implemented.
    * Icons will be remade soon.
+  
 ![](https://media.discordapp.net/attachments/936741759210389555/1036927810561900574/unknown.png)
 ![](https://media.discordapp.net/attachments/936741759210389555/1036927810004066304/unknown.png)
 ### "Screw you!" text and credits:
    * Once again, self-explainable.
+  
 ![](https://media.discordapp.net/attachments/1025448192491388998/1036759283724976232/unknown.png)
-![](https://steamuserimages-a.akamaihd.net/ugc/1867331664966091046/04CE86873FABC69324CC5CD3D45B6B45BE1837CB)
+![](https://media.discordapp.net/attachments/936741759210389555/1036928314163613737/327416939.2150001_image.png)
 ### 7 events:
    * Upon pressing 7 on any song, by default it goes to the chart editor.
    * You can change it in the chart editor.
