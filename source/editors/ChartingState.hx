@@ -380,7 +380,7 @@ class ChartingState extends MusicBeatState
 		\nHold Control and click on an arrow to select it
 		\n" + keyBonds["zoom+"][0].toString() + "/" + keyBonds["zoom-"][0].toString() + " - Zoom in/out
 		\n" + keyBonds["save"][0].toString() + " - Save Chart
-		\n
+		\nHold C - Drawing
 		\nEsc - Test your chart inside Chart Editor
 		\nEnter - Play your chart
 		\n" + keyBonds["decrease"][0].toString() + "/" + keyBonds["increase"][0].toString() + " - Decrease/Increase Note Sustain Length
@@ -1825,6 +1825,15 @@ class ChartingState extends MusicBeatState
 				curZoom++;
 				updateZoom();
 			}
+			if (FlxG.keys.pressed.C && !FlxG.keys.pressed.CONTROL)
+				if (!FlxG.mouse.overlaps(curRenderedNotes)) //lmao cant place notes when your cursor already overlaps one
+					if (FlxG.mouse.x > gridBG.x
+						&& FlxG.mouse.x < gridBG.x + gridBG.width
+						&& FlxG.mouse.y > gridBG.y
+						&& FlxG.mouse.y < gridBG.y + gridBG.height)
+							if (!FlxG.keys.pressed.CONTROL) //stop crashing
+								addNote(); //allows you to draw notes by holding left click
+
 
 			if (FlxG.keys.justPressed.TAB)
 			{
