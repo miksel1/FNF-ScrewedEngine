@@ -3160,7 +3160,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if(ClientPrefs.crazyCounter) {
-			judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nTotal hit: ${totals}\nCombo: ${combo}\n';
+			judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nTotal Hits: ${totals}\nCombo: ${combo}\n';
 		}
 
 		super.update(elapsed);
