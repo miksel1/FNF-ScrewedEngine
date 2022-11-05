@@ -150,8 +150,6 @@ class PlayState extends MusicBeatState
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
-	public static var event7:String;
-	public static var event7Value:String;
 
 	public var spawnTime:Float = 2000;
 
@@ -3187,18 +3185,12 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.anyJustPressed(debugKeysChart) && !endingSong && !inCutscene)
 		{
-			switch(event7)
+			switch(SONG.event7)
 			{
-				case "---", null:
-					persistentUpdate = false;
-					paused = true;
-					cancelMusicFadeTween();
-					CustomFadeTransition.nextCamera = camOther;
-					MusicBeatState.switchState(new ChartingState());
 				case "Game Over":
 					health = 0;
 				case "Go to Song":
-					SONG = Song.loadFromJson(event7Value, event7Value);
+					SONG = Song.loadFromJson(Paths.formatToSongPath(SONG.event7Value), Paths.formatToSongPath(SONG.event7Value));
 					MusicBeatState.resetState();
 				case "Close Game":
 					System.exit(0);
@@ -3214,7 +3206,7 @@ class PlayState extends MusicBeatState
 					var bg = new FlxSprite(-FlxG.width, -FlxG.height).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
 					add(bg);
 					bg.cameras = [camHUD];
-					startVideo(event7Value);
+					startVideo(SONG.event7Value);
 				default:
 					openChartEditor();
 			}

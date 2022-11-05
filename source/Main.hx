@@ -109,40 +109,49 @@ class Main extends Sprite
 	#if CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
-		var errMsg:String = "";
-		var path:String;
-		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
-		var dateNow:String = Date.now().toString();
-
-		dateNow = dateNow.replace(" ", "_");
-		dateNow = dateNow.replace(":", "'");
-
-		path = "./crash/" + "PsychEngine_" + dateNow + ".txt";
-
-		for (stackItem in callStack)
+		if (PlayState.chartingMode)
 		{
-			switch (stackItem)
-			{
-				case FilePos(s, file, line, column):
-					errMsg += file + " (line " + line + ")\n";
-				default:
-					Sys.println(stackItem);
-			}
+			editors.ChartingState.instance.onCrash(e);
 		}
+		else
+		{
+			var errMsg:String = "";
+			var path:String;
+			var callStack:Array<StackItem> = CallStack.exceptionStack(true);
+			var dateNow:String = Date.now().toString();
 
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n> Crash Handler written by: sqirra-rng";
+			dateNow = dateNow.replace(" ", "_");
+			dateNow = dateNow.replace(":", "'");
 
-		if (!FileSystem.exists("./crash/"))
-			FileSystem.createDirectory("./crash/");
+			path = "./crash/" + "StridentEngine_" + dateNow + ".txt";
 
-		File.saveContent(path, errMsg + "\n");
+			for (stackItem in callStack)
+			{
+				switch (stackItem)
+				{
+					case FilePos(s, file, line, column):
+						errMsg += file + " (line " + line + ")\n";
+					default:
+						Sys.println(stackItem);
+				}
+			}
 
-		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
+			errMsg += "\nUncaught Error: "
+				+ e.error
+				+ "\nPlease report this error to Wither362\n\n> Crash Handler written by: sqirra-rng";
 
-		Application.current.window.alert(errMsg, "Error!");
-		DiscordClient.shutdown();
-		Sys.exit(1);
+			if (!FileSystem.exists("./crash/"))
+				FileSystem.createDirectory("./crash/");
+
+			File.saveContent(path, errMsg + "\n");
+
+			Sys.println(errMsg);
+			Sys.println("Crash dump saved in " + Path.normalize(path));
+
+			Application.current.window.alert(errMsg, "Error!");
+			DiscordClient.shutdown();
+			Sys.exit(1);
+		}
 	}
 	#end
 }

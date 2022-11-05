@@ -47,7 +47,7 @@ class Song
 	public var needsVoices:Bool = true;
 	public var arrowSkin:String;
 	public var playerArrowSkin:String;
-	public var splashSkin:String;
+	public var splashSkin:String = 'noteSplashes';
 	public var speed:Float = 1;
 	public var stage:String;
 	public var ghostTappingAllowed:Bool = true;
@@ -59,7 +59,10 @@ class Song
 
 	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
-		if(songJson.gfVersion == null)
+		if(songJson.ghostTappingAllowed == null)
+			songJson.ghostTappingAllowed = true;
+
+		if(songJson.gfVersion == null && songJson.player3 != null)
 		{
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;

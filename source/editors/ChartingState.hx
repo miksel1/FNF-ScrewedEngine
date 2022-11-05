@@ -54,6 +54,16 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+#if CRASH_HANDLER
+import lime.app.Application;
+import openfl.events.UncaughtErrorEvent;
+import haxe.CallStack;
+import haxe.io.Path;
+import sys.FileSystem;
+import sys.io.File;
+import sys.io.Process;
+#end
+
 using StringTools;
 
 @:access(flixel.system.FlxSound._sound)
@@ -166,8 +176,34 @@ class ChartingState extends MusicBeatState
 	var currentSongName:String;
 
 	var zoomTxt:FlxText;
+	/**
+	 A strange way to implement zoom
+
+	 * ITS A `FLOAT` VALUE
+	 */
+	var manualZoomInput:FlxUINumericStepper;
 
 	var zoomList:Array<Float> = [
+		0.25,
+		0.5,
+		1,
+		1.5,
+		2,
+		3,
+		4,
+		6,
+		7,
+		7.5,
+		8,
+		12,
+		16,
+		19,
+		24,
+		30,
+		48,
+		60
+	];
+	var oldZoomList:Array<Float> = [
 		0.25,
 		0.5,
 		1,
@@ -226,6 +262,8 @@ class ChartingState extends MusicBeatState
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 
+	public static var instance:ChartingState;
+
 	override function create()
 	{
 		if (PlayState.SONG != null)
@@ -258,6 +296,9 @@ class ChartingState extends MusicBeatState
 			addSection();
 			PlayState.SONG = _song;
 		}
+
+		PlayState.chartingMode = true;
+		instance = this;
 
 		// Paths.clearMemory();
 
@@ -379,7 +420,8 @@ class ChartingState extends MusicBeatState
 		\nHold Shift to move 4x faster
 		\nHold Control and click on an arrow to select it
 		\n" + keyBonds["zoom+"][0].toString() + "/" + keyBonds["zoom-"][0].toString() + " - Zoom in/out
-		\n" + keyBonds["save"][0].toString() + " - Save Chart
+		\nG - Reset Manual Zoom
+		\n" + keyBonds["save"][0].toString() + " - Save Chart (Autosave it)
 		\nHold C - Drawing
 		\nEsc - Test your chart inside Chart Editor
 		\nEnter - Play your chart
@@ -389,9 +431,10 @@ class ChartingState extends MusicBeatState
 		var tipTextArray:Array<String> = text.split('\n');
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 7, 0, tipTextArray[i], 16);
-			tipText.y += i * 12;
+			tipText.y += i * 11;
 			tipText.setFormat(Paths.font("vcr.ttf"), 14, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 			//tipText.borderSize = 2;
+			//tipText.width -= 1;
 			tipText.scrollFactor.set();
 			add(tipText);
 		}
@@ -417,9 +460,20 @@ class ChartingState extends MusicBeatState
 		}
 		lastSong = currentSongName;
 
-		zoomTxt = new FlxText(10, 10, 0, "Zoom: 1 / 1", 16);
+		zoomTxt = new FlxText(10, 20, 0, "Zoom: 1 / 1", 16);
 		zoomTxt.scrollFactor.set();
 		add(zoomTxt);
+
+		manualZoomInput = new FlxUINumericStepper(zoomTxt.x + 20, zoomTxt.y + 200, 0.1, zoomList[curZoom], zoomList[0], zoomList[zoomList.length - 1], 2);
+		manualZoomInput.setScrollFactor(0, 0);
+		manualZoomInput.value = zoomList[curZoom];
+		manualZoomInput.name = 'manual_zoom';
+		blockPressWhileTypingOnStepper.push(manualZoomInput);
+		add(manualZoomInput);
+
+		var manualZoomTxt:FlxText = new FlxText(manualZoomInput.x, manualZoomInput.y - 20, -1, 'Manual Zoom:', 10);
+		manualZoomTxt.scrollFactor.set();
+		add(manualZoomTxt);
 
 		debugGroup = new FlxTypedGroup<DebugLuaText>();
 		add(debugGroup);
@@ -460,9 +514,10 @@ class ChartingState extends MusicBeatState
 			//trace('CHECKED!');
 		};
 
-		var ghostTappingAllowed = new FlxUICheckBox(check_voices.x, 45, null, true, "Ghost Tap", 100);
+		//if(_song.ghostTappingAllowed == null) _song.ghostTappingAllowed = true;
+
+		var ghostTappingAllowed = new FlxUICheckBox(check_voices.x, 45, null, null, "Ghost Tap", 100);
 		ghostTappingAllowed.checked = _song.ghostTappingAllowed;
-		// _song.needsVoices = check_voices.checked;
 		ghostTappingAllowed.callback = function()
 		{
 			_song.ghostTappingAllowed = ghostTappingAllowed.checked;
@@ -527,7 +582,7 @@ class ChartingState extends MusicBeatState
 		clear_notes.label.color = FlxColor.WHITE;
 
 
-		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 70, 1, 1, 1, maxBpm, 1);
+		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 80, 1, 1, 1, maxBpm, 1);
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 		blockPressWhileTypingOnStepper.push(stepperBPM);
@@ -639,7 +694,7 @@ class ChartingState extends MusicBeatState
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressWhileScrolling.push(stageDropDown);
 
-		creditInputText = new FlxUIInputText(10, 200 + 90, 125, _song.credit, 8);
+		creditInputText = new FlxUIInputText(10, 300, 125, _song.credit, 8);
 		blockPressWhileTypingOn.push(creditInputText);
 
 		screwYouInputText = new FlxUIInputText(creditInputText.x + 140, creditInputText.y, 125, _song.screwYou, 8);
@@ -1065,6 +1120,7 @@ class ChartingState extends MusicBeatState
 
 	var eventDropDown:FlxUIDropDownMenuCustom;
 	var event7DropDown:FlxUIDropDownMenuCustom;
+	var event7InputText:FlxUIInputText;
 	var descText:FlxText;
 	var selectedEventText:FlxText;
 	function addEventsUI():Void
@@ -1077,7 +1133,7 @@ class ChartingState extends MusicBeatState
 			_song.event7 = pressing7Events[0];
 
 		event7DropDown = new FlxUIDropDownMenuCustom(160, 300, FlxUIDropDownMenuCustom.makeStrIdLabelArray(pressing7Events, true), function(pressed:String) {
-			trace('event pressed 1');
+			//trace('event pressed');
 			var whatIsIt:Int = Std.parseInt(pressed);
 			var arraySelectedShit:String = pressing7Events[whatIsIt];
 			_song.event7 = arraySelectedShit;
@@ -1087,8 +1143,12 @@ class ChartingState extends MusicBeatState
 		blockPressWhileScrolling.push(event7DropDown); // maybe?
 		var text:FlxText = new FlxText(160, 280, 0, "7 Event:");
 		tab_group_event.add(text);
-		var text:FlxText = new FlxText(300, 50 + 80, 0, "NOTE: YOU HAVE TO\nENTER THE DEBUG\nMENU AGAIN TO\nSEE PRESETS RELOAD");
+		var text:FlxText = new FlxText(300, 200, 0, "NOTE: YOU HAVE TO\nENTER THE DEBUG\nMENU AGAIN TO\nSEE PRESETS RELOAD");
 		tab_group_event.add(text);
+
+		event7InputText = new FlxUIInputText(160, event7DropDown.y + 40, 100, _song.event7Value);
+		blockPressWhileTypingOn.push(event7InputText);
+		tab_group_event.add(event7InputText);
 
 		#if LUA_ALLOWED
 		var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
@@ -1232,6 +1292,7 @@ class ChartingState extends MusicBeatState
 		tab_group_event.add(value1InputText);
 		tab_group_event.add(value2InputText);
 		tab_group_event.add(eventDropDown);
+		tab_group_event.add(event7DropDown);
 
 		UI_box.addGroup(tab_group_event);
 	}
@@ -1568,6 +1629,21 @@ class ChartingState extends MusicBeatState
 			{
 				vocals.volume = nums.value;
 			}
+			if (wname == 'manual_zoom') // some good coding here
+			{
+				var oldZoomFloat = zoomList[curZoom];
+				var oldZoom = curZoom;
+				if(!zoomList.contains(nums.value)) {
+					zoomList.push(nums.value);
+					zoomList.sort(function(a:Float, b:Float) {
+						return FlxSort.byValues(FlxSort.ASCENDING, a, b);
+					});
+				}
+				curZoom = zoomList.indexOf(nums.value);
+				if(oldZoomFloat != zoomList[curZoom]) {
+					updateZoom();
+				}
+			}
 		}
 		else if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == noteSplashesInputText) {
@@ -1595,6 +1671,8 @@ class ChartingState extends MusicBeatState
 					curSelectedNote[0] = value;
 					updateGrid();
 				}
+			} else if(sender == event7InputText) {
+				_song.event7Value = event7InputText.text;
 			}
 		}
 		else if (id == FlxUISlider.CHANGE_EVENT && (sender is FlxUISlider))
@@ -1719,7 +1797,8 @@ class ChartingState extends MusicBeatState
 				if (FlxG.mouse.x > gridBG.x
 					&& FlxG.mouse.x < gridBG.x + gridBG.width
 					&& FlxG.mouse.y > gridBG.y
-					&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom])
+					&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]
+					&& !FlxG.mouse.overlaps(manualZoomInput))
 				{
 					addTextToLog('added note id: ' + addNote(null, null, null, true));
 					addNote();
@@ -1840,7 +1919,10 @@ class ChartingState extends MusicBeatState
 					}
 				}
 			}
-
+			if(FlxG.keys.justPressed.G) {
+				zoomList = oldZoomList;
+				updateZoom();
+			}
 
 			if (FlxG.keys.justPressed.TAB)
 			{
@@ -2204,10 +2286,12 @@ class ChartingState extends MusicBeatState
 	}
 
 	function updateZoom() {
+		if(curZoom >= zoomList.length) curZoom = 2;
 		var daZoom:Float = zoomList[curZoom];
 		var zoomThing:String = '1 / ' + daZoom;
 		if(daZoom < 1) zoomThing = Math.round(1 / daZoom) + ' / 1';
 		zoomTxt.text = 'Zoom: ' + zoomThing;
+		manualZoomInput.value = zoomList[curZoom];
 		reloadGridLayer();
 	}
 
@@ -3202,21 +3286,61 @@ class ChartingState extends MusicBeatState
 	}
 	public static function addTextToLog(text:String, color:FlxColor = FlxColor.WHITE) {
 		FlxG.log.add(text);
+		//trace(text);
 		#if debug
 		addTextToDebug(text, color);
 		#end
 	}
 
-
 	override function updateCurStep():Void 
 	{
-
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
 
-		var shit = ((Conductor.songPosition ) - lastChange.songTime) / lastChange.stepCrochet;
+		var shit = ((Conductor.songPosition) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
+
+	#if CRASH_HANDLER
+	public function onCrash(e:UncaughtErrorEvent)
+	{
+		addTextToDebug('Crashed!!!', FlxColor.RED);
+		autosaveSong();
+		var errMsg:String = "";
+		var path:String;
+		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
+		var dateNow:String = Date.now().toString();
+
+		dateNow = dateNow.replace(" ", "_");
+		dateNow = dateNow.replace(":", "'");
+
+		path = "./crash/" + "StridentEngine_" + dateNow + ".txt";
+
+		for (stackItem in callStack)
+		{
+			switch (stackItem)
+			{
+				case FilePos(s, file, line, column):
+					errMsg += file + " (line " + line + ")\n";
+				default:
+					Sys.println(stackItem);
+			}
+		}
+
+		errMsg += "\nUncaught Error: " + e.error + "\nReport this error to Wither362\nDon't worry about your changes, they are saved";
+
+		if (!FileSystem.exists("./crash/"))
+			FileSystem.createDirectory("./crash/");
+
+		File.saveContent(path, errMsg + "\n");
+
+		Sys.println(errMsg);
+		Sys.println("Crash dump saved in " + Path.normalize(path));
+
+		Application.current.window.alert(errMsg, "Error!");
+		FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetState, true);
+	}
+	#end
 }
 
 class AttachedFlxText extends FlxText
