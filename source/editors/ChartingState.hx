@@ -1083,6 +1083,8 @@ class ChartingState extends MusicBeatState
 			_song.event7 = arraySelectedShit;
 		});
 		event7DropDown.selectedLabel = _song.event7;
+		event7DropDown.active = true;
+		blockPressWhileScrolling.push(event7DropDown); // maybe?
 		var text:FlxText = new FlxText(160, 280, 0, "7 Event:");
 		tab_group_event.add(text);
 		var text:FlxText = new FlxText(300, 50 + 80, 0, "NOTE: YOU HAVE TO\nENTER THE DEBUG\nMENU AGAIN TO\nSEE PRESETS RELOAD");
@@ -1129,7 +1131,7 @@ class ChartingState extends MusicBeatState
 		eventDropDown = new FlxUIDropDownMenuCustom(20, 50, FlxUIDropDownMenuCustom.makeStrIdLabelArray(leEvents, true), function(pressed:String) {
 			var selectedEvent:Int = Std.parseInt(pressed);
 			descText.text = eventStuff[selectedEvent][1];
-			if (curSelectedNote != null &&  eventStuff != null) {
+			if (curSelectedNote != null && eventStuff != null) {
 				if (curSelectedNote != null && curSelectedNote[2] == null) {
 					curSelectedNote[1][curEventSelected][0] = eventStuff[selectedEvent][0];
 				}
@@ -1148,8 +1150,8 @@ class ChartingState extends MusicBeatState
 		value2InputText = new FlxUIInputText(20, 150, 100, "");
 		blockPressWhileTypingOn.push(value2InputText);
 
-		var text:FlxText = new FlxText(20, 170, 0, "Value 3:");
-		tab_group_event.add(text);
+		/*var text:FlxText = new FlxText(20, 170, 0, "Value 3:"); // no 3 event :'(
+		tab_group_event.add(text);*/
 
 		// New event buttons
 		var removeButton:FlxButton = new FlxButton(eventDropDown.x + eventDropDown.width + 10, eventDropDown.y, '-', function()
@@ -1825,14 +1827,19 @@ class ChartingState extends MusicBeatState
 				curZoom++;
 				updateZoom();
 			}
-			if (FlxG.keys.pressed.C && !FlxG.keys.pressed.CONTROL)
-				if (!FlxG.mouse.overlaps(curRenderedNotes)) //lmao cant place notes when your cursor already overlaps one
+			if (FlxG.keys.pressed.C && !FlxG.keys.pressed.CONTROL) {
+				if (!FlxG.mouse.overlaps(curRenderedNotes)) { //lmao cant place notes when your cursor already overlaps one
 					if (FlxG.mouse.x > gridBG.x
 						&& FlxG.mouse.x < gridBG.x + gridBG.width
 						&& FlxG.mouse.y > gridBG.y
 						&& FlxG.mouse.y < gridBG.y + gridBG.height)
-							if (!FlxG.keys.pressed.CONTROL) //stop crashing
-								addNote(); //allows you to draw notes by holding left click
+					{
+						if (!FlxG.keys.pressed.CONTROL) {//stop crashing
+							addNote(); //allows you to draw notes by holding left click
+						}
+					}
+				}
+			}
 
 
 			if (FlxG.keys.justPressed.TAB)
@@ -1872,13 +1879,10 @@ class ChartingState extends MusicBeatState
 
 			if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
 			{
-				if (FlxG.keys.pressed.SHIFT)
-					resetSection(true);
-				else
-					resetSection();
+				resetSection(FlxG.keys.pressed.SHIFT);
 			}
 
-			if (FlxG.mouse.wheel != 0)
+			if (FlxG.mouse.wheel != 0) // i dont recommend the fucking mouse
 			{
 				FlxG.sound.music.pause();
 				if (!mouseQuant)
@@ -1923,7 +1927,9 @@ class ChartingState extends MusicBeatState
 					FlxG.sound.music.time -= daTime;
 				}
 				else
+				{
 					FlxG.sound.music.time += daTime;
+				}
 
 				if(vocals != null) {
 					vocals.pause();
@@ -2037,7 +2043,7 @@ class ChartingState extends MusicBeatState
 					var datime = (feces - secStart) - (dastrum - secStart); //idk math find out why it doesn't work on any other section other than 0
 					if (curSelectedNote != null)
 					{
-						var controlArray:Array<Bool> = [ // this doesnt let you to put all the notes at the same time
+						var controlArray:Array<Bool> = [ // this doesnt let you to put all the notes at the same time :'(
 							FlxG.keys.pressed.ONE,
 							FlxG.keys.pressed.TWO,
 							FlxG.keys.pressed.THREE,
@@ -2117,7 +2123,6 @@ class ChartingState extends MusicBeatState
 			playbackSpeed += 0.01;
 		if (FlxG.keys.pressed.ALT && (pressedLB || pressedRB || holdingLB || holdingRB))
 			playbackSpeed = 1;
-		//
 
 		if (playbackSpeed <= 0.5)
 			playbackSpeed = 0.5;
@@ -2161,10 +2166,12 @@ class ChartingState extends MusicBeatState
 					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
 					strumLineNotes.members[noteDataToCheck].resetAnim = (note.sustainLength / 1000) + 0.15;
 
-					if(!playedSound[data]) {
-						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)){
+					if(!playedSound[data])
+					{
+						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress))
+						{
 							var soundToPlay = 'hitsound';
-							if(_song.player1 == 'gf') { //Easter egg
+							if(_song.player1.startsWith('gf')) { //Easter egg
 								soundToPlay = 'GF_' + Std.string(data + 1);
 							}
 
@@ -2182,7 +2189,8 @@ class ChartingState extends MusicBeatState
 			}
 		});
 
-		if(metronome.checked && lastConductorPos != Conductor.songPosition) {
+		if(metronome.checked && lastConductorPos != Conductor.songPosition)
+		{
 			var metroInterval:Float = 60 / metronomeStepper.value;
 			var metroStep:Int = Math.floor(((Conductor.songPosition + metronomeOffsetStepper.value) / metroInterval) / 1000);
 			var lastMetroStep:Int = Math.floor(((lastConductorPos + metronomeOffsetStepper.value) / metroInterval) / 1000);
@@ -2739,7 +2747,7 @@ class ChartingState extends MusicBeatState
 				if(note.eventLength > 1) daText.yAdd += 8;
 				curRenderedNoteType.add(daText);
 				daText.sprTracker = note;
-				//trace('test: ' + i[0], 'startThing: ' + startThing, 'endThing: ' + endThing);
+				//addTextToLog('test: ' + i[0], 'startThing: ' + startThing, 'endThing: ' + endThing);
 			}
 		}
 
