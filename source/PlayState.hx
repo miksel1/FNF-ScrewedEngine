@@ -219,7 +219,6 @@ class PlayState extends MusicBeatState
 	var screwYouTxt:FlxText;
 	var watermarkTxt:FlxText;
 	var ghostTappersOff:Bool = false;
-	var heyStopTrying:Bool = false;
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
@@ -234,6 +233,7 @@ class PlayState extends MusicBeatState
 	public static var activeWavy:Bool = false;
 
 	public static var screenshader:Shaders.PulseEffect = new PulseEffect();
+	public static var anotherScreenshader:Shaders.PulseEffect = new PulseEffect();
 
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
@@ -347,6 +347,9 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
+	var canCPULight:Bool = true;
+	var canPlayerLight:Bool = true;
+
 	override public function create()
 	{
 		//trace('Playback Rate: ' + playbackRate);
@@ -374,6 +377,7 @@ class PlayState extends MusicBeatState
 			'NOTE_RIGHT'
 		];
 
+		//Shaders
 		the3DWorldEffect = new WiggleEffect();
 		the3DWorldEffect.effectType = WiggleEffectType.FLAG;
 		the3DWorldEffect.waveAmplitude = 0.1;
@@ -392,12 +396,13 @@ class PlayState extends MusicBeatState
 		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 		screenshader.shader.uampmul.value[0] = 0;
 
-		#if windows
-		screenshader.waveAmplitude = 1;
-        screenshader.waveFrequency = 2;
-        screenshader.waveSpeed = 1;
-        screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
-		#end
+		if(SONG.event7 == 'Rainbow Eyesore') {
+			anotherScreenshader.waveAmplitude = 1;
+			anotherScreenshader.waveFrequency = 2;
+			anotherScreenshader.waveSpeed = 1;
+			anotherScreenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+			anotherScreenshader.shader.uampmul.value[0] = 0;
+		}
 
 		//Ratings
 		ratingsData.push(new Rating('sick')); //default rating
@@ -1209,43 +1214,42 @@ class PlayState extends MusicBeatState
 		add(scoreTxt);
 
 		if(SONG.credit != null) {
-			watermarkTxt = new FlxText(10, FlxG.height - 28, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} by ${SONG.credit} - Screwed Edition', 74);
+			watermarkTxt = new FlxText(10, healthBarBG.y - 30, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} by ${SONG.credit} - Screwed Edition', 74);
 			watermarkTxt.scrollFactor.set();
 			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			watermarkTxt.size = 18;
 			watermarkTxt.updateHitbox();
-			watermarkTxt.alpha = 0.6;
+			watermarkTxt.alpha = 0.8;
 			add(watermarkTxt);
 		}
 		else {
-			watermarkTxt = new FlxText(10, FlxG.height - 28, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} - Screwed Edition', 74);
+			watermarkTxt = new FlxText(10, healthBarBG.y - 30, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} - Screwed Edition', 74);
 			watermarkTxt.scrollFactor.set();
 			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			watermarkTxt.size = 18;
 			watermarkTxt.updateHitbox();
-			watermarkTxt.alpha = 0.6;
+			watermarkTxt.alpha = 0.8;
 			add(watermarkTxt);
 		}
 
 		if(SONG.screwYou != null)
 		{
-			screwYouTxt = new FlxText(10, FlxG.height - 28, 0, SONG.screwYou, 74);
+			screwYouTxt = new FlxText(10, healthBarBG.y, 0, SONG.screwYou, 74);
 			screwYouTxt.scrollFactor.set();
 			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			screwYouTxt.size = 18;
 			screwYouTxt.updateHitbox();
-			screwYouTxt.alpha = 0.6;
+			screwYouTxt.alpha = 0.8;
 			add(screwYouTxt);
-			watermarkTxt.y = FlxG.height - 50;
 			screwYouTxt.cameras = [camHUD];
 		}
 		else {
-			screwYouTxt = new FlxText(10, FlxG.height - 28, 0, null, 74);
+			screwYouTxt = new FlxText(10, healthBarBG.y, 0, null, 74);
 			screwYouTxt.scrollFactor.set();
 			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			screwYouTxt.size = 18;
 			screwYouTxt.updateHitbox();
-			screwYouTxt.alpha = 0.6;
+			screwYouTxt.alpha = 0.8;
 			add(screwYouTxt);
 			screwYouTxt.cameras = [camHUD];
 		}
@@ -1254,6 +1258,8 @@ class PlayState extends MusicBeatState
 			watermarkTxt.visible = false;
 			screwYouTxt.visible = false;
 		}
+
+
 		if(ClientPrefs.crazyCounter) { // theoyeah engine?
 			judgementCounter = new FlxText(20, 0, 0, '', 20);
 			judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1263,6 +1269,7 @@ class PlayState extends MusicBeatState
 			judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nTotal hit: ${totals}\nCombo: ${combo}\n';
 			add(judgementCounter);
 		}
+
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1499,6 +1506,9 @@ class PlayState extends MusicBeatState
 				case 'music':
 					Paths.music(key);
 			}
+		}
+		if(SONG.event7 == 'Play Video') {
+			Paths.video(SONG.event7Value);
 		}
 		Paths.clearUnusedMemory();
 
@@ -1751,7 +1761,7 @@ class PlayState extends MusicBeatState
 	{
 		if(endingSong)
 			endSong();
-		else
+		else if (!startedCountdown)
 			startCountdown();
 	}
 
@@ -3002,8 +3012,15 @@ class PlayState extends MusicBeatState
 			disableTheTripper = true;
 		}
 
-		FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
+		var filters:Array<BitmapFilter> = [new ShaderFilter(screenshader.shader)];
+		if(SONG.event7 == 'Rainbow Eyesore') {
+			filters.push(new ShaderFilter(anotherScreenshader.shader));
+		}
+		FlxG.camera.setFilters(filters);
 		screenshader.update(elapsed);
+		if(SONG.event7 == 'Rainbow Eyesore')
+			anotherScreenshader.update(elapsed);
+
 		if(disableTheTripper)
 		{
 			screenshader.shader.uampmul.value[0] -= (elapsed / 2);
@@ -3175,7 +3192,7 @@ class PlayState extends MusicBeatState
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
 		}
 
-		if (controls.PAUSE && startedCountdown && canPause && !heyStopTrying)
+		if (controls.PAUSE && startedCountdown && canPause && !inCutscene)
 		{
 			var ret:Dynamic = callOnLuas('onPause', [], false);
 			if(ret != FunkinLua.Function_Stop) {
@@ -3187,26 +3204,52 @@ class PlayState extends MusicBeatState
 		{
 			switch(SONG.event7)
 			{
-				case "Game Over":
+				case 'Game Over':
+					if(screenshader.Enabled)
+						screenshader.Enabled = false;
+					if(anotherScreenshader.Enabled)
+						anotherScreenshader.Enabled = false;
+
 					health = 0;
-				case "Go to Song":
+					doDeathCheck();
+				case 'Go to Song':
 					SONG = Song.loadFromJson(Paths.formatToSongPath(SONG.event7Value), Paths.formatToSongPath(SONG.event7Value));
 					MusicBeatState.resetState();
-				case "Close Game":
+				case 'Close Game':
 					System.exit(0);
-				case "Play Video":
-					updateTime = false;
-					FlxG.sound.music.volume = 0;
-					vocals.volume = 0;
-					vocals.stop();
-					FlxG.sound.music.stop();
-					KillNotes();
-					heyStopTrying = true;
+				case 'Play Video':
+					if (SONG.event7Value.trim() != '')
+					{
+						if (screenshader.Enabled)
+							screenshader.Enabled = false;
+						if (anotherScreenshader.Enabled)
+							anotherScreenshader.Enabled = false;
 
-					var bg = new FlxSprite(-FlxG.width, -FlxG.height).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-					add(bg);
-					bg.cameras = [camHUD];
-					startVideo(SONG.event7Value);
+						updateTime = false;
+						FlxG.sound.music.volume = 0;
+						vocals.volume = 0;
+						vocals.stop();
+						FlxG.sound.music.stop();
+						KillNotes();
+
+						var bg = new FlxSprite(-FlxG.width, -FlxG.height).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
+						add(bg);
+						bg.cameras = [camHUD];
+						startVideo(SONG.event7Value);
+					}
+				case 'Rainbow Eyesore':
+					if(ClientPrefs.shaders) {
+						FlxG.camera.setFilters([new ShaderFilter(anotherScreenshader.shader)]);
+						anotherScreenshader.waveAmplitude = 1;
+						anotherScreenshader.waveFrequency = 2;
+						if(SONG.event7Value.trim() == '')
+							anotherScreenshader.waveSpeed = new flixel.math.FlxRandom().float(-100000, 100000);
+						else
+							anotherScreenshader.waveSpeed = Std.parseFloat(SONG.event7Value.trim());
+						anotherScreenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+						anotherScreenshader.shader.uampmul.value[0] = 1;
+						anotherScreenshader.Enabled = true;
+					}
 				default:
 					openChartEditor();
 			}
@@ -3247,7 +3290,7 @@ class PlayState extends MusicBeatState
 			cancelMusicFadeTween();
 			MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 		}
-		
+
 		if (startedCountdown)
 		{
 			Conductor.songPosition += FlxG.elapsed * 1000 * playbackRate;
@@ -3306,7 +3349,7 @@ class PlayState extends MusicBeatState
 		FlxG.watch.addQuick("stepShit", curStep);
 
 		// RESET = Quick Game Over Screen
-		if (!ClientPrefs.noReset && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong && !heyStopTrying)
+		if (!ClientPrefs.noReset && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong)
 		{
 			health = 0;
 			trace("RESET = True");
@@ -3998,18 +4041,18 @@ class PlayState extends MusicBeatState
 				var message:String = (value2);
 
 				lime.app.Application.current.window.alert(message, title);
-			case '\"Screw you!\" Text Change':
+			case '"Screw you!" Text Change':
 				var text:String = (value1);
 
 				screwYouTxt.text = text;
-				if(screwYouTxt.text == null || screwYouTxt.text == "")
-				{
-						watermarkTxt.y = FlxG.height - 28;
-				}
-				else
-				{
-						watermarkTxt.y = FlxG.height - 50;
-				}
+			case 'Deactivate CPU LIGHT':
+				canCPULight = false;
+			case 'Activate CPU LIGHT':
+				canCPULight = true;
+			case 'Deactivate PLAYER LIGHT':
+				canPlayerLight = false;
+			case 'Activate PLAYER LIGHT':
+				canPlayerLight = true;
 		}
 		callOnLuas('onEvent', [eventName, value1, value2]);
 	}
@@ -5389,8 +5432,10 @@ class PlayState extends MusicBeatState
 		var spr:StrumNote = null;
 		if(isDad) {
 			spr = strumLineNotes.members[id];
+			if(!canCPULight) return;
 		} else {
 			spr = playerStrums.members[id];
+			if(!canPlayerLight) return;
 		}
 
 		if(spr != null) {

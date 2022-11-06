@@ -110,7 +110,20 @@ class ChartingState extends MusicBeatState
 		['Popup', "Value 1: Title\nValue 2: Message\nMakes a window popup with a message in it."],
 		['Popup (No Pause)', "Value 1: Title\nValue 2: Message\nSame as popup but without a pause."],
 		['\"Screw you!\" Text Change', "Value 1: Text\n\nChanges the \"Screw you!\" text."],
-		['Random Text Change', "\n\n\nValue 1: Step to end at\nValue 2: List of words seperated with ^\nChanges the \"Screw you!\" text through\na list of words you put.\nChanges on a step hit."]
+		//['Random Text Change', "\n\n\nValue 1: Step to end at\nValue 2: List of words seperated with ^\nChanges the \"Screw you!\" text through\na list of words you put.\nChanges on a step hit."],
+		['Deactivate CPU LIGHT', "Disables the CPU STRUM to be lighted.\nUseful for songs that use a lot of\nnotes."],
+		['Activate CPU LIGHT', "The opposite of the earlier one"],
+		['Deactivate PLAYER LIGHT', "The same but for player"],
+		['Activate PLAYER LIGHT', "The opposite of the earlier one"]
+	];
+	var pressing7Events:Array<String> = [
+		'---',
+		'None',
+		'Game Over',
+		'Go to Song',
+		'Close Game',
+		'Play Video',
+		'Rainbow Eyesore'
 	];
 
 	var _file:FileReference;
@@ -1032,7 +1045,7 @@ class ChartingState extends MusicBeatState
 
 		notePlayerSkinInputText = new FlxUIInputText(10, noteSkinInputText.y + 35, 150, skinP, 8);
 		blockPressWhileTypingOn.push(notePlayerSkinInputText);
-	
+
 		noteSplashesInputText = new FlxUIInputText(10, noteSkinInputText.y + 75, 150, _song.splashSkin, 8);
 		blockPressWhileTypingOn.push(noteSplashesInputText);
 
@@ -1123,12 +1136,12 @@ class ChartingState extends MusicBeatState
 	var event7InputText:FlxUIInputText;
 	var descText:FlxText;
 	var selectedEventText:FlxText;
+	var untilTheEnd:FlxText;
 	function addEventsUI():Void
 	{
 		var tab_group_event = new FlxUI(null, UI_box);
 		tab_group_event.name = 'Events';
 
-		var pressing7Events:Array<String> = ['---', 'None', 'Game Over', 'Go to Song', 'Close Game', 'Play Video'];
 		if(_song.event7 == null || !pressing7Events.contains(_song.event7)) // fix crash
 			_song.event7 = pressing7Events[0];
 
@@ -1137,14 +1150,24 @@ class ChartingState extends MusicBeatState
 			var whatIsIt:Int = Std.parseInt(pressed);
 			var arraySelectedShit:String = pressing7Events[whatIsIt];
 			_song.event7 = arraySelectedShit;
+			if(untilTheEnd != null)
+				untilTheEnd.visible = _song.event7 == 'Rainbow Eyesore';
 		});
 		event7DropDown.selectedLabel = _song.event7;
 		event7DropDown.active = true;
 		blockPressWhileScrolling.push(event7DropDown); // maybe?
-		var text:FlxText = new FlxText(160, 280, 0, "7 Event:");
-		tab_group_event.add(text);
+		var event7Text:FlxText = new FlxText(160, 280, 0, "7 Event:");
+		tab_group_event.add(event7Text);
 		var text:FlxText = new FlxText(300, 200, 0, "NOTE: YOU HAVE TO\nENTER THE DEBUG\nMENU AGAIN TO\nSEE PRESETS RELOAD");
 		tab_group_event.add(text);
+		untilTheEnd = new FlxText(event7Text.x, event7Text.y - 50, event7Text.fieldWidth + 50, "UNTIL THE SONG ENDS");
+		untilTheEnd.color = FlxColor.RED;
+		untilTheEnd.borderColor = 0x7C0000;
+		untilTheEnd.borderSize = 3;
+		untilTheEnd.visible = false;
+		tab_group_event.add(untilTheEnd);
+		if(_song.event7 == 'Rainbow Eyesore')
+			untilTheEnd.visible = true;
 
 		event7InputText = new FlxUIInputText(160, event7DropDown.y + 40, 100, _song.event7Value);
 		blockPressWhileTypingOn.push(event7InputText);
@@ -1661,7 +1684,7 @@ class ChartingState extends MusicBeatState
 				else if(sender == value2InputText) {
 					if(curSelectedNote[1][curEventSelected] != null)
 					{
-						curSelectedNote[1][curEventSelected][2] = value1InputText.text;
+						curSelectedNote[1][curEventSelected][2] = value2InputText.text;
 						updateGrid();
 					}
 				}
