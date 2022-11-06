@@ -47,7 +47,7 @@ _____________________________________
 * Comes with a Mod Organizing/Disabling Menu.
 
 ## D&B Features:
-* Adds multiple features from mods like Strident Crisis like:
+   * Adds multiple features from mods like Strident Crisis like:
 ### Freeplay Sections:
    * Explains itself, Freeplay Sections from Bambi's Purgatory.
    * Currently not implemented.
@@ -66,8 +66,8 @@ _____________________________________
 ### Shaders:
    * WIP! Currently they dont work.
 ### Eyesores:
-   * That rainbowy thing from Polygonized and Glitch, added into Psych! (Currently broken due to the shaders not working.)
-* I may've forgotten a few...
+   * That rainbowy thing from Polygonized and Glitch, added into Psych!
+   * I may've forgotten a few...
 
 
 ## Atleast one change to every week:
