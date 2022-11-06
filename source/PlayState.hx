@@ -1209,7 +1209,7 @@ class PlayState extends MusicBeatState
 		add(scoreTxt);
 
 		if(SONG.credit != null) {
-			watermarkTxt = new FlxText(10, FlxG.height - 28, 0, 'By ' + SONG.credit + ' - ' + SONG.song + " - [" + CoolUtil.difficultyString() + "] - Screwed Edition", 74);
+			watermarkTxt = new FlxText(10, FlxG.height - 28, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} by ${SONG.credit} - Screwed Edition', 74);
 			watermarkTxt.scrollFactor.set();
 			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			watermarkTxt.size = 18;
@@ -1218,7 +1218,7 @@ class PlayState extends MusicBeatState
 			add(watermarkTxt);
 		}
 		else {
-			watermarkTxt = new FlxText(10, FlxG.height - 28, 0, SONG.song + " - [" + CoolUtil.difficultyString() + "] - Screwed Edition", 74);
+			watermarkTxt = new FlxText(10, FlxG.height - 28, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} - Screwed Edition', 74);
 			watermarkTxt.scrollFactor.set();
 			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			watermarkTxt.size = 18;
