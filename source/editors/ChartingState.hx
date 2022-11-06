@@ -1649,7 +1649,7 @@ class ChartingState extends MusicBeatState
 			if(sender == noteSplashesInputText) {
 				_song.splashSkin = noteSplashesInputText.text;
 			}
-			else if(curSelectedNote != null)
+			if(curSelectedNote != null)
 			{
 				if(sender == value1InputText) {
 					if(curSelectedNote[1][curEventSelected] != null)
@@ -1671,8 +1671,13 @@ class ChartingState extends MusicBeatState
 					curSelectedNote[0] = value;
 					updateGrid();
 				}
-			} else if(sender == event7InputText) {
+			}
+			if(sender == event7InputText) {
 				_song.event7Value = event7InputText.text;
+			} else if(sender == screwYouInputText) {
+				_song.screwYou = screwYouInputText;
+			} else if(sender == creditInputText) {
+				_song.credit = creditInputText.text;
 			}
 		}
 		else if (id == FlxUISlider.CHANGE_EVENT && (sender is FlxUISlider))
