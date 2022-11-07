@@ -123,7 +123,8 @@ class ChartingState extends MusicBeatState
 		'Go to Song',
 		'Close Game',
 		'Play Video',
-		'Rainbow Eyesore'
+		'Rainbow Eyesore',
+		'Nothing' // why?
 	];
 
 	var _file:FileReference;
@@ -140,6 +141,7 @@ class ChartingState extends MusicBeatState
 	private static var lastSong:String = '';
 
 	var bpmTxt:FlxText;
+
 
 	var camPos:FlxObject;
 	var strumLine:FlxSprite;
