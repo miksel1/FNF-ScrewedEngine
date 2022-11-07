@@ -3250,6 +3250,8 @@ class PlayState extends MusicBeatState
 						anotherScreenshader.shader.uampmul.value[0] = 1;
 						anotherScreenshader.Enabled = true;
 					}
+				case 'Nothing': // dont let it
+					//
 				default:
 					openChartEditor();
 			}
@@ -3366,7 +3368,7 @@ class PlayState extends MusicBeatState
 			{
 				var dunceNote:Note = unspawnNotes[0];
 				notes.insert(0, dunceNote);
-				dunceNote.spawned=true;
+				dunceNote.spawned = true;
 				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
 
 				var index:Int = unspawnNotes.indexOf(dunceNote);
