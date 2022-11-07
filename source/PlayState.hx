@@ -4055,6 +4055,15 @@ class PlayState extends MusicBeatState
 				canPlayerLight = false;
 			case 'Activate PLAYER LIGHT':
 				canPlayerLight = true;
+			case 'Random Text Change':
+				//disableTheTextAt = Std.parseInt(value1);
+				if(value2 != null)
+				{
+					//textStuffLol = value2.trim().split('^');
+				}
+
+				//textIsGoing = true;
+
 		}
 		callOnLuas('onEvent', [eventName, value1, value2]);
 	}
