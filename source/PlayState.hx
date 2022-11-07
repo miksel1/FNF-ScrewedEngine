@@ -99,6 +99,8 @@ class PlayState extends MusicBeatState
 
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
+	private var canCPULight:Bool = true;
+	private var canPlayerLight:Bool = true;
 
 	#if (haxe >= "4.0.0")
 	public var boyfriendMap:Map<String, Boyfriend> = new Map();
@@ -347,9 +349,6 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
-	var canCPULight:Bool = true;
-	var canPlayerLight:Bool = true;
-
 	override public function create()
 	{
 		//trace('Playback Rate: ' + playbackRate);
@@ -395,6 +394,9 @@ class PlayState extends MusicBeatState
 		screenshader.waveSpeed = 1;
 		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 		screenshader.shader.uampmul.value[0] = 0;
+		if(SONG.song == 'disposition') {
+			// screenshader.Enabled = true;
+		}
 
 		if(SONG.event7 == 'Rainbow Eyesore') {
 			anotherScreenshader.waveAmplitude = 1;
