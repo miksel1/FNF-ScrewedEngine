@@ -33,6 +33,8 @@ import flixel.math.FlxMath;
 import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.FlxAssets.FlxShader;
+import WiggleEffect;
+import WiggleEffect.WiggleEffectType;
 
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
@@ -1105,7 +1107,74 @@ class FunkinLua {
 			luaTrace("setObjectOrder: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
 		});
 
+		Lua_helper.add_callback(lua, "addNewGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25) {
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				var glitchShader:WiggleEffect = new WiggleEffect();
+				glitchShader.effectType = WiggleEffect.typeFromString(type);
+				glitchShader.waveAmplitude = waveAmplitude;
+				glitchShader.waveFrequency = waveFrequency;
+				glitchShader.waveSpeed = waveSpeed;
+
+				stuff.shader = glitchShader.shader;
+				PlayState.instance.modchartGlitchEffects.set(tag, glitchShader);
+				return true;
+			} else {
+				luaTrace('addNewGlitchEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "addGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25,
+			useOtherTypeInsteadOfThe3DWorldEffect:Bool = true)
+		{
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				if(useOtherTypeInsteadOfThe3DWorldEffect) {
+					var glitchShader:WiggleEffect = new WiggleEffect();
+					glitchShader.effectType = WiggleEffect.typeFromString(type);
+					glitchShader.waveAmplitude = waveAmplitude;
+					glitchShader.waveFrequency = waveFrequency;
+					glitchShader.waveSpeed = waveSpeed;
+
+					stuff.shader = glitchShader.shader;
+					PlayState.instance.modchartGlitchEffects.set(tag, glitchShader);
+				} else {
+					stuff.shader = PlayState.the3DWorldEffect.shader;
+				}
+				return true;
+			} else {
+				luaTrace('addGlitchEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "add3DWorldEffect", function(tag:String) {
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				stuff.shader = PlayState.the3DWorldEffect.shader;
+				return true;
+			} else {
+				luaTrace('add3DWorldEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
+
 		// gay ass tweens
+		Lua_helper.add_callback(lua, "windowTweenX", function(tag:String, value:Dynamic, duration:Float, ease:String) {
+			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(Lib.application.window, {x: value}, duration, {ease: getFlxEaseByString(ease),
+				onComplete: function(twn:FlxTween) {
+					PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+					PlayState.instance.modchartTweens.remove(tag);
+				}
+			}));
+		});
+		Lua_helper.add_callback(lua, "windowTweenY", function(tag:String, value:Dynamic, duration:Float, ease:String) {
+			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(Lib.application.window, {y: value}, duration, {ease: getFlxEaseByString(ease),
+				onComplete: function(twn:FlxTween) {
+					PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+					PlayState.instance.modchartTweens.remove(tag);
+				}
+			}));
+		});
 		Lua_helper.add_callback(lua, "doTweenX", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
@@ -3030,13 +3099,15 @@ class FunkinLua {
 		}
 	}
 
-	function tweenShit(tag:String, vars:String) {
+	function tweenShit(tag:String, ?vars:String):Dynamic {
 		cancelTween(tag);
-		var variables:Array<String> = vars.split('.');
-		var sexyProp:Dynamic = getObjectDirectly(variables[0]);
-		if(variables.length > 1) {
-			sexyProp = getVarInArray(getPropertyLoopThingWhatever(variables), variables[variables.length-1]);
-		}
+		//if(vars.length > 0) {
+			var variables:Array<String> = vars.split('.');
+			var sexyProp:Dynamic = getObjectDirectly(variables[0]);
+			if(variables.length > 1) {
+				sexyProp = getVarInArray(getPropertyLoopThingWhatever(variables), variables[variables.length-1]);
+			}
+		//}
 		return sexyProp;
 	}
 

@@ -113,6 +113,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var modchartGlitchEffects:Map<String, WiggleEffect> = new Map<String, WiggleEffect>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -124,6 +125,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map();
 	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
+	public var modchartGlitchEffects:Map<String, WiggleEffect> = new Map();
 	#end
 
 	var judgementCounter:FlxText;
@@ -3005,6 +3007,10 @@ class PlayState extends MusicBeatState
 		the3DWorldEffect.update(elapsed);
 		the3DWorldEffectWavy.update(elapsed);
 
+		for (effect => value in modchartGlitchEffects) {
+			value.update(elapsed);
+		}
+
 		if(disableTheTripperAt == curStep)
 		{
 			disableTheTripper = true;
@@ -5258,6 +5264,22 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.fadeTween.cancel();
 		}
 		FlxG.sound.music.fadeTween = null;
+	}
+
+	public static function rainbowEyesore(shader:Shaders.PulseEffect, time:Int, speed:Float) {
+		if(anotherScreenshader.Enabled) {
+			FlxG.camera.setFilters([new ShaderFilter(shader.shader), new ShaderFilter(anotherScreenshader.shader)]);
+		} else {
+			FlxG.camera.setFilters([new ShaderFilter(shader.shader)]);
+		}
+		instance.disableTheTripper = false;
+		instance.disableTheTripperAt = time;
+		shader.waveAmplitude = 1;
+		shader.waveFrequency = 2;
+		shader.waveSpeed = speed;
+		shader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+		shader.shader.uampmul.value[0] = 1;
+		shader.Enabled = true;
 	}
 
 	var lastStepHit:Int = -1;

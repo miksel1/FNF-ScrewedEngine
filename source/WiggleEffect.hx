@@ -3,6 +3,8 @@ package;
 // STOLEN FROM HAXEFLIXEL DEMO LOL
 import flixel.system.FlxAssets.FlxShader;
 
+using StringTools;
+
 enum WiggleEffectType
 {
 	DREAMY;
@@ -19,6 +21,16 @@ class WiggleEffect
 	public var waveSpeed(default, set):Float = 0;
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
+
+	public static function typeFromString(v:String):WiggleEffectType {
+		switch(v.trim().replace('-', '').replace('_', '').toUpperCase()) {
+			case 'WAVY': return WAVY;
+			case 'HEATWAVEHORIZONTAL': return HEAT_WAVE_HORIZONTAL;
+			case 'HEATWAVEVERTICAL': return HEAT_WAVE_VERTICAL;
+			case 'FLAG': return FLAG;
+		}
+		return DREAMY;
+	}
 
 	public function new():Void
 	{
