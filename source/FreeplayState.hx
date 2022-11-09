@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.ui.FlxUIInputText;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -33,6 +34,8 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
+	var searcher:FlxUIInputText;
+
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -54,7 +57,9 @@ class FreeplayState extends MusicBeatState
 	{
 		//Paths.clearStoredMemory();
 		//Paths.clearUnusedMemory();
-		
+
+		FlxG.mouse.visible = true;
+
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles(false);
@@ -105,6 +110,9 @@ class FreeplayState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
+
+		searcher = new FlxUIInputText(FlxG.height - 30, FlxG.width - 50);
+		add(searcher);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
@@ -531,6 +539,11 @@ class FreeplayState extends MusicBeatState
 		scoreBG.x = FlxG.width - (scoreBG.scale.x / 2);
 		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
 		diffText.x -= diffText.width / 2;
+	}
+
+	override function destroy() {
+		FlxG.mouse.visible = false;
+		super.destroy();
 	}
 }
 

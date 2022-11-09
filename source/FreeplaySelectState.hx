@@ -1,5 +1,6 @@
 package;
 
+import FreeplayState;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flash.text.TextField;
@@ -18,9 +19,11 @@ import lime.utils.Assets;
 #if desktop
 import Discord.DiscordClient;
 #end
+
 using StringTools;
 
-class FreeplaySelectState extends MusicBeatState {
+class FreeplaySelectState extends MusicBeatState
+{
 	var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
@@ -66,7 +69,7 @@ class FreeplaySelectState extends MusicBeatState {
 		0xFF24177D, // purgatory stuff
 		0xFF420000, // purgatory stuff
 		0xFFFFFFFF, // purgatory stuff
-    ];
+	];
 
 	private var iconArray:Array<HealthIcon> = [];
 
@@ -75,7 +78,7 @@ class FreeplaySelectState extends MusicBeatState {
 		#if desktop
 		DiscordClient.changePresence("In the Continued Freeplay Menu", null);
 		#end
-		
+
 		var isDebug:Bool = false;
 
 		#if debug
@@ -86,7 +89,7 @@ class FreeplaySelectState extends MusicBeatState {
 		bg.color = 0xFF4965FF;
 		add(bg);
 
-		CurrentSongIcon = new FlxSprite(0,0).loadGraphic(Paths.image('week_icons_' + (AllPossibleSongs[CurrentPack].toLowerCase())));
+		CurrentSongIcon = new FlxSprite(0, 0).loadGraphic(Paths.image('week_icons_' + (AllPossibleSongs[CurrentPack].toLowerCase())));
 
 		CurrentSongIcon.centerOffsets(false);
 		CurrentSongIcon.x = (FlxG.width / 2) - 256;
@@ -107,32 +110,31 @@ class FreeplaySelectState extends MusicBeatState {
 	}
 
 	public function LoadProperPack()
+	{
+		switch (AllPossibleSongs[CurrentPack].toLowerCase())
 		{
-			switch (AllPossibleSongs[CurrentPack].toLowerCase())
-			{
-				case 'main':
-					addWeek(['Fuming'], 1, ['pissyboy']);
-					addWeek(['Screwed-ReeVrzed'], 1, ['pissyboy']);
-					addWeek(['Screwed-v3'], 1, ['pissyboy']);
-					addWeek(['Outrage'], 1, ['pissyboy']);
-					addWeek(['Enshrouded'], 2, ['enshroud']);
-					addWeek(['Polygonized'], 2, ['dave3d']);
-					addWeek(['Butter'], 3, ['bambi']);
-					addWeek(['No-Corn'], 3, ['bambi']);
-					addWeek(['Farm'], 3, ['bambi']);
-					addWeek(['Blocked'], 3, ['bambi']);
-					addWeek(['Corn-Theft'], 3, ['bambi']);
-				case 'extra':
-					addWeek(['End-Of-The-World'], 8, ['eotw']);
-				case 'old':
-					addWeek(['Fuming-Old'], 9, ['pissyboy']);
-					addWeek(['Screwed-v1'], 9, ['oldscrew']);
-				case 'joke':
-					addWeek(['Screwed-But-Awesome'], 7, ['bambijmad']);
-					addWeek(['Screwed-But-Top'], 7, ['bambijmad']);
-			}
+			case 'main':
+				addWeek(['Fuming'], 1, ['pissyboy']);
+				addWeek(['Screwed-ReeVrzed'], 1, ['pissyboy']);
+				addWeek(['Screwed-v3'], 1, ['pissyboy']);
+				addWeek(['Outrage'], 1, ['pissyboy']);
+				addWeek(['Enshrouded'], 2, ['enshroud']);
+				addWeek(['Polygonized'], 2, ['dave3d']);
+				addWeek(['Butter'], 3, ['bambi']);
+				addWeek(['No-Corn'], 3, ['bambi']);
+				addWeek(['Farm'], 3, ['bambi']);
+				addWeek(['Blocked'], 3, ['bambi']);
+				addWeek(['Corn-Theft'], 3, ['bambi']);
+			case 'extra':
+				addWeek(['End-Of-The-World'], 8, ['eotw']);
+			case 'old':
+				addWeek(['Fuming-Old'], 9, ['pissyboy']);
+				addWeek(['Screwed-v1'], 9, ['oldscrew']);
+			case 'joke':
+				addWeek(['Screwed-But-Awesome'], 7, ['bambijmad']);
+				addWeek(['Screwed-But-Top'], 7, ['bambijmad']);
 		}
-
+	}
 
 	public function GoToActualFreeplay()
 	{
@@ -141,7 +143,7 @@ class FreeplaySelectState extends MusicBeatState {
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true);
 			songText.isMenuItem = false;
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -163,7 +165,7 @@ class FreeplaySelectState extends MusicBeatState {
 		scoreBG.y = 10;
 		add(scoreBG);
 
-		diffText = new FlxText(scoreText.x -10, scoreText.y + 30, 0, "", 24);
+		diffText = new FlxText(scoreText.x - 10, scoreText.y + 30, 0, "", 24);
 		diffText.font = scoreText.font;
 		diffText.x = 20;
 		diffText.y = 40;
@@ -179,7 +181,7 @@ class FreeplaySelectState extends MusicBeatState {
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String)
 	{
-		songs.push(new SongMetadata(songName, weekNum, songCharacter));
+		songs.push(new SongMetadata(songName, weekNum, songCharacter, 0x000000));
 	}
 
 	public function UpdatePackSelection(change:Int)
@@ -224,13 +226,14 @@ class FreeplaySelectState extends MusicBeatState {
 	}
 
 	var instPlaying:Int = -1;
+
 	private static var vocals:FlxSound = null;
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-
-		if (!InMainFreeplayState) 
+		if (!InMainFreeplayState)
 		{
 			if (controls.UI_LEFT_P)
 			{
@@ -259,8 +262,8 @@ class FreeplaySelectState extends MusicBeatState {
 			{
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new MainMenuState());
-			}	
-		
+			}
+
 			return;
 		}
 
@@ -299,20 +302,20 @@ class FreeplaySelectState extends MusicBeatState {
 			changeDiff(1);
 
 		if (controls.BACK)
-			{
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new FreeplaySelectState());
-	
+		{
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			MusicBeatState.switchState(new FreeplaySelectState());
+
 			if (accepted)
 			{
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-			
+
 				trace(poop);
-			
+
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
-			
+
 				PlayState.storyWeek = songs[curSelected].week;
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
@@ -322,7 +325,7 @@ class FreeplaySelectState extends MusicBeatState {
 			FlxG.sound.music.volume = 0;
 			PlayState.SONG = Song.loadFromJson("lacuna-hard", "lacuna"); // you dun fucked up again
 			FlxG.save.data.lacunaFINDED = true;
-			
+
 			new FlxTimer().start(0.25, function(tmr:FlxTimer)
 			{
 				LoadingState.loadAndSwitchState(new PlayState());
@@ -330,68 +333,71 @@ class FreeplaySelectState extends MusicBeatState {
 				FreeplaySelectState.destroyFreeplayVocals();
 			});
 		}
-	#if PRELOAD_ALL
-	if(space && instPlaying != curSelected)
-	{
-		destroyFreeplayVocals();
-		Paths.currentModDirectory = songs[curSelected].folder;
-		var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-		PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-		if (PlayState.SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-		else
-			vocals = new FlxSound();
+		#if PRELOAD_ALL
+		if (space && instPlaying != curSelected)
+		{
+			destroyFreeplayVocals();
+			Paths.currentModDirectory = songs[curSelected].folder;
+			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+			if (PlayState.SONG.needsVoices)
+				vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+			else
+				vocals = new FlxSound();
 
-		FlxG.sound.list.add(vocals);
-		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
-		vocals.play();
-		vocals.persist = true;
-		vocals.looped = true;
-		vocals.volume = 0.7;
-		instPlaying = curSelected;
-	}
-	else #end if (accepted)
-	{
-		var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
-		var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-		#if MODS_ALLOWED
-		if(!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop)) && !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop))) {
-		#else
-		if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
-		#end
-			poop = songLowercase;
-			curDifficulty = 1;
-			trace('Couldnt find file');
+			FlxG.sound.list.add(vocals);
+			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+			vocals.play();
+			vocals.persist = true;
+			vocals.looped = true;
+			vocals.volume = 0.7;
+			instPlaying = curSelected;
 		}
-		trace(poop);
+		else #end if (accepted)	{
+			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+			#if MODS_ALLOWED
+			if (!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop))
+				&& !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop)))
+			#else
+			if (!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop)))
+			#end
+			{
+				poop = songLowercase;
+				curDifficulty = 1;
+				trace('Couldnt find file');
+			}
+			trace(poop);
 
-		PlayState.SONG = Song.loadFromJson(poop, songLowercase);
-		PlayState.isStoryMode = false;
-		PlayState.storyDifficulty = curDifficulty;
+			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+			PlayState.isStoryMode = false;
+			PlayState.storyDifficulty = curDifficulty;
 
-		PlayState.storyWeek = songs[curSelected].week;
-		trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
-		LoadingState.loadAndSwitchState(new PlayState());
+			PlayState.storyWeek = songs[curSelected].week;
+			trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
+			LoadingState.loadAndSwitchState(new PlayState());
 
-		FlxG.sound.music.volume = 0;
-				
-		destroyFreeplayVocals();
+			FlxG.sound.music.volume = 0;
+
+			destroyFreeplayVocals();
+		}
+		else if (controls.RESET)
+		{
+			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+		}
+		super.update(elapsed);
 	}
-	else if(controls.RESET)
+
+	public static function destroyFreeplayVocals()
 	{
-		openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (vocals != null)
+		{
+			vocals.stop();
+			vocals.destroy();
+		}
+		vocals = null;
 	}
-	super.update(elapsed);
-}
-
-public static function destroyFreeplayVocals() {
-	if(vocals != null) {
-		vocals.stop();
-		vocals.destroy();
-	}
-	vocals = null;
-}
 
 	function changeDiff(change:Int = 0)
 	{
@@ -402,15 +408,16 @@ public static function destroyFreeplayVocals() {
 		if (curDifficulty > 2)
 			curDifficulty = 2;
 
-		if (songs[curSelected].week == 6 || songs[curSelected].week == 7 || songs[curSelected].week == 8 || songs[curSelected].week == 9 || songs[curSelected].week == 10 || songs[curSelected].week == 11)
-			{
-				curDifficulty = 2;
-			}
+		if (songs[curSelected].week == 6 || songs[curSelected].week == 7 || songs[curSelected].week == 8 || songs[curSelected].week == 9
+			|| songs[curSelected].week == 10 || songs[curSelected].week == 11)
+		{
+			curDifficulty = 2;
+		}
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		#end
-	
+
 		PlayState.storyDifficulty = curDifficulty;
 		diffText.text = '< ' + CoolUtil.difficultyString() + ' >';
 	}
@@ -435,7 +442,8 @@ public static function destroyFreeplayVocals() {
 				curDifficulty = 2;
 		}
 
-		if (songs[curSelected].week == 6 || songs[curSelected].week == 7 || songs[curSelected].week == 8 || songs[curSelected].week == 9 || songs[curSelected].week == 10 || songs[curSelected].week == 11)
+		if (songs[curSelected].week == 6 || songs[curSelected].week == 7 || songs[curSelected].week == 8 || songs[curSelected].week == 9
+			|| songs[curSelected].week == 10 || songs[curSelected].week == 11)
 		{
 			curDifficulty = 2;
 		}
@@ -468,22 +476,5 @@ public static function destroyFreeplayVocals() {
 		}
 		changeDiff();
 		FlxTween.color(bg, 0.25, bg.color, songColors[songs[curSelected].week]);
-	}
-}
-
-class SongMetadata
-{
-	public var songName:String = "";
-	public var week:Int = 0;
-	public var songCharacter:String = "";
-	public var folder:String = "";
-
-	public function new(song:String, week:Int, songCharacter:String)
-	{
-		this.songName = song;
-		this.week = week;
-		this.songCharacter = songCharacter;
-		this.folder = Paths.currentModDirectory;
-		if(this.folder == null) this.folder = '';
 	}
 }

@@ -359,7 +359,7 @@ class Paths
 			localTrackedAssets.push(path);
 			return currentTrackedAssets.get(path);
 		}
-		trace('oh no its returning null NOOOO');
+		trace('oh no $key in $library its returning null NOOOO');
 		return null;
 	}
 
@@ -485,7 +485,7 @@ class Paths
 								var global:Bool = Reflect.getProperty(stuff, "runsGlobally");
 								if(global)globalMods.push(dat[0]);
 							}
-						} catch(e:Dynamic){
+						} catch(e:Dynamic) {
 							trace(e);
 						}
 					}
