@@ -28,6 +28,7 @@ using StringTools;
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
+	var notSongs:Array<Int> = [];
 
 	var selector:FlxText;
 	private static var curSelected:Int = 0;
@@ -35,6 +36,7 @@ class FreeplayState extends MusicBeatState
 	private static var lastDifficultyName:String = '';
 
 	var searcher:FlxUIInputText;
+	var titleTxt:FlxText; // trying to do like creditsState
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
@@ -79,7 +81,11 @@ class FreeplayState extends MusicBeatState
 			for (j in 0...leWeek.songs.length)
 			{
 				leSongs.push(leWeek.songs[j][0]);
-				leChars.push(leWeek.songs[j][1]);
+				if(leWeek.songs[j][1] != 'nothing' && leWeek.songs[j][1] != '') {
+					leChars.push(leWeek.songs[j][1]);
+				} else {
+					//notSongs.push(j);
+				}
 			}
 
 			WeekData.setDirectoryFromWeek(leWeek);
@@ -131,16 +137,18 @@ class FreeplayState extends MusicBeatState
 			}
 			songText.snapToPosition();
 
-			Paths.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.sprTracker = songText;
+			if(!notSongs.contains(i)) {
+				Paths.currentModDirectory = songs[i].folder;
+				var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+				icon.sprTracker = songText;
 
-			// using a FlxGroup is too much fuss!
-			iconArray.push(icon);
-			add(icon);
+				// using a FlxGroup is too much fuss!
+				iconArray.push(icon);
+				add(icon);
+			}
 
 			// songText.x += 40;
-			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
+			// DONT PUT X IN THE FIRST PARAMETER OF `new ALPHABET()` !!
 			// songText.screenCenter(X);
 		}
 		WeekData.setDirectoryFromWeek();
@@ -336,7 +344,7 @@ class FreeplayState extends MusicBeatState
 		}
 		else if(space)
 		{
-			if(instPlaying != curSelected)
+			if(instPlaying != curSelected /*&& !notSongs.contains(curSelected)*/ && !songs[curSelected].songName.startsWith('--') && !songs[curSelected].songName.endsWith('--'))
 			{
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
@@ -360,7 +368,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		else if (accepted)
+		else if (accepted /*&& !notSongs.contains(curSelected)*/ && !songs[curSelected].songName.startsWith('--') && !songs[curSelected].songName.endsWith('--'))
 		{
 			persistentUpdate = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
