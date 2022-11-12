@@ -82,7 +82,7 @@ class CreditsState extends MusicBeatState
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Screwed Engine'],
-			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'0x242124'],
+			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'0x390000'],
 			['Delta',				'delta',			'Strident Engine',												'https://www.youtube.com/c/Delta1248',		'0xFF00C6FF'],
 			[''],
 			['Psych Engine Team'],
@@ -110,7 +110,7 @@ class CreditsState extends MusicBeatState
 			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',		'378FC7']
 		];
 
-		for(i in pisspoop) {
+		for (i in pisspoop) {
 			creditsStuff.push(i);
 		}
 

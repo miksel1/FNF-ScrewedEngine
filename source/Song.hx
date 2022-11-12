@@ -156,4 +156,8 @@ class Song
 		swagShit.validScore = true;
 		return swagShit;
 	}
+
+	public static function isValidSong(songName:String) {
+		return !(songName.startsWith('--') && songName.endsWith('--'));
+	}
 }

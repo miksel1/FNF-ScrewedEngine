@@ -216,7 +216,7 @@ class ChartingState extends MusicBeatState
 		24,
 		30,
 		48,
-		60
+		51.2
 	];
 	var oldZoomList:Array<Float> = [
 		0.25,
@@ -236,7 +236,7 @@ class ChartingState extends MusicBeatState
 		24,
 		30,
 		48,
-		60
+		51.2
 	];
 	var curZoom:Int = 2;
 
