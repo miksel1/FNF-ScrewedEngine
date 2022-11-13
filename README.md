@@ -1,22 +1,23 @@
 # Friday Night Funkin' - Screwed Engine
-Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
+Engine originally created for (Screwed Edition)[lol] (a mod of Dave And Bambi), but it can be used for your mod too! Just credit us.
 
 ## How to compile:
 Please, keep in mind that you can not seem to compile FNF on Windows 7.
 
-Just watch longestsoloever's video, ive used his tutorial and ive been successful with it. 
+Just watch longestsoloever's video, I've used his tutorial and I've been successful with it. 
 https://www.youtube.com/watch?v=4IuC8ti6_4o
 
-If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then re-install linc_luajit.
+If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then _re-install linc_luajit_.
 
 If you want video support on your mod, simply do `haxelib install hxCodec` on a Command prompt/PowerShell
 
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Screwed Engine Credits:
-* Wither362 - Basically making everything on the engine.
+* Wither362 - Basically making everything on the engine (ALL).
 * miksel1 - The one who broke most of the code at the beginning
-* not capcha - Helping with Freeplay Sections
+* Dante - Strident Engine coder
+* not capcha - Helping with _Legacy_ Freeplay Sections
 
 ## Psych Engine Credits:
 * Shadow Mario - Programmer
@@ -49,24 +50,32 @@ _____________________________________
 ## D&B Features:
    * Adds multiple features from mods like Strident Crisis like:
 ### Freeplay Sections:
-   * Explains itself, Freeplay Sections from Bambi's Purgatory.
-   * Currently not implemented.
-   * Icons will be remade soon.
-  
-![](https://media.discordapp.net/attachments/936741759210389555/1036927810561900574/unknown.png)
-![](https://media.discordapp.net/attachments/936741759210389555/1036927810004066304/unknown.png)
-### "Screw you!" text and credits:
+   * Explains itself, Freeplay Sections with a ***new system***: songs that start with "--" and end with "--", if will add it to a new section
+### A search bar in Freeplay
+
+### "Screw you!" and credits text:
    * Once again, self-explainable.
   
 ![](https://media.discordapp.net/attachments/1025448192491388998/1036759283724976232/unknown.png)
 ![](https://media.discordapp.net/attachments/936741759210389555/1036928314163613737/327416939.2150001_image.png)
+### Chart Editor:
+   * In the chart editor, I added a few new features like:
+     * Manual Zoom.
+     * More Zoom.
+     * Drawing.
+     * Autosave.
+     * More buttons.
+     * Strident Engine.
+     * More events (use them for lot-of-notes songs!)
+     * Some new inputs.
 ### 7 events:
    * Upon pressing 7 on any song, by default it goes to the chart editor.
    * You can change it in the chart editor.
 ### Shaders:
-   * WIP! Currently they dont work.
+   * Glitch Effect:
+     * Added into lua!
 ### Eyesores:
-   * That rainbowy thing from Polygonized and Glitch, added into Psych!
+   * Rainbow Eyesore from Polygonized and Glitch, added into Psych (credits for ***Delta***)!
    * I may've forgotten a few...
 
 
