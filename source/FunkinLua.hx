@@ -1107,6 +1107,89 @@ class FunkinLua {
 			luaTrace("setObjectOrder: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
 		});
 
+		// some shit
+		Lua_helper.add_callback(lua, "getDeviceName", function() {
+			return Lib.application.window.application.window.application.window.display.name; // lol
+		});
+		Lua_helper.add_callback(lua, "getBordeless", function() {
+			return Lib.application.window.bordeless;
+		});
+		Lua_helper.add_callback(lua, "setBordeless", function(v:Bool) {
+			return Lib.application.window.bordeless = v;
+		});
+		Lua_helper.add_callback(lua, "getFullscreen", function() {
+			return Lib.application.window.fullscreen;
+		});
+		Lua_helper.add_callback(lua, "setFullscreen", function(v:Bool) {
+			return Lib.application.window.fullscreen = v;
+		});
+		Lua_helper.add_callback(lua, "getHeight", function() {
+			return Lib.application.window.height;
+		});
+		Lua_helper.add_callback(lua, "setHeight", function(newHeight:Int) {
+			return Lib.application.window.height = newHeight;
+		});
+		Lua_helper.add_callback(lua, "getHidden", function() {
+			return Lib.application.window.hidden;
+		});
+		Lua_helper.add_callback(lua, "getWindowID", function() {
+			return Lib.application.window.id;
+		});
+		Lua_helper.add_callback(lua, "getMaximized", function() {
+			return Lib.application.window.maximized;
+		});
+		Lua_helper.add_callback(lua, "setMaximized", function(v:Bool) {
+			return Lib.application.window.maximized = v;
+		});
+		Lua_helper.add_callback(lua, "getMinimized", function() {
+			return Lib.application.window.minimized;
+		});
+		Lua_helper.add_callback(lua, "setMinimized", function(v:Bool) {
+			return Lib.application.window.minimized = v;
+		});
+		Lua_helper.add_callback(lua, "getMouseLock", function() {
+			return Lib.application.window.mouseLock;
+		});
+		Lua_helper.add_callback(lua, "setMouseLock", function(v:Bool) {
+			return Lib.application.window.mouseLock = v;
+		});
+		Lua_helper.add_callback(lua, "getWidth", function() {
+			return Lib.application.window.width;
+		});
+		Lua_helper.add_callback(lua, "setWidth", function(newWidth:Int) {
+			return Lib.application.window.width = newWidth;
+		});
+		Lua_helper.add_callback(lua, "getWindowTitle", function() {
+			return Lib.application.window.title;
+		});
+		Lua_helper.add_callback(lua, "getWindowX", function() {
+			return Lib.application.window.x;
+		});
+		Lua_helper.add_callback(lua, "getWindowY", function() {
+			return Lib.application.window.y;
+		});
+		Lua_helper.add_callback(lua, "getResizable", function() {
+			return Lib.application.window.resizable;
+		});
+		Lua_helper.add_callback(lua, "getWindowScale", function() {
+			return Lib.application.window.scale;
+		});
+		Lua_helper.add_callback(lua, "getWindowTextInputEnabled", function() {
+			return Lib.application.window.textInputEnabled;
+		});
+		Lua_helper.add_callback(lua, "getFrameRate", function() {
+			return Lib.application.window.frameRate;
+		});
+		Lua_helper.add_callback(lua, "closeWindow", function() {
+			Lib.application.window.close();
+		});
+		Lua_helper.add_callback(lua, "resizeWindow", function(width:Int, height:Int) {
+			Lib.application.window.resize(width, height);
+		});
+		Lua_helper.add_callback(lua, "warpMouse", function(x:Int, y:Int) {
+			return Lib.application.window.warpMouse(x, y);
+		});
+
 		Lua_helper.add_callback(lua, "addNewGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25) {
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
