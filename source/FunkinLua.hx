@@ -1111,11 +1111,11 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getDeviceName", function() {
 			return Lib.application.window.application.window.application.window.display.name; // lol
 		});
-		Lua_helper.add_callback(lua, "getBordeless", function() {
-			return Lib.application.window.bordeless;
+		Lua_helper.add_callback(lua, "getBorderless", function() {
+			return Lib.application.window.borderless;
 		});
-		Lua_helper.add_callback(lua, "setBordeless", function(v:Bool) {
-			return Lib.application.window.bordeless = v;
+		Lua_helper.add_callback(lua, "setBorderless", function(v:Bool) {
+			return Lib.application.window.borderless = v;
 		});
 		Lua_helper.add_callback(lua, "getFullscreen", function() {
 			return Lib.application.window.fullscreen;
