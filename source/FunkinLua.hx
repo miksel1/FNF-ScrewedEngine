@@ -1162,11 +1162,20 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getWindowTitle", function() {
 			return Lib.application.window.title;
 		});
+		Lua_helper.add_callback(lua, "setWindowTitle", function(newTitle:String) {
+			return Lib.application.window.title = newTitle;
+		});
 		Lua_helper.add_callback(lua, "getWindowX", function() {
 			return Lib.application.window.x;
 		});
+		Lua_helper.add_callback(lua, "setWindowX", function(x:Int) {
+			return Lib.application.window.x = x;
+		});
 		Lua_helper.add_callback(lua, "getWindowY", function() {
 			return Lib.application.window.y;
+		});
+		Lua_helper.add_callback(lua, "setWindowY", function(y:Int) {
+			return Lib.application.window.y = y;
 		});
 		Lua_helper.add_callback(lua, "getResizable", function() {
 			return Lib.application.window.resizable;
@@ -1177,8 +1186,14 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getWindowTextInputEnabled", function() {
 			return Lib.application.window.textInputEnabled;
 		});
+		Lua_helper.add_callback(lua, "setWindowTextInputEnabled", function(v:Bool) {
+			return Lib.application.window.textInputEnabled = v;
+		});
 		Lua_helper.add_callback(lua, "getFrameRate", function() {
 			return Lib.application.window.frameRate;
+		});
+		Lua_helper.add_callback(lua, "setFrameRate", function(framerate:Float) {
+			return Lib.application.window.frameRate = framerate;
 		});
 		Lua_helper.add_callback(lua, "closeWindow", function() {
 			Lib.application.window.close();
@@ -1187,7 +1202,7 @@ class FunkinLua {
 			Lib.application.window.resize(width, height);
 		});
 		Lua_helper.add_callback(lua, "warpMouse", function(x:Int, y:Int) {
-			return Lib.application.window.warpMouse(x, y);
+			Lib.application.window.warpMouse(x, y);
 		});
 
 		Lua_helper.add_callback(lua, "addNewGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25) {
