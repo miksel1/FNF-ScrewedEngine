@@ -37,17 +37,9 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 _____________________________________
 
 # Features
+  * Some new Achievements for good spammers.
 
-## Attractive animated dialogue boxes:
-
-![](https://user-images.githubusercontent.com/44785097/127706669-71cd5cdb-5c2a-4ecc-871b-98a276ae8070.gif)
-
-
-## Mod Support
-* Probably one of the main points of this engine, you can code in .lua files outside of the source code, making your own weeks without even messing with the source!
-* Comes with a Mod Organizing/Disabling Menu.
-
-## D&B Features:
+# D&B Features:
    * Adds multiple features from mods like Strident Crisis like:
 ### Freeplay Sections:
    * Explains itself, Freeplay Sections with a ***new system***: songs that start with "--" and end with "--", if will add it to a new section
