@@ -5551,6 +5551,10 @@ class PlayState extends MusicBeatState
 				}
 				switch(achievementName)
 				{
+					case 'bro_what':
+						if(!cpuControlled && totals > 8000) {
+							unlock = true;
+						}
 					case 'ur_bad':
 						if(ratingPercent < 0.2 && !practiceMode) {
 							unlock = true;
