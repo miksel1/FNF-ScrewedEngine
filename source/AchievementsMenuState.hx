@@ -21,7 +21,7 @@ class AchievementsMenuState extends MusicBeatState
 {
 	#if ACHIEVEMENTS_ALLOWED
 	var options:Array<String> = [];
-	private var grpOptions:FlxTypedGroup<Alphabet>;
+	private var grpOptions:FlxTypedGroup<Dynamic>;
 	private static var curSelected:Int = 0;
 	private var achievementArray:Array<AttachedAchievement> = [];
 	private var achievementIndex:Array<Int> = [];
@@ -39,7 +39,7 @@ class AchievementsMenuState extends MusicBeatState
 		menuBG.antialiasing = ClientPrefs.globalAntialiasing;
 		add(menuBG);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
+		grpOptions = new FlxTypedGroup<Dynamic>();
 		add(grpOptions);
 
 		Achievements.loadAchievements();
@@ -52,16 +52,29 @@ class AchievementsMenuState extends MusicBeatState
 
 		for (i in 0...options.length) {
 			var achieveName:String = Achievements.achievementsStuff[achievementIndex[i]][2];
-			var optionText:Alphabet = new Alphabet(280, 300, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
-			optionText.isMenuItem = true;
-			optionText.targetY = i - curSelected;
-			optionText.snapToPosition();
-			grpOptions.add(optionText);
+			if(achieveName != 'bro_what') {
+				var optionText:Alphabet = new Alphabet(280, 300, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
+				optionText.isMenuItem = true;
+				optionText.targetY = i - curSelected;
+				optionText.snapToPosition();
+				grpOptions.add(optionText);
 
-			var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
-			icon.sprTracker = optionText;
-			achievementArray.push(icon);
-			add(icon);
+				var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
+				icon.sprTracker = optionText;
+				achievementArray.push(icon);
+				add(icon);
+			} else {
+				var optionText:OtherAlphabet = new OtherAlphabet(280, 300, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
+				optionText.isMenuItem = true;
+				optionText.targetY = i - curSelected;
+				optionText.snapToPosition();
+				grpOptions.add(optionText);
+
+				var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
+				icon.sprTracker = optionText;
+				achievementArray.push(icon);
+				add(icon);
+			}
 		}
 
 		descText = new FlxText(150, 600, 980, "", 32);
