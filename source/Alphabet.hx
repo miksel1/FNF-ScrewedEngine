@@ -22,6 +22,7 @@ enum Alignment
 class Alphabet extends FlxSpriteGroup
 {
 	public var text(default, set):String;
+	public var image(default, set):String;
 
 	public var bold:Bool = false;
 	public var letters:Array<AlphaCharacter> = [];
@@ -39,7 +40,7 @@ class Alphabet extends FlxSpriteGroup
 	public var distancePerItem:FlxPoint = new FlxPoint(20, 120);
 	public var startPosition:FlxPoint = new FlxPoint(0, 0); //for the calculations
 
-	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = true)
+	public function new(x:Float, y:Float, text:String = "", bold:Bool = true, image:String = 'alphabet')
 	{
 		super(x, y);
 
@@ -47,6 +48,7 @@ class Alphabet extends FlxSpriteGroup
 		this.startPosition.y = y;
 		this.bold = bold;
 		this.text = text;
+		this.image = image;
 	}
 
 	public function setAlignmentFromString(align:String)
@@ -83,7 +85,7 @@ class Alphabet extends FlxSpriteGroup
 				default:
 					newOffset = 0;
 			}
-	
+
 			letter.offset.x -= letter.alignOffset;
 			letter.offset.x += newOffset;
 			letter.alignOffset = newOffset;
@@ -98,6 +100,17 @@ class Alphabet extends FlxSpriteGroup
 		updateAlignment();
 		this.text = newText;
 		return newText;
+	}
+
+	private function set_image(v:String):String {
+		if(v == image)
+			return v;
+		image = v;
+		for (let in letters) {
+			let.image = image;
+		}
+		updateAlignment();
+		return image;
 	}
 
 	public function clearLetters()
@@ -191,7 +204,6 @@ class Alphabet extends FlxSpriteGroup
 		rows = 0;
 		for (character in newText.split(''))
 		{
-			
 			if(character != '\n')
 			{
 				var spaceChar:Bool = (character == " " || (bold && character == "_"));
@@ -211,7 +223,7 @@ class Alphabet extends FlxSpriteGroup
 					}
 					consecutiveSpaces = 0;
 
-					var letter:AlphaCharacter = new AlphaCharacter(xPos, rows * Y_PER_ROW * scaleY, character, bold, this);
+					var letter:AlphaCharacter = new AlphaCharacter(xPos, rows * Y_PER_ROW * scaleY, character, bold, this, image);
 					letter.x += letter.letterOffset[0] * scaleX;
 					letter.y -= letter.letterOffset[1] * scaleY;
 					letter.row = rows;
@@ -275,7 +287,7 @@ class AlphaCharacter extends FlxSprite
 		'm'  => null, 'n'  => null, 'o'  => null, 'p'  => null, 'q'  => null, 'r'  => null,
 		's'  => null, 't'  => null, 'u'  => null, 'v'  => null, 'w'  => null, 'x'  => null,
 		'y'  => null, 'z'  => null,
-		
+
 		//numbers
 		'0'  => null, '1'  => null, '2'  => null, '3'  => null, '4'  => null,
 		'5'  => null, '6'  => null, '7'  => null, '8'  => null, '9'  => null,
@@ -323,11 +335,11 @@ class AlphaCharacter extends FlxSprite
 
 	public var row:Int = 0;
 	public var rowWidth:Float = 0;
-	public function new(x:Float, y:Float, character:String, bold:Bool, parent:Alphabet)
+	public function new(x:Float, y:Float, character:String, bold:Bool, parent:Alphabet, image:String = 'alphabet')
 	{
 		super(x, y);
 		this.parent = parent;
-		image = 'alphabet';
+		this.image = image;
 		antialiasing = ClientPrefs.globalAntialiasing;
 
 		var curLetter:Letter = allLetters.get('?');
