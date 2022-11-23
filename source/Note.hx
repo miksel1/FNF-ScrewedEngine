@@ -74,6 +74,8 @@ class Note extends FlxSprite
 	public var offsetAngle:Float = 0;
 	public var multAlpha:Float = 1;
 	public var multSpeed(default, set):Float = 1;
+	//public var scrollSpeedType:String = 'default';
+	public var multScroll(default, set):Float = 1;
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
@@ -100,6 +102,9 @@ class Note extends FlxSprite
 		multSpeed = value;
 		//trace('fuck cock');
 		return value;
+	}
+	private function set_multScroll(v:Float):Float {
+		return multScroll = v;
 	}
 
 	public function resizeByRatio(ratio:Float) //haha funny twitter shit
@@ -152,6 +157,8 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+				case 'Random Scroll':
+					multScroll = FlxG.random.float(eventVal1 == null ? 0.5 : Std.parseFloat(eventVal1), eventVal2 == null ? 1.6 : Std.parseFloat(eventVal2));
 			}
 			noteType = value;
 		}
@@ -195,7 +202,7 @@ class Note extends FlxSprite
 
 		// trace(prevNote);
 
-		if(prevNote!=null)
+		if(prevNote != null)
 			prevNote.nextNote = this;
 
 		if (isSustainNote && prevNote != null)

@@ -34,6 +34,8 @@ class ClientPrefs {
 	public static var checkForUpdates:Bool = true;
 	public static var comboStacking = true;
 	public static var crazyCounter:Bool = true;
+	public static var maxNotes:Int = 5000;
+	public static var showHealth:Bool = true;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -101,6 +103,8 @@ class ClientPrefs {
 	}
 
 	public static function saveSettings() {
+		FlxG.save.data.showHealth = showHealth;
+		FlxG.save.data.maxNotes = maxNotes;
 		FlxG.save.data.crazyCounter = crazyCounter;
 		FlxG.save.data.downScroll = downScroll;
 		FlxG.save.data.middleScroll = middleScroll;
@@ -149,7 +153,15 @@ class ClientPrefs {
 	}
 
 	public static function loadPrefs() {
-		if(FlxG.save.data.crazyCounter != null) crazyCounter = FlxG.save.data.crazyCounter;
+		if(FlxG.save.data.showHealth != null)
+			showHealth = FlxG.save.data.showHealth;
+
+		if(FlxG.save.data.maxNotes != null)
+			maxNotes = FlxG.save.data.maxNotes;
+
+		if(FlxG.save.data.crazyCounter != null)
+			crazyCounter = FlxG.save.data.crazyCounter;
+	
 		if(FlxG.save.data.downScroll != null) {
 			downScroll = FlxG.save.data.downScroll;
 		}

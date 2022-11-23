@@ -16,7 +16,7 @@ class AttachedSprite extends FlxSprite
 	public var copyAlpha:Bool = true;
 	public var copyVisible:Bool = false;
 
-	public function new(?file:String = null, ?anim:String = null, ?library:String = null, ?loop:Bool = false)
+	public function new(?file:String = null, ?anim:String, ?library:String, loop:Bool = false)
 	{
 		super();
 		if(anim != null) {

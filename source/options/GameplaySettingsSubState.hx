@@ -70,6 +70,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Show Health Percent',
+			'If unchecked, you will now see how many health you\nhave',
+			'showHealth',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",
 			'noReset',

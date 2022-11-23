@@ -1205,6 +1205,7 @@ class FunkinLua {
 			Lib.application.window.warpMouse(x, y);
 		});
 
+		//Lua_helper.add_callback(lua, "addWiggleEffect");
 		Lua_helper.add_callback(lua, "addNewGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25) {
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
@@ -1215,7 +1216,7 @@ class FunkinLua {
 				glitchShader.waveSpeed = waveSpeed;
 
 				stuff.shader = glitchShader.shader;
-				PlayState.instance.modchartGlitchEffects.set(tag, glitchShader);
+				PlayState.instance.modchartWiggleEffects.set(tag, glitchShader);
 				return true;
 			} else {
 				luaTrace('addNewGlitchEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
@@ -1235,7 +1236,7 @@ class FunkinLua {
 					glitchShader.waveSpeed = waveSpeed;
 
 					stuff.shader = glitchShader.shader;
-					PlayState.instance.modchartGlitchEffects.set(tag, glitchShader);
+					PlayState.instance.modchartWiggleEffects.set(tag, glitchShader);
 				} else {
 					stuff.shader = PlayState.the3DWorldEffect.shader;
 				}

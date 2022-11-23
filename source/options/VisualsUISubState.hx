@@ -89,6 +89,16 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.decimals = 1;
 		addOption(option);
 
+		var option:Option = new Option('Max Notes in Freeplay',
+			'How much notes you can play?',
+			'maxNotes',
+			'int',
+			5000);
+		option.scrollSpeed = 1;
+		option.minValue = 100;
+		option.changeValue = 1;
+		addOption(option);
+
 		#if !mobile
 		var option:Option = new Option('FPS Counter',
 			'If unchecked, hides FPS Counter.',
@@ -114,7 +124,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			['None', 'Breakfast', 'Tea Time']);
 		addOption(option);
 		option.onChange = onChangePauseMusic;
-		
+
 		#if CHECK_FOR_UPDATES
 		var option:Option = new Option('Check for Updates',
 			'On Release builds, turn this on to check for updates when you start the game.',

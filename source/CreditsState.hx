@@ -228,7 +228,7 @@ class CreditsState extends MusicBeatState
 				quitting = true;
 			}
 		}
-		
+
 		for (item in grpOptions.members)
 		{
 			if(!item.bold)

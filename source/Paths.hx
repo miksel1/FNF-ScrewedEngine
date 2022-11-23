@@ -85,7 +85,7 @@ class Paths
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
-	public static function clearStoredMemory(?cleanUnused:Bool = false) {
+	public static function clearStoredMemory(cleanUnused:Bool = false) {
 		// clear anything not in the tracked assets list
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())
@@ -119,7 +119,7 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
-	public static function getPath(file:String, type:AssetType, ?library:Null<String> = null)
+	public static function getPath(file:String, ?type:AssetType, ?library:Null<String> = null)
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
@@ -239,7 +239,7 @@ class Paths
 		return returnAsset;
 	}
 
-	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
+	static public function getTextFromFile(key:String, ignoreMods:Bool = false):String
 	{
 		#if sys
 		#if MODS_ALLOWED
@@ -335,16 +335,18 @@ class Paths
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	public static function returnGraphic(key:String, ?library:String) {
 		#if MODS_ALLOWED
-		var modKey:String = modsImages(key);
-		if(FileSystem.exists(modKey)) {
-			if(!currentTrackedAssets.exists(modKey)) {
-				var newBitmap:BitmapData = BitmapData.fromFile(modKey);
-				var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(newBitmap, false, modKey);
-				newGraphic.persist = true;
-				currentTrackedAssets.set(modKey, newGraphic);
+		if(!key.contains('Wither')) {
+			var modKey:String = modsImages(key);
+			if(FileSystem.exists(modKey)) {
+				if(!currentTrackedAssets.exists(modKey)) {
+					var newBitmap:BitmapData = BitmapData.fromFile(modKey);
+					var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(newBitmap, false, modKey);
+					newGraphic.persist = true;
+					currentTrackedAssets.set(modKey, newGraphic);
+				}
+				localTrackedAssets.push(modKey);
+				return currentTrackedAssets.get(modKey);
 			}
-			localTrackedAssets.push(modKey);
-			return currentTrackedAssets.get(modKey);
 		}
 		#end
 

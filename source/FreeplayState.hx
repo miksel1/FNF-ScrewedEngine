@@ -479,28 +479,49 @@ class FreeplayState extends MusicBeatState
 				}*/
 				trace(poop);
 
-				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
-				PlayState.isStoryMode = false;
-				PlayState.storyDifficulty = curDifficulty;
+				var songnsn = Song.loadFromJson(poop, songLowercase);
 
-				trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
-				if (colorTween != null)
-				{
-					colorTween.cancel();
+				var max = 0;
+				for(section in songnsn.notes) {
+					if(section.sectionNotes.length > max)
+						max = section.sectionNotes.length;
 				}
-
-				if (FlxG.keys.pressed.SHIFT)
+				if (max > ClientPrefs.maxNotes)
 				{
-					LoadingState.loadAndSwitchState(new ChartingState());
-				}
-				else
-				{
-					LoadingState.loadAndSwitchState(new PlayState());
-				}
+					openSubState(new Prompt(
+						"The actual song has more than " + ClientPrefs.maxNotes + " notes\n\nProceed?",
+						0,
+						function()
+						{
+							PlayState.SONG = songnsn;
+							PlayState.isStoryMode = false;
+							PlayState.storyDifficulty = curDifficulty;
 
-				FlxG.sound.music.volume = 0;
+							trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
+							if (colorTween != null)
+							{
+								colorTween.cancel();
+							}
 
-				destroyFreeplayVocals();
+							if (FlxG.keys.pressed.SHIFT)
+							{
+								LoadingState.loadAndSwitchState(new ChartingState());
+							}
+							else
+							{
+								LoadingState.loadAndSwitchState(new PlayState());
+							}
+
+							FlxG.sound.music.volume = 0;
+
+							destroyFreeplayVocals();
+						},
+						function()
+						{
+							FlxG.sound.play(Paths.sound('cancelMenu'));
+						}
+					));
+				}
 			}
 			else if (reset && Song.isValidSong(songs[curSelected].songName))
 			{
