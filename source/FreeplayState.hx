@@ -365,20 +365,20 @@ class FreeplayState extends MusicBeatState
 
 		if (!blockInput)
 		{
-			var up = controls.UI_UP && canWrite;
-			var down = controls.UI_DOWN && canWrite;
-			var upP = controls.UI_UP_P && canWrite;
-			var downP = controls.UI_DOWN_P && canWrite;
-			var accepted = controls.ACCEPT && canWrite && ahg;
-			var leftP = controls.UI_LEFT_P && canWrite;
-			var rightP = controls.UI_RIGHT_P && canWrite;
-			var space = FlxG.keys.justPressed.SPACE && canWrite;
-			var ctrl = FlxG.keys.justPressed.CONTROL && canWrite;
-			var back = controls.BACK && canWrite;
-			var reset = controls.RESET && canWrite;
+			var up = controls.UI_UP;
+			var down = controls.UI_DOWN;
+			var upP = controls.UI_UP_P;
+			var downP = controls.UI_DOWN_P;
+			var accepted = controls.ACCEPT && ahg;
+			var leftP = controls.UI_LEFT_P;
+			var rightP = controls.UI_RIGHT_P;
+			var space = FlxG.keys.justPressed.SPACE;
+			var ctrl = FlxG.keys.justPressed.CONTROL;
+			var back = controls.BACK;
+			var reset = controls.RESET;
 
 			var shiftMult:Int = 1;
-			if (FlxG.keys.pressed.SHIFT && canWrite)
+			if (FlxG.keys.pressed.SHIFT)
 				shiftMult = 3;
 
 			if (songs.length > 1)
