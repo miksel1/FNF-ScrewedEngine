@@ -43,10 +43,26 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //Load stupidly first for getting the file size
+			var frames:Array<Int> = [0, 1, 2];
+			var finalWidth = 3;
+			switch (file.width)
+			{
+				case 450:
+					finalWidth = 3;
+					frames = [0, 1, 2];
+					iconOffsets[0] = (width - 450) / 3;
+					iconOffsets[1] = (width - 450) / 3;
+				case 300:
+					finalWidth = 2;
+					frames = [0, 1];
+					iconOffsets[0] = (width - 300) / 2;
+					iconOffsets[1] = (width - 300) / 2;
+				case 150:
+					finalWidth = 1;
+					frames = [0];
+					iconOffsets[0] = (width - 150) / 1;
+			}
 			loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / 2;
-			iconOffsets[1] = (width - 150) / 2;
-			iconOffsets[2] = (width - 150) / 2;
 			updateHitbox();
 
 			animation.add(char, [0, 1, 2], 0, false, isPlayer);
