@@ -18,7 +18,7 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 * miksel1 - The one who broke most of the code at the beginning
 * Dante - Strident Engine coder
 * not capcha - Helping with _Legacy_ Freeplay Sections
-* ThermiteFe8 - Made the winning icon code
+* BeastlyGhost - Help with winning icons
 
 ## Psych Engine Credits:
 * Shadow Mario - Programmer
