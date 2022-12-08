@@ -364,7 +364,7 @@ class ChartingState extends MusicBeatState
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
 		FlxG.mouse.visible = true;
-		//FlxG.save.bind('funkin', 'ninjamuffin99');
+		//FlxG.save.bind('funkin' #if (flixel < "5.0.0"), 'ninjamuffin99' #end);
 
 		tempBpm = _song.bpm;
 
@@ -3348,7 +3348,7 @@ class ChartingState extends MusicBeatState
 		dateNow = dateNow.replace(" ", "_");
 		dateNow = dateNow.replace(":", "'");
 
-		path = "./crash/" + "StridentEngine_" + dateNow + ".txt";
+		path = "./crash/" + "ScrewedEngine_" + dateNow + ".txt";
 
 		for (stackItem in callStack)
 		{

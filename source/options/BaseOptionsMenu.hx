@@ -151,6 +151,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		if(nextAccept <= 0)
 		{
+			var bla = FlxG.keys.pressed.SHIFT ? curOption.changeValueShift : 1;
 			var usesCheckbox = true;
 			if(curOption.type != 'bool')
 			{
@@ -170,10 +171,14 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				if(controls.UI_LEFT || controls.UI_RIGHT) {
 					var pressed = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
 					if(holdTime > 0.5 || pressed) {
-						if(pressed) {
+						if(pressed)
+						{
 							var add:Dynamic = null;
 							if(curOption.type != 'string') {
-								add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
+								if(controls.UI_LEFT)
+									add = -curOption.changeValue * bla;
+								else
+									add = curOption.changeValue * bla;
 							}
 
 							switch(curOption.type)
@@ -213,7 +218,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 							curOption.change();
 							FlxG.sound.play(Paths.sound('scrollMenu'));
 						} else if(curOption.type != 'string') {
-							holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1);
+							holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1) * bla;
 							if(holdValue < curOption.minValue) holdValue = curOption.minValue;
 							else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 

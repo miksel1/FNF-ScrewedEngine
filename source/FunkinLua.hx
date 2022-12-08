@@ -2673,7 +2673,7 @@ class FunkinLua {
 			if(!PlayState.instance.modchartSaves.exists(name))
 			{
 				var save:FlxSave = new FlxSave();
-				save.bind(name, folder);
+				save.bind(name #if (flixel < "5.0.0"), folder #end);
 				PlayState.instance.modchartSaves.set(name, save);
 				return;
 			}

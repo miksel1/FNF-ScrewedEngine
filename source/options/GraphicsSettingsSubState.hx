@@ -67,7 +67,6 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			'int',
 			60);
 		addOption(option);
-
 		option.minValue = 60;
 		option.maxValue = 240;
 		option.displayFormat = '%v FPS';

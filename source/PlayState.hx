@@ -1270,7 +1270,7 @@ class PlayState extends MusicBeatState
 				'['
 				+ CoolUtil.difficultyString()
 				+ '] - '
-				+ '${SONG.song} by ${SONG.credit} - Screwed Edition', 74);
+				+ '${SONG.song} by ${SONG.credit} - Screwed Engine', 74);
 			watermarkTxt.scrollFactor.set();
 			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			watermarkTxt.size = 18;
@@ -1280,7 +1280,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			watermarkTxt = new FlxText(10, healthBarBG.y - 30, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} - Screwed Edition', 74);
+			watermarkTxt = new FlxText(10, healthBarBG.y - 30, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} - Screwed Engine', 74);
 			watermarkTxt.scrollFactor.set();
 			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			watermarkTxt.size = 18;
@@ -1537,7 +1537,11 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			startCountdown();
+			switch(daSong) {
+				// case 'freeplay song with cutscene':
+				default:
+					startCountdown();
+			}
 		}
 		RecalculateRating();
 
@@ -1586,6 +1590,8 @@ class PlayState extends MusicBeatState
 					Paths.sound(key);
 				case 'music':
 					Paths.music(key);
+				case 'video':
+					Paths.video(key);
 			}
 		}
 		if (SONG.event7 == 'Play Video')
@@ -3527,7 +3533,7 @@ class PlayState extends MusicBeatState
 		if (health > maxHealth)
 			health = maxHealth;
 
-		if(iconP1.animation.frames =- 3) {
+		if(iconP1.animation.frames == 3) {
 			if (healthBar.percent < 20)
 				iconP1.animation.curAnim.curFrame = 1;
 			else if (healthBar.percent > 80)
@@ -3682,8 +3688,8 @@ class PlayState extends MusicBeatState
 			}
 			else if (boyfriend.animation.curAnim != null
 				&& boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration
-					&& boyfriend.animation.curAnim.name.startsWith('sing')
-					&& !boyfriend.animation.curAnim.name.endsWith('miss'))
+				&& boyfriend.animation.curAnim.name.startsWith('sing')
+				&& !boyfriend.animation.curAnim.name.endsWith('miss'))
 			{
 				boyfriend.dance();
 				// boyfriend.animation.curAnim.finish();

@@ -48,14 +48,14 @@ class GlitchEffect
         shader.uEnabled.value = [Enabled];
         return v;
     }
-    
+
     function set_waveFrequency(v:Float):Float
     {
         waveFrequency = v;
         shader.uFrequency.value = [waveFrequency];
         return v;
     }
-    
+
     function set_waveAmplitude(v:Float):Float
     {
         waveAmplitude = v;
@@ -91,14 +91,14 @@ class DistortBGEffect
         shader.uSpeed.value = [waveSpeed];
         return v;
     }
-    
+
     function set_waveFrequency(v:Float):Float
     {
         waveFrequency = v;
         shader.uFrequency.value = [waveFrequency];
         return v;
     }
-    
+
     function set_waveAmplitude(v:Float):Float
     {
         waveAmplitude = v;
@@ -235,19 +235,19 @@ class GlitchShader extends FlxShader
 
     //modified version of the wave shader to create weird garbled corruption like messes
     uniform float uTime;
-    
+
     /**
      * How fast the waves move over time
      */
     uniform float uSpeed;
-    
+
     /**
      * Number of waves over time
      */
     uniform float uFrequency;
 
     uniform bool uEnabled;
-    
+
     /**
      * How much the pixels are going to stretch over the waves
      */
@@ -257,7 +257,7 @@ class GlitchShader extends FlxShader
     {
         float x = 0.0;
         float y = 0.0;
-        
+
         float offsetX = sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
         float offsetY = sin(pt.x * uFrequency - uTime * uSpeed) * (uWaveAmplitude / pt.y * pt.x);
         pt.x += offsetX; // * (pt.y - 1.0); // <- Uncomment to stop bottom part of the screen from moving
@@ -284,7 +284,6 @@ class InvertShader extends FlxShader
     #if SHADERS_ENABLED
     @:glFragmentSource('
     #pragma header
-    
 
     vec4 sineWave(vec4 pt)
     {
@@ -315,17 +314,17 @@ class DistortBGShader extends FlxShader
 
     //gives the character a glitchy, distorted outline
     uniform float uTime;
-    
+
     /**
      * How fast the waves move over time
      */
     uniform float uSpeed;
-    
+
     /**
      * Number of waves over time
      */
     uniform float uFrequency;
-    
+
     /**
      * How much the pixels are going to stretch over the waves
      */
@@ -335,7 +334,7 @@ class DistortBGShader extends FlxShader
     {
         float x = 0.0;
         float y = 0.0;
-        
+
         float offsetX = sin(pt.x * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
         float offsetY = sin(pt.y * uFrequency - uTime * uSpeed) * (uWaveAmplitude);
         pt.x += offsetX; // * (pt.y - 1.0); // <- Uncomment to stop bottom part of the screen from moving
@@ -372,19 +371,19 @@ class PulseShader extends FlxShader
 
     //modified version of the wave shader to create weird garbled corruption like messes
     uniform float uTime;
-    
+
     /**
      * How fast the waves move over time
      */
     uniform float uSpeed;
-    
+
     /**
      * Number of waves over time
      */
     uniform float uFrequency;
 
     uniform bool uEnabled;
-    
+
     /**
      * How much the pixels are going to stretch over the waves
      */
@@ -426,22 +425,22 @@ class BlockedGlitchShader extends FlxShader
 
     // ---- gllock required fields -----------------------------------------------------------------------------------------
     #define RATE 0.75
-    
+
     uniform float time;
     uniform float end;
     uniform sampler2D imageData;
     uniform vec2 screenSize;
     // ---------------------------------------------------------------------------------------------------------------------
-    
+
     float rand(vec2 co){
       return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453) * 2.0 - 1.0;
     }
-    
+
     float offset(float blocks, vec2 uv) {
       float shaderTime = time*RATE;
       return rand(vec2(shaderTime, floor(uv.y * blocks)));
     }
-    
+
     void main(void) {
       vec2 uv = openfl_TextureCoordv;
       gl_FragColor = texture(bitmap, uv);

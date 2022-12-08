@@ -157,7 +157,12 @@ class Song
 		return swagShit;
 	}
 
-	public static function isValidSong(songName:String) {
+	/**
+	 * Returns `true` if the input does not starts with "--" and it does not ends with "--"
+	 * @param songName
+     * @return is a Valid song?
+	 */
+	public inline static function isValidSong(songName:String):Bool {
 		return !(songName.startsWith('--') && songName.endsWith('--'));
 	}
 }

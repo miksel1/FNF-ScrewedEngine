@@ -94,9 +94,10 @@ class VisualsUISubState extends BaseOptionsMenu
 			'maxNotes',
 			'int',
 			5000);
-		option.scrollSpeed = 1;
 		option.minValue = 100;
 		option.changeValue = 1;
+		option.scrollSpeed = 100;
+		option.changeValueShift = 4;
 		addOption(option);
 
 		#if !mobile
