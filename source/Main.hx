@@ -134,7 +134,7 @@ class Main extends Sprite
 	#if CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
-		if (PlayState.chartingMode)
+		if (FlxG.state is editors.ChartingState)
 		{
 			editors.ChartingState.instance.onCrash(e);
 		}
@@ -148,7 +148,7 @@ class Main extends Sprite
 			dateNow = dateNow.replace(" ", "_");
 			dateNow = dateNow.replace(":", "'");
 
-			path = "./crash/" + "StridentEngine_" + dateNow + ".txt";
+			path = "./crash/" + "ScrewedEngine_" + dateNow + ".txt";
 
 			for (stackItem in callStack)
 			{

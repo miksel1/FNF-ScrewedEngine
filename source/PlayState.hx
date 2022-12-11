@@ -5937,7 +5937,7 @@ class PlayState extends MusicBeatState
 					phillyWindow.alpha = 1;
 				}
 
-				if (curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8)
+				if (curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8 && !trainSound.playing)
 				{
 					trainCooldown = FlxG.random.int(-4, 0);
 					trainStart();
