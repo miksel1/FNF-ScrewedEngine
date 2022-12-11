@@ -134,7 +134,7 @@ class Main extends Sprite
 	#if CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
-		if (FlxG.state is ChartingState)
+		if (FlxG.state is editors.ChartingState)
 		{
 			editors.ChartingState.instance.onCrash(e);
 		}
