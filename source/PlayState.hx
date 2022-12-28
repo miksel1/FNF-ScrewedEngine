@@ -4857,6 +4857,9 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
+		if(cpuControlled)
+			return; // fuck it
+
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
 		rating.cameras = [camHUD];
 		rating.screenCenter();
@@ -5127,7 +5130,7 @@ class PlayState extends MusicBeatState
 	{
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
-		if (!cpuControlled && startedCountdown && !paused && key > -1)
+		if (!cpuControlled && startedCountdown && !paused && key > -1 && canPlayerLight)
 		{
 			var spr:StrumNote = playerStrums.members[key];
 			if (spr != null)
@@ -5198,20 +5201,19 @@ class PlayState extends MusicBeatState
 				}
 			});
 
+			#if ACHIEVEMENTS_ALLOWED
 			if (parsedHoldArray.contains(true) && !endingSong)
 			{
-				#if ACHIEVEMENTS_ALLOWED
 				var achieve:String = checkForAchievement(['oversinging']);
 				if (achieve != null)
 				{
 					startAchievement(achieve);
 				}
-				#end
 			}
-			else if (boyfriend.animation.curAnim != null
+			else #end if (boyfriend.animation.curAnim != null
 				&& boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration
-					&& boyfriend.animation.curAnim.name.startsWith('sing')
-					&& !boyfriend.animation.curAnim.name.endsWith('miss'))
+				&& boyfriend.animation.curAnim.name.startsWith('sing')
+				&& !boyfriend.animation.curAnim.name.endsWith('miss'))
 			{
 				boyfriend.dance();
 				// boyfriend.animation.curAnim.finish();
@@ -5233,7 +5235,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function parseKeys(?suffix:String = ''):Array<Bool>
+	private function parseKeys(suffix:String = ''):Array<Bool>
 	{
 		var ret:Array<Bool> = [];
 		for (i in 0...controlArray.length)
@@ -5337,7 +5339,7 @@ class PlayState extends MusicBeatState
 			new FlxTimer().start(1 / 60, function(tmr:FlxTimer)
 			{
 				boyfriend.stunned = false;
-		});*/
+			});*/
 
 			if (boyfriend.hasMissAnimations)
 			{
@@ -5426,7 +5428,7 @@ class PlayState extends MusicBeatState
 			if (note.hitCausesMiss)
 			{
 				noteMiss(note);
-				if (!note.noteSplashDisabled && !note.isSustainNote)
+				if ((!note.noteSplashDisabled && !note.isSustainNote && canPlayerLight) || cpuControlled)
 				{
 					spawnNoteSplashOnNote(note);
 				}
@@ -5499,7 +5501,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			if (cpuControlled)
+			/*if (cpuControlled)
 			{
 				var time:Float = 0.15;
 				if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
@@ -5508,7 +5510,7 @@ class PlayState extends MusicBeatState
 				}
 				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)), time);
 			}
-			else
+			else*/
 			{
 				var spr = playerStrums.members[note.noteData];
 				if (spr != null)
@@ -5522,7 +5524,12 @@ class PlayState extends MusicBeatState
 			var isSus:Bool = note.isSustainNote; // GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 			var leData:Int = Math.round(Math.abs(note.noteData));
 			var leType:String = note.noteType;
-			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+			callOnLuas('goodNoteHit', [
+				notes.members.indexOf(note),
+				leData,
+				leType,
+				isSus
+			]);
 
 			if (!note.isSustainNote)
 			{
@@ -5569,7 +5576,11 @@ class PlayState extends MusicBeatState
 		}
 
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
+		splash.setupNoteSplash(
+			x, y,
+			data,
+			skin,
+			hue, sat, brt);
 		grpNoteSplashes.add(splash);
 	}
 
@@ -5750,7 +5761,7 @@ class PlayState extends MusicBeatState
 	var tankSpeed:Float = FlxG.random.float(5, 7);
 	var tankAngle:Float = FlxG.random.int(-90, 45);
 
-	function moveTank(?elapsed:Float = 0):Void
+	function moveTank(elapsed:Float = 0):Void
 	{
 		if (!inCutscene)
 		{
@@ -6026,6 +6037,9 @@ class PlayState extends MusicBeatState
 
 	function StrumPlayAnim(isDad:Bool, id:Int, time:Float)
 	{
+		if(cpuControlled)
+			return; // why not?
+
 		var spr:StrumNote = null;
 		if (isDad)
 		{
@@ -6092,6 +6106,9 @@ class PlayState extends MusicBeatState
 				ratingFC = "SFC";
 			if (goods > 0)
 				ratingFC = "GFC";
+			/*if (greats > 0) // time will pass...
+				ratingFC = "YFC";
+			*/
 			if (bads > 0 || shits > 0)
 				ratingFC = "FC";
 			if (songMisses > 0 && songMisses < 10)
