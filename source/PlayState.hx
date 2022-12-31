@@ -9,6 +9,7 @@ import Section.SwagSection;
 import Song.SwagSong;
 import effects.WiggleEffect;
 import effects.WiggleEffect.WiggleEffectType;
+import effects.MosaicEffect;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -111,6 +112,7 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map<String, effects.WiggleEffect>();
+	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map<String, effects.MosaicEffect>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -123,6 +125,7 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map();
+	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map();
 	#end
 
 	var judgementCounter:FlxText;
@@ -242,10 +245,11 @@ class PlayState extends MusicBeatState
 	public static var the3DWorldEffect:effects.WiggleEffect;
 	public static var the3DWorldEffectWavy:effects.WiggleEffect;
 	public static var wavyShader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
-	public static var activeWavy:Bool = false;
-
 	public static var screenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var anotherScreenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
+	public static var mosaicEffect:effects.MosaicEffect = new effects.MosaicEffect();
+
+	public static var activeWavy:Bool = false;
 
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
