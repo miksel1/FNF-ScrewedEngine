@@ -1052,8 +1052,14 @@ class ChartingState extends MusicBeatState
 		noteSplashesInputText = new FlxUIInputText(10, noteSkinInputText.y + 75, 150, _song.splashSkin, 8);
 		blockPressWhileTypingOn.push(noteSplashesInputText);
 
-		var reloadNotesButton:FlxButton = new FlxButton(10 + 5, noteSplashesInputText.y + 20, 'Change Notes', function() {
+		var reloadNotesButton:FlxButton = new FlxButton(10 + 5, noteSplashesInputText.y + 20, 'Reload Skin', function() {
+			if(noteSkinInputText.text.endsWith('.png'))
+				noteSkinInputText.text.replace('.png', '');
+
 			_song.arrowSkin = noteSkinInputText.text;
+			if(notePlayerSkinInputText.text.endsWith('.png'))
+				notePlayerSkinInputText.text.replace('.png', '');
+
 			_song.playerArrowSkin = notePlayerSkinInputText.text;
 			updateGrid();
 		});
@@ -2157,14 +2163,14 @@ class ChartingState extends MusicBeatState
 					if (curSelectedNote != null)
 					{
 						var controlArray:Array<Bool> = [ // this doesnt let you to put all the notes at the same time :'(
-							FlxG.keys.pressed.ONE,
-							FlxG.keys.pressed.TWO,
-							FlxG.keys.pressed.THREE,
-							FlxG.keys.pressed.FOUR,
-							FlxG.keys.pressed.FIVE,
-							FlxG.keys.pressed.SIX,
-							FlxG.keys.pressed.SEVEN,
-							FlxG.keys.pressed.EIGHT
+							(FlxG.keys.pressed.ONE && !FlxG.keys.justPressed.ONE),
+							(FlxG.keys.pressed.TWO && !FlxG.keys.justPressed.TWO),
+							(FlxG.keys.pressed.THREE && !FlxG.keys.justPressed.THREE),
+							(FlxG.keys.pressed.FOUR && !FlxG.keys.justPressed.FOUR),
+							(FlxG.keys.pressed.FIVE && !FlxG.keys.justPressed.FIVE),
+							(FlxG.keys.pressed.SIX && !FlxG.keys.justPressed.SIX),
+							(FlxG.keys.pressed.SEVEN && !FlxG.keys.justPressed.SEVEN),
+							(FlxG.keys.pressed.EIGHT && !FlxG.keys.justPressed.EIGHT)
 						];
 
 						if(controlArray.contains(true))
@@ -2613,8 +2619,6 @@ class ChartingState extends MusicBeatState
 		{
 			curSelectedNote[2] += value;
 			curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
-
-
 		}
 
 		updateNoteUI();
@@ -3292,7 +3296,7 @@ class ChartingState extends MusicBeatState
 		addTextToDebug("Problem saving Song data", FlxColor.RED);
 	}
 
-	function getSectionBeats(?section:Null<Int> = null)
+	function getSectionBeats(?section:Null<Int>)
 	{
 		if (section == null) section = curSec;
 		var val:Null<Float> = null;

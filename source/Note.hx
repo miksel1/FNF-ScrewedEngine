@@ -7,6 +7,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flash.display.BitmapData;
 import editors.ChartingState;
+import effects.ColorSwap;
 
 using StringTools;
 
@@ -19,7 +20,7 @@ typedef EventNote = {
 
 class Note extends FlxSprite
 {
-	public var extraData:Map<String,Dynamic> = [];
+	public var extraData:Map<String, Dynamic> = [];
 
 	public var strumTime:Float = 0;
 	public var mustPress:Bool = false;
@@ -58,7 +59,7 @@ class Note extends FlxSprite
 	public var lowPriority:Bool = false;
 
 	public static var swagWidth:Float = 160 * 0.7;
-	
+
 	private var colArray:Array<String> = ['purple', 'blue', 'green', 'red'];
 	private var pixelInt:Array<Int> = [0, 1, 2, 3];
 

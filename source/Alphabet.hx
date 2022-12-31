@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.ui.FlxUI.NamedBool;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;

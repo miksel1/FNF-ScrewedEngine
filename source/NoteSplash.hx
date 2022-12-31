@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
+import effects.ColorSwap;
 
 class NoteSplash extends FlxSprite
 {
@@ -10,7 +11,7 @@ class NoteSplash extends FlxSprite
 	private var idleAnim:String;
 	private var textureLoaded:String = null;
 
-	public function new(x:Float = 0, y:Float = 0, ?note:Int = 0) {
+	public function new(x:Float = 0, y:Float = 0, note:Int = 0) {
 		super(x, y);
 
 		var skin:String = 'noteSplashes';
@@ -58,7 +59,7 @@ class NoteSplash extends FlxSprite
 	}
 
 	override function update(elapsed:Float) {
-		if(animation.curAnim != null)if(animation.curAnim.finished) kill();
+		if(animation.curAnim != null) if(animation.curAnim.finished) kill();
 
 		super.update(elapsed);
 	}

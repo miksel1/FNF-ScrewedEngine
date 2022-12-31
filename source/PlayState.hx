@@ -5,10 +5,10 @@ import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
 #end
-import Shaders;
 import Section.SwagSection;
 import Song.SwagSong;
-import WiggleEffect.WiggleEffectType;
+import effects.WiggleEffect;
+import effects.WiggleEffect.WiggleEffectType;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -110,7 +110,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
-	public var modchartWiggleEffects:Map<String, WiggleEffect> = new Map<String, WiggleEffect>();
+	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map<String, effects.WiggleEffect>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -122,7 +122,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map();
 	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
-	public var modchartWiggleEffects:Map<String, WiggleEffect> = new Map();
+	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map();
 	#end
 
 	var judgementCounter:FlxText;
@@ -239,13 +239,13 @@ class PlayState extends MusicBeatState
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
-	public static var the3DWorldEffect:WiggleEffect;
-	public static var the3DWorldEffectWavy:WiggleEffect;
-	public static var wavyShader:Shaders.PulseEffect = new PulseEffect();
+	public static var the3DWorldEffect:effects.WiggleEffect;
+	public static var the3DWorldEffectWavy:effects.WiggleEffect;
+	public static var wavyShader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var activeWavy:Bool = false;
 
-	public static var screenshader:Shaders.PulseEffect = new PulseEffect();
-	public static var anotherScreenshader:Shaders.PulseEffect = new PulseEffect();
+	public static var screenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
+	public static var anotherScreenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
@@ -290,7 +290,7 @@ class PlayState extends MusicBeatState
 	var heyTimer:Float;
 
 	var bgGirls:BackgroundGirls;
-	var wiggleShit:WiggleEffect = new WiggleEffect();
+	var wiggleShit:effects.WiggleEffect = new WiggleEffect();
 	var bgGhouls:BGSprite;
 
 	var tankWatchtower:BGSprite;
@@ -1181,9 +1181,6 @@ class PlayState extends MusicBeatState
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
-
-		for (i in 0...playerStrums.length)
-			playerStrums.members[i].texture = SONG.playerArrowSkin; // YEAH!! I FUCKING FINALLY DID IT!!!
 
 		// startCountdown();
 
@@ -2737,11 +2734,10 @@ class PlayState extends MusicBeatState
 		var file:String = Paths.json(songName + '/events');
 		#if MODS_ALLOWED
 		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
-		{
 		#else
 		if (OpenFlAssets.exists(file))
-		{
 		#end
+		{
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
 			for (event in eventsData) // Event Notes
 			{
@@ -2841,6 +2837,13 @@ class PlayState extends MusicBeatState
 				if (!noteTypeMap.exists(swagNote.noteType))
 				{
 					noteTypeMap.set(swagNote.noteType, true);
+				}
+				if(swagNote.mustPress) { // fixeeeeddd
+					if(SONG.arrowSkin != SONG.playerArrowSkin && SONG.playerArrowSkin != '') {
+						if((swagNote.noteType == '' || swagNote.noteType == null) && swagNote.texture != SONG.playerArrowSkin) {
+							swagNote.texture = SONG.playerArrowSkin;
+						}
+					}
 				}
 			}
 			daBeats += 1;
@@ -3012,6 +3015,9 @@ class PlayState extends MusicBeatState
 
 			if (player == 1)
 			{
+				if(SONG.playerArrowSkin != SONG.arrowSkin)
+					babyArrow.texture = SONG.playerArrowSkin;
+
 				playerStrums.add(babyArrow);
 			}
 			else
@@ -5811,7 +5817,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.fadeTween = null;
 	}
 
-	public static function rainbowEyesore(shader:Shaders.PulseEffect, time:Int, speed:Float)
+	public static function rainbowEyesore(shader:effects.Shaders.PulseEffect, time:Int, speed:Float)
 	{
 		if (anotherScreenshader.Enabled)
 		{

@@ -33,8 +33,8 @@ import flixel.math.FlxMath;
 import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.FlxAssets.FlxShader;
-import WiggleEffect;
-import WiggleEffect.WiggleEffectType;
+import effects.WiggleEffect;
+import effects.WiggleEffect.WiggleEffectType;
 
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;

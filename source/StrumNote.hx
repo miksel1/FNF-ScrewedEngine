@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
+import effects.ColorSwap;
 
 using StringTools;
 
@@ -144,7 +145,7 @@ class StrumNote extends FlxSprite
 		super.update(elapsed);
 	}
 
-	public function playAnim(anim:String, ?force:Bool = false) {
+	public function playAnim(anim:String, force:Bool = false) {
 		animation.play(anim, force);
 		centerOffsets();
 		centerOrigin();

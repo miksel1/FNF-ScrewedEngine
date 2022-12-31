@@ -1,4 +1,4 @@
-package;
+package effects;
 
 // STOLEN FROM HAXEFLIXEL DEMO LOL
 import flixel.system.FlxAssets.FlxShader;

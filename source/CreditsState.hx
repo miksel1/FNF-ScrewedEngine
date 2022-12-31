@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.effects.chainable.FlxEffectSprite;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -13,6 +14,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.addons.effects.chainable.FlxGlitchEffect;
 #if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
@@ -37,6 +39,11 @@ class CreditsState extends MusicBeatState
 
 	var offsetThing:Float = -75;
 
+	var glitchedOnes:Array<String> = ['Wither362', 'Delta', 'miksel'];
+
+	var glitchEffect:FlxGlitchEffect;
+	var glitchBg:FlxEffectSprite;
+
 	override function create()
 	{
 		#if desktop
@@ -48,7 +55,10 @@ class CreditsState extends MusicBeatState
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		add(bg);
 		bg.screenCenter();
-		
+		add(glitchBg = new FlxEffectSprite(bg));
+		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
+		glitchBg.effects = [glitchEffect];
+
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
@@ -82,10 +92,14 @@ class CreditsState extends MusicBeatState
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Screwed Engine'],
-			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'0x390000'],
-			['Delta',				'delta',			'Strident Engine',												'https://www.youtube.com/c/Delta1248',		'0xFF00C6FF'],
+			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'0xFF5F5F'],
+			['Delta',				'delta',			'Strident Engine',												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
+			['miksel',				'miksel',			'Features and Idea Creator',									'https://www.youtube.com/@miksel_fnf',	'371893'],
+			['Join our Discord!',	'discord',			'Yeah! join us for features and more!',							'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
-			['Psych Engine Team'],
+			['Screwed Engine Contributors'],
+			['Memehoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
+			['Original Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
 			['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',		'B42F71'],
 			['shubs',				'shubs',			'Additional Programmer of Psych Engine',						'https://twitter.com/yoshubs',			'5E99DF'],
@@ -117,7 +131,9 @@ class CreditsState extends MusicBeatState
 		for (i in 0...creditsStuff.length)
 		{
 			var isSelectable:Bool = !unselectableCheck(i);
-			var image = (creditsStuff[i][0] == 'Wither362' || creditsStuff[i][0] == 'Delta') ? 'otherAlphabet' : 'alphabet';
+			var image = 'alphabet';
+			if(glitchedOnes.contains(creditsStuff[i][0]))
+			image = 'otherAlphabet';
 			var optionText:Alphabet = new Alphabet(
 				FlxG.width / 2,
 				300,
@@ -246,6 +262,7 @@ class CreditsState extends MusicBeatState
 				}
 			}
 		}
+
 		super.update(elapsed);
 	}
 
@@ -297,6 +314,7 @@ class CreditsState extends MusicBeatState
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
+		glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);
 	}
 
 	#if MODS_ALLOWED
