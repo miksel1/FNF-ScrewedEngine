@@ -1256,6 +1256,12 @@ class FunkinLua {
 			}
 			return false;
 		});
+		/*Lua_helper.add_callback(lua, "addMosaicEffect", function(tag:String, strengthX:Float. strengthY:Float) {
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				stuff.shader = 
+			}
+		});*/
 
 		// gay ass tweens
 		Lua_helper.add_callback(lua, "windowTweenX", function(tag:String, value:Dynamic, duration:Float, ease:String) {
