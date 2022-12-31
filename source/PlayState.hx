@@ -5420,7 +5420,7 @@ class PlayState extends MusicBeatState
 			if (cpuControlled && (note.ignoreNote || note.hitCausesMiss))
 				return;
 
-			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled)
+			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled && canPlayerLight)
 			{
 				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.hitsoundVolume);
 			}
@@ -5428,7 +5428,7 @@ class PlayState extends MusicBeatState
 			if (note.hitCausesMiss)
 			{
 				noteMiss(note);
-				if ((!note.noteSplashDisabled && !note.isSustainNote && canPlayerLight) || cpuControlled)
+				if (!note.noteSplashDisabled && !note.isSustainNote && canPlayerLight && !cpuControlled)
 				{
 					spawnNoteSplashOnNote(note);
 				}
@@ -5501,7 +5501,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			/*if (cpuControlled)
+			/*if (cpuControlled) // this causes lag
 			{
 				var time:Float = 0.15;
 				if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
@@ -5511,7 +5511,7 @@ class PlayState extends MusicBeatState
 				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)), time);
 			}
 			else*/
-			{
+			if(!cpuControlled) {
 				var spr = playerStrums.members[note.noteData];
 				if (spr != null)
 				{
