@@ -1,5 +1,6 @@
 package;
 
+import effects.MosaicEffect;
 import openfl.display.BitmapData;
 #if LUA_ALLOWED
 import llua.Lua;
@@ -1256,12 +1257,18 @@ class FunkinLua {
 			}
 			return false;
 		});
-		/*Lua_helper.add_callback(lua, "addMosaicEffect", function(tag:String, strengthX:Float. strengthY:Float) {
+		Lua_helper.add_callback(lua, "add" + /*'New' + */ "MosaicEffect", function(tag:String, strengthX:Float, strengthY:Float) {
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-				stuff.shader = 
+				var shader:MosaicEffect = new MosaicEffect();
+				shader.setStrength(strengthX, strengthY);
+				stuff.shader = shader.shader;
+				return true;
+			} else {
+				luaTrace('addMosaicEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
 			}
-		});*/
+			return false;
+		});
 
 		// gay ass tweens
 		Lua_helper.add_callback(lua, "windowTweenX", function(tag:String, value:Dynamic, duration:Float, ease:String) {
@@ -3479,11 +3486,11 @@ class FunkinLua {
 
 class ModchartSprite extends FlxSprite
 {
-	public var wasAdded:Bool = false;
+	public var wasAdded:Bool = false; // this is now used in this file...
 	public var animOffsets:Map<String, Array<Float>> = new Map<String, Array<Float>>();
 	//public var isInFront:Bool = false;
 
-	public function new(?x:Float = 0, ?y:Float = 0)
+	public function new(x:Float = 0, y:Float = 0)
 	{
 		super(x, y);
 		antialiasing = ClientPrefs.globalAntialiasing;

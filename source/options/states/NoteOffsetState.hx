@@ -1,4 +1,4 @@
-package options;
+package options.states;
 
 import flixel.util.FlxStringUtil;
 import flixel.tweens.FlxEase;
@@ -116,7 +116,7 @@ class NoteOffsetState extends MusicBeatState
 		add(comboNums);
 
 		var seperatedScore:Array<Int> = [];
-		for (i in 0...3)
+		for (_ in 0...3)
 		{
 			seperatedScore.push(FlxG.random.int(0, 9));
 		}
@@ -355,7 +355,7 @@ class NoteOffsetState extends MusicBeatState
 
 			persistentUpdate = false;
 			CustomFadeTransition.nextCamera = camOther;
-			MusicBeatState.switchState(new options.OptionsState());
+			MusicBeatState.switchState(new options.states.OptionsState());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 1, true);
 			FlxG.mouse.visible = false;
 		}

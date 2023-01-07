@@ -18,7 +18,7 @@ import flixel.system.FlxAssets.FlxShader;
 
 class GlitchEffect
 {
-    public var shader(default,null):GlitchShader = new GlitchShader();
+    public var shader(default, null):GlitchShader = new GlitchShader();
 
     #if SHADERS_ENABLED
     public var waveSpeed(default, set):Float = 0;
@@ -64,168 +64,6 @@ class GlitchEffect
     }
     #end
 }
-
-class DistortBGEffect
-{
-    public var shader(default,null):DistortBGShader = new DistortBGShader();
-
-    #if SHADERS_ENABLED
-    public var waveSpeed(default, set):Float = 0;
-	public var waveFrequency(default, set):Float = 0;
-	public var waveAmplitude(default, set):Float = 0;
-
-	public function new():Void
-	{
-		shader.uTime.value = [0];
-	}
-
-    public function update(elapsed:Float):Void
-    {
-        shader.uTime.value[0] += elapsed;
-    }
-
-
-    function set_waveSpeed(v:Float):Float
-    {
-        waveSpeed = v;
-        shader.uSpeed.value = [waveSpeed];
-        return v;
-    }
-
-    function set_waveFrequency(v:Float):Float
-    {
-        waveFrequency = v;
-        shader.uFrequency.value = [waveFrequency];
-        return v;
-    }
-
-    function set_waveAmplitude(v:Float):Float
-    {
-        waveAmplitude = v;
-        shader.uWaveAmplitude.value = [waveAmplitude];
-        return v;
-    }
-    #end
-}
-
-
-class PulseEffect
-{
-    public var shader(default,null):PulseShader = new PulseShader();
-
-    #if SHADERS_ENABLED
-    public var waveSpeed(default, set):Float = 0;
-	public var waveFrequency(default, set):Float = 0;
-	public var waveAmplitude(default, set):Float = 0;
-    public var Enabled(default, set):Bool = false;
-
-	public function new():Void
-	{
-		shader.uTime.value = [0];
-        shader.uampmul.value = [0];
-        shader.uEnabled.value = [false];
-	}
-
-    public function update(elapsed:Float):Void
-    {
-        shader.uTime.value[0] += elapsed;
-    }
-
-
-    function set_waveSpeed(v:Float):Float
-    {
-        waveSpeed = v;
-        shader.uSpeed.value = [waveSpeed];
-        return v;
-    }
-
-    function set_Enabled(v:Bool):Bool
-    {
-        Enabled = v;
-        shader.uEnabled.value = [Enabled];
-        return v;
-    }
-    
-    function set_waveFrequency(v:Float):Float
-    {
-        waveFrequency = v;
-        shader.uFrequency.value = [waveFrequency];
-        return v;
-    }
-    
-    function set_waveAmplitude(v:Float):Float
-    {
-        waveAmplitude = v;
-        shader.uWaveAmplitude.value = [waveAmplitude];
-        return v;
-    }
-    #end
-}
-
-
-class InvertColorsEffect
-{
-    public var shader(default,null):InvertShader = new InvertShader();
-
-}
-
-class BlockedGlitchEffect
-{
-    public var shader(default, null):BlockedGlitchShader = new BlockedGlitchShader();
-
-    #if SHADERS_ENABLED
-    public var time(default, set):Float = 0;
-    public var resolution(default, set):Float = 0;
-    public var colorMultiplier(default, set):Float = 0;
-    public var hasColorTransform(default, set):Bool = false;
-
-    public function new(res:Float, time:Float, colorMultiplier:Float, colorTransform:Bool):Void
-    {
-        set_time(time);
-        set_resolution(res);
-        set_colorMultiplier(colorMultiplier);
-        set_hasColorTransform(colorTransform);
-    }
-    public function update(elapsed:Float):Void
-    {
-        shader.time.value[0] += elapsed;
-    }
-    public function set_resolution(v:Float):Float
-    {
-        resolution = v;
-        shader.screenSize.value = [resolution];
-        return this.resolution;
-    }
-	function set_hasColorTransform(value:Bool):Bool {
-		this.hasColorTransform = value;
-        shader.hasColorTransform.value = [hasColorTransform];
-        return hasColorTransform;
-	}
-
-	function set_colorMultiplier(value:Float):Float {
-        this.colorMultiplier = value;
-        shader.colorMultiplier.value = [value];
-        return this.colorMultiplier;
-    }
-
-	function set_time(value:Float):Float {
-        this.time = value;
-        shader.time.value = [value];
-        return this.time;
-    }
-    #end
-}
-
-class DitherEffect
-{
-    public var shader(default,null):DitherShader = new DitherShader();
-
-    public function new():Void
-    {
-
-    }
-}
-
 class GlitchShader extends FlxShader
 {
     #if SHADERS_ENABLED
@@ -279,32 +117,48 @@ class GlitchShader extends FlxShader
     }
 }
 
-class InvertShader extends FlxShader
+class DistortBGEffect
 {
+    public var shader(default,null):DistortBGShader = new DistortBGShader();
+
     #if SHADERS_ENABLED
-    @:glFragmentSource('
-    #pragma header
+    public var waveSpeed(default, set):Float = 0;
+	public var waveFrequency(default, set):Float = 0;
+	public var waveAmplitude(default, set):Float = 0;
 
-    vec4 sineWave(vec4 pt)
+	public function new():Void
+	{
+		shader.uTime.value = [0];
+	}
+
+    public function update(elapsed:Float):Void
     {
-        return vec4(1.0 - pt.x, 1.0 - pt.y, 1.0 - pt.z, pt.w);
+        shader.uTime.value[0] += elapsed;
     }
 
-    void main()
+
+    function set_waveSpeed(v:Float):Float
     {
-        vec2 uv = openfl_TextureCoordv;
-        gl_FragColor = sineWave(texture2D(bitmap, uv));
-    }')
+        waveSpeed = v;
+        shader.uSpeed.value = [waveSpeed];
+        return v;
+    }
+
+    function set_waveFrequency(v:Float):Float
+    {
+        waveFrequency = v;
+        shader.uFrequency.value = [waveFrequency];
+        return v;
+    }
+
+    function set_waveAmplitude(v:Float):Float
+    {
+        waveAmplitude = v;
+        shader.uWaveAmplitude.value = [waveAmplitude];
+        return v;
+    }
     #end
-
-    public function new()
-    {
-       super();
-    }
 }
-
-
-
 class DistortBGShader extends FlxShader
 {
     #if SHADERS_ENABLED
@@ -361,7 +215,58 @@ class DistortBGShader extends FlxShader
     }
 }
 
+class PulseEffect
+{
+    public var shader(default,null):PulseShader = new PulseShader();
 
+    #if SHADERS_ENABLED
+    public var waveSpeed(default, set):Float = 0;
+	public var waveFrequency(default, set):Float = 0;
+	public var waveAmplitude(default, set):Float = 0;
+    public var Enabled(default, set):Bool = false;
+
+	public function new():Void
+	{
+		shader.uTime.value = [0];
+        shader.uampmul.value = [0];
+        shader.uEnabled.value = [false];
+	}
+
+    public function update(elapsed:Float):Void
+    {
+        shader.uTime.value[0] += elapsed;
+    }
+
+
+    function set_waveSpeed(v:Float):Float
+    {
+        waveSpeed = v;
+        shader.uSpeed.value = [waveSpeed];
+        return v;
+    }
+
+    function set_Enabled(v:Bool):Bool
+    {
+        Enabled = v;
+        shader.uEnabled.value = [Enabled];
+        return v;
+    }
+    
+    function set_waveFrequency(v:Float):Float
+    {
+        waveFrequency = v;
+        shader.uFrequency.value = [waveFrequency];
+        return v;
+    }
+    
+    function set_waveAmplitude(v:Float):Float
+    {
+        waveAmplitude = v;
+        shader.uWaveAmplitude.value = [waveAmplitude];
+        return v;
+    }
+    #end
+}
 class PulseShader extends FlxShader
 {
     #if SHADERS_ENABLED
@@ -416,6 +321,80 @@ class PulseShader extends FlxShader
     }
 }
 
+class InvertColorsEffect
+{
+    public var shader(default,null):InvertShader = new InvertShader();
+}
+class InvertShader extends FlxShader
+{
+    #if SHADERS_ENABLED
+    @:glFragmentSource('
+    #pragma header
+
+    vec4 sineWave(vec4 pt)
+    {
+        return vec4(1.0 - pt.x, 1.0 - pt.y, 1.0 - pt.z, pt.w);
+    }
+
+    void main()
+    {
+        vec2 uv = openfl_TextureCoordv;
+        gl_FragColor = sineWave(texture2D(bitmap, uv));
+    }')
+    #end
+
+    public function new()
+    {
+       super();
+    }
+}
+
+class BlockedGlitchEffect
+{
+    public var shader(default, null):BlockedGlitchShader = new BlockedGlitchShader();
+
+    #if SHADERS_ENABLED
+    public var time(default, set):Float = 0;
+    public var resolution(default, set):Float = 0;
+    public var colorMultiplier(default, set):Float = 0;
+    public var hasColorTransform(default, set):Bool = false;
+
+    public function new(res:Float, time:Float, colorMultiplier:Float, colorTransform:Bool):Void
+    {
+        set_time(time);
+        set_resolution(res);
+        set_colorMultiplier(colorMultiplier);
+        set_hasColorTransform(colorTransform);
+    }
+    public function update(elapsed:Float):Void
+    {
+        shader.time.value[0] += elapsed;
+    }
+    public function set_resolution(v:Float):Float
+    {
+        resolution = v;
+        shader.screenSize.value = [resolution];
+        return this.resolution;
+    }
+	function set_hasColorTransform(value:Bool):Bool {
+		this.hasColorTransform = value;
+        shader.hasColorTransform.value = [hasColorTransform];
+        return hasColorTransform;
+	}
+
+	function set_colorMultiplier(value:Float):Float {
+        this.colorMultiplier = value;
+        shader.colorMultiplier.value = [value];
+        return this.colorMultiplier;
+    }
+
+	function set_time(value:Float):Float {
+        this.time = value;
+        shader.time.value = [value];
+        return this.time;
+    }
+    #end
+}
 class BlockedGlitchShader extends FlxShader
 {
     // https://www.shadertoy.com/view/MlVSD3
@@ -454,6 +433,16 @@ class BlockedGlitchShader extends FlxShader
     public function new()
     {
         super();
+    }
+}
+
+class DitherEffect
+{
+    public var shader(default,null):DitherShader = new DitherShader();
+
+    public function new():Void
+    {
+
     }
 }
 

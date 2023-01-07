@@ -115,7 +115,8 @@ class ChartingState extends MusicBeatState
 		['Deactivate CPU LIGHT', "Disables the CPU STRUM to be lighted.\nUseful for songs that use a lot of\nnotes."],
 		['Activate CPU LIGHT', "The opposite of the earlier one"],
 		['Deactivate PLAYER LIGHT', "The same but for player"],
-		['Activate PLAYER LIGHT', "The opposite of the earlier one"]
+		['Activate PLAYER LIGHT', "The opposite of the earlier one"],
+		['(SOURCE ONLY) Add GlitchEffect', 'Adds a Glitch effect to the FlxSprite.\nValue 1: tag (name) of the FlxSprite.\n\n<b><r>YOU SHOULD ALWAYS USE\n<i>"addEventObject(tag, object)"<i>\nAFTER CREATING THE FLXSPRITE<r><b>']
 	];
 	var pressing7Events:Array<String> = [
 		'---',
@@ -127,6 +128,12 @@ class ChartingState extends MusicBeatState
 		'Rainbow Eyesore',
 		'Nothing' // why?
 	];
+
+	var boldFormat:FlxTextFormat;
+	var italicFormat:FlxTextFormat;
+	var strongFormat:FlxTextFormat;
+	var redFormat:FlxTextFormat;
+	var blackFormat:FlxTextFormat;
 
 	var _file:FileReference;
 
@@ -312,6 +319,13 @@ class ChartingState extends MusicBeatState
 			addSection();
 			PlayState.SONG = _song;
 		}
+
+		var normalColor:FlxColor = FlxColor.WHITE;
+		boldFormat = new FlxTextFormat(normalColor, true, false);
+		italicFormat = new FlxTextFormat(normalColor, false, true);
+		strongFormat = new FlxTextFormat(normalColor, true, true);
+		redFormat = new FlxTextFormat(FlxColor.RED);
+		blackFormat = new FlxTextFormat(FlxColor.BLACK);
 
 		PlayState.chartingMode = true;
 		instance = this;
@@ -1211,7 +1225,7 @@ class ChartingState extends MusicBeatState
 		eventPushedMap = null;
 		#end
 
-		descText = new FlxText(20, 225, 0, eventStuff[0][0]);
+		descText = new FlxText(20, 200, 0, eventStuff[0][0]);
 
 		var leEvents:Array<String> = [];
 		for (i in 0...eventStuff.length) {
@@ -1223,6 +1237,13 @@ class ChartingState extends MusicBeatState
 		eventDropDown = new FlxUIDropDownMenuCustom(20, 50, FlxUIDropDownMenuCustom.makeStrIdLabelArray(leEvents, true), function(pressed:String) {
 			var selectedEvent:Int = Std.parseInt(pressed);
 			descText.text = eventStuff[selectedEvent][1];
+			descText.applyMarkup(eventStuff[selectedEvent][1], [
+				new FlxTextFormatMarkerPair(boldFormat, '<b>'),
+				new FlxTextFormatMarkerPair(italicFormat, '<i>'),
+				new FlxTextFormatMarkerPair(strongFormat, '<strong>'),
+				new FlxTextFormatMarkerPair(redFormat, '<r>'),
+				new FlxTextFormatMarkerPair(blackFormat, '<bl>')
+			]);
 			if (curSelectedNote != null && eventStuff != null) {
 				if (curSelectedNote != null && curSelectedNote[2] == null) {
 					curSelectedNote[1][curEventSelected][0] = eventStuff[selectedEvent][0];
