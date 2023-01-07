@@ -1,4 +1,4 @@
-package options;
+package options.substates;
 
 #if desktop
 import Discord.DiscordClient;

@@ -1,5 +1,6 @@
 package;
 
+import lime.app.Application;
 import lime.system.System;
 import flixel.graphics.FlxGraphic;
 #if desktop
@@ -113,6 +114,9 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map<String, effects.WiggleEffect>();
 	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map<String, effects.MosaicEffect>();
+
+	// events one
+	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -126,6 +130,9 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map();
 	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map();
+
+	// events one
+	public var sourceSprites:Map<String, FlxSprite> = new Map();
 	#end
 
 	var judgementCounter:FlxText;
@@ -1815,6 +1822,18 @@ class PlayState extends MusicBeatState
 			luaArray.push(new FunkinLua(luaFile));
 		}
 		#end
+	}
+
+	/**
+	 * Adds the object to lua, useful for events. **SHOULD BE USED ONLY FOR EVENTS**
+	 * @param tag String to define
+	 * @param object FlxSprite to add
+	 * @return Bool, if the tag existed before
+	 */
+	public function addEventObject(tag:String, object:FlxSprite):Bool {
+		var returnIt = sourceSprites.exists(tag);
+		sourceSprites.set(tag, object);
+		return returnIt;
 	}
 
 	public function getLuaObject(tag:String, text:Bool = true):FlxSprite
@@ -4473,6 +4492,20 @@ class PlayState extends MusicBeatState
 				}
 
 				// textIsGoing = true;
+			case '(SOURCE ONLY) Add GlitchEffect':
+				if(sourceSprites.exists(value1)) {
+					var stuff:FlxSprite = sourceSprites.get(value1);
+					var glitchShader:WiggleEffect = new WiggleEffect();
+					glitchShader.effectType = WiggleEffectType.FLAG;
+					glitchShader.waveAmplitude = 0.1;
+					glitchShader.waveFrequency = 5;
+					glitchShader.waveSpeed = 2.25;
+
+					stuff.shader = glitchShader.shader;
+					trace('glitch effect added to: ' + value1);
+				} else {
+					Application.current.window.alert('TAG "' + value1 + '" NOT FOUND', 'Error in "Add GlitchEffect"!!');
+				}
 		}
 		callOnLuas('onEvent', [eventName, value1, value2]);
 	}

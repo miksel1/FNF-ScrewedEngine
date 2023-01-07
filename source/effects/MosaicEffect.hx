@@ -1,9 +1,9 @@
 package effects;
 
 #if (openfl >= "8.0.0")
-import openfl8.MosaicShader;
+import effects.openfl8.MosaicShader;
 #else
-import openfl3.MosaicShader;
+//import effects.openfl3.MosaicShader;
 #end
 
 /**

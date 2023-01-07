@@ -1,6 +1,6 @@
 package;
 
-import options.NotesSubState;
+import options.substates.NotesSubState;
 import Controls.Control;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -255,7 +255,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.botplaySine = 0;
 				case 'Options':
 					toPlayState = true;
-					MusicBeatState.switchState(new options.OptionsState());
+					MusicBeatState.switchState(new options.states.OptionsState());
 				case "Exit to menu":
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
