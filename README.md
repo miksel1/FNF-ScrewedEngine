@@ -1,11 +1,14 @@
 # Friday Night Funkin' - Screwed Engine
-Engine originally created for (Screwed Edition)[lol] (a mod of Dave And Bambi), but it can be used for your mod too! Just credit us.
+Engine originally created for (Screwed Edition)[link soon...] (a mod of Dave And Bambi), but it can be used for your mod too! Just credit us.
+
+## Join our discord now!
+It's a fun way to get **information**/**releases**/**teasers** about the engine ***and*** from the **mod**! Just take in mind the rules. [Link here: https://discord.gg/ACY3MQgB2A](https://discord.gg/ACY3MQgB2A)
 
 ## How to compile:
 Please, keep in mind that you can not seem to compile FNF on Windows 7.
 
 Just watch longestsoloever's video, I've used his tutorial and I've been successful with it. 
-https://www.youtube.com/watch?v=4IuC8ti6_4o
+https://www.youtube.com/watch?v=4IuC8ti6_4o _-miksel_
 
 If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then _re-install linc_luajit_.
 
@@ -14,7 +17,7 @@ If you want video support on your mod, simply do `haxelib install hxCodec` on a 
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Screwed Engine Credits:
-* Wither362 - Basically making everything on the engine (ALL).
+* [@Wither362](www.github.com/Wither362) - Basically making everything on the engine (ALL).
 * miksel1 - The one who broke most of the code at the beginning
 * Dante - Strident Engine coder
 * not capcha - Helping with _Legacy_ Freeplay Sections
