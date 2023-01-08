@@ -1,5 +1,7 @@
 package;
 
+import flixel.ui.FlxButton.FlxTypedButton;
+import effects.GrainEffect;
 import flixel.addons.effects.chainable.FlxEffectSprite;
 #if desktop
 import Discord.DiscordClient;
@@ -28,6 +30,7 @@ class CreditsState extends MusicBeatState
 	var curSelected:Int = -1;
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
+	private var grpTitles:FlxTypedGroup<Alphabet>;
 	private var iconArray:Array<AttachedSprite> = [];
 	private var creditsStuff:Array<Array<String>> = [];
 
@@ -35,14 +38,23 @@ class CreditsState extends MusicBeatState
 	var descText:FlxText;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
+	var titleColorTween:FlxTween;
 	var descBox:AttachedSprite;
 
 	var offsetThing:Float = -75;
 
 	var glitchedOnes:Array<String> = ['Wither362', 'Delta', 'miksel'];
+	var grainedOnes:Array<String> = ['Wither362', 'BeastlyGhost']; // time to credit them ;)
+	var coolTitleOnes:Array<String> = ['Wither362', 'Delta', 'Join our Discord!', 'miksel', 'Meme Hoovy', 'BeastlyGhost']; // yes dude ;D
 
 	var glitchEffect:FlxGlitchEffect;
 	var glitchBg:FlxEffectSprite;
+
+	var grainEffect:GrainEffect;
+
+	var theTitle:Alphabet;
+	var visibleTitle:Bool = false;
+	var theTitleTween:FlxTween;
 
 	override function create()
 	{
@@ -60,7 +72,11 @@ class CreditsState extends MusicBeatState
 		glitchBg.effects = [glitchEffect];
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
+		grpTitles = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
+
+		grainEffect = new GrainEffect();
+		grainEffect.lumAmount *= 2;
 
 		#if MODS_ALLOWED
 		var path:String = 'modsList.txt';
@@ -92,13 +108,15 @@ class CreditsState extends MusicBeatState
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Screwed Engine'],
-			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'0xFF5F5F'],
+			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'FF5F5F'],
 			['Delta',				'delta',			'Strident Engine',												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
 			['miksel',				'miksel',			'Features and Idea Creator',									'https://www.youtube.com/@miksel_fnf',	'371893'],
 			['Join our Discord!',	'discord',			'Yeah! join us for features and more!',							'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
 			['Screwed Engine Contributors'],
-			['Memehoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
+			['Meme Hoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
+			['BeastlyGhost',		'beast',			'Icons help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
+			[''],
 			['Original Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
 			['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',		'B42F71'],
@@ -141,6 +159,11 @@ class CreditsState extends MusicBeatState
 				!isSelectable,
 				image
 			);
+			if(grainedOnes.contains(creditsStuff[i][0])) {
+				optionText.forEach(function(spr:FlxSprite) {
+					//spr.shader = grainEffect.shader;
+				});
+			}
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;
@@ -156,7 +179,10 @@ class CreditsState extends MusicBeatState
 				var icon:AttachedSprite = new AttachedSprite('credits/' + creditsStuff[i][1]);
 				icon.xAdd = optionText.width + 10;
 				icon.sprTracker = optionText;
-	
+
+				if(grainedOnes.contains(creditsStuff[i][0])) {
+				//	icon.shader = grainEffect.shader;
+				}
 				// using a FlxGroup is too much fuss!
 				iconArray.push(icon);
 				add(icon);
@@ -164,8 +190,12 @@ class CreditsState extends MusicBeatState
 
 				if(curSelected == -1) curSelected = i;
 			}
-			else optionText.alignment = CENTERED;
+			else {
+				optionText.alignment = CENTERED;
+				grpTitles.add(optionText);
+			}
 		}
+		visibleTitle = (!coolTitleOnes.contains(creditsStuff[curSelected][0]));
 
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
@@ -184,6 +214,29 @@ class CreditsState extends MusicBeatState
 
 		bg.color = getCurrentBGColor();
 		intendedColor = bg.color;
+		theTitle = new Alphabet(
+			FlxG.width / 2,
+			40,
+			'SCREWED ENGINE',
+			true,
+			'alphabet'
+		);
+		theTitle.alignment = CENTERED;
+		theTitle.setAlpha(0.7);
+		theTitle.setVisible(visibleTitle);
+		add(theTitle);
+
+		if(coolTitleOnes.contains(creditsStuff[curSelected][0])) {
+			grpTitles.forEach(function(tit:Alphabet) {
+				if(tit.text.toUpperCase().contains('SCREWED')) {
+					titleColorTween = FlxTween.color(tit, 1, tit.color, intendedColor, {
+						onComplete: function(twn:FlxTween) {
+							titleColorTween = null;
+						}
+					});
+				}
+			});
+		}
 		changeSelection();
 		super.create();
 	}
@@ -239,6 +292,9 @@ class CreditsState extends MusicBeatState
 				if(colorTween != null) {
 					colorTween.cancel();
 				}
+				if(titleColorTween != null) {
+					titleColorTween.cancel();
+				}
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new MainMenuState());
 				quitting = true;
@@ -278,10 +334,15 @@ class CreditsState extends MusicBeatState
 				curSelected = 0;
 		} while(unselectableCheck(curSelected));
 
-		var newColor:Int =  getCurrentBGColor();
+		visibleTitle = (!coolTitleOnes.contains(creditsStuff[curSelected][0]));
+
+		var newColor:Int = getCurrentBGColor();
 		if(newColor != intendedColor) {
 			if(colorTween != null) {
 				colorTween.cancel();
+			}
+			if(titleColorTween != null) {
+				titleColorTween.cancel();
 			}
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
@@ -289,7 +350,19 @@ class CreditsState extends MusicBeatState
 					colorTween = null;
 				}
 			});
+			if(coolTitleOnes.contains(creditsStuff[curSelected][0])) {
+				grpTitles.forEach(function(alp:Alphabet) {
+					if(alp.text.toUpperCase().contains('SCREWED')) {
+						titleColorTween = FlxTween.color(alp, 1, alp.color, intendedColor, {
+							onComplete: function(twn:FlxTween) {
+								titleColorTween = null;
+							}
+						});
+					}
+				});
+			}
 		}
+		theTitle.setVisible(visibleTitle);
 
 		var bullShit:Int = 0;
 

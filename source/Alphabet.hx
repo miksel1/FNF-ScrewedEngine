@@ -254,6 +254,18 @@ class Alphabet extends FlxSpriteGroup
 
 		if(letters.length > 0) rows++;
 	}
+
+	public function setAlpha(newAlpha:Float) {
+		forEach(function(alp:FlxSprite) {
+			alp.alpha = newAlpha;
+		});
+	}
+
+	public function setVisible(newVisible:Bool) {
+		forEach(function(alp:FlxSprite) {
+			alp.visible = newVisible;
+		});
+	}
 }
 
 

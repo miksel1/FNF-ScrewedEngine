@@ -46,11 +46,11 @@ class GrainEffect {
 		shader = new GrainShader();
 		this.textelSize = textelSize;
 
-		/*shader.coloramount.value = [colorAmount];
+		shader.coloramount.value = [colorAmount];
 		shader.colored.value = [colored];
 		shader.grainamount.value = [grainAmount];
 		shader.grainsize.value = [grainSize];
-		shader.lumamount.value = [lumAmount];*/
+		shader.lumamount.value = [lumAmount];
 
 		shader.uTime.value = [0];
 	}
