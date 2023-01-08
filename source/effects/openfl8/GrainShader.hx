@@ -1,5 +1,6 @@
 package effects.openfl8;
 
+import openfl.display.ShaderParameter;
 import flixel.system.FlxAssets.FlxShader;
 
 class GrainShader extends FlxShader
@@ -26,17 +27,20 @@ class GrainShader extends FlxShader
 		*/
 		uniform float uTime;
 
-		const float permTexUnit = 1.0/256.0;        // Perm texture texel-size
-		const float permTexUnitHalf = 0.5/256.0;    // Half perm texture texel-size
+		/**
+		 * Perm texture texel-size
+		 */
+		uniform float permTexUnit 		/* = 1.0 / 256.0 */;        // Perm texture texel-size
+		uniform float permTexUnitHalf 	/* = 0.5 / 256.0 */;    // Half perm texture texel-size
 
 		float width = openfl_TextureSize.x;
 		float height = openfl_TextureSize.y;
 
-		const float grainamount = 0.05; //grain amount
-		bool colored = false; //colored noise?
-		float coloramount = 0.6;
-		float grainsize = 1.6; //grain particle size (1.5 - 2.5)
-		float lumamount = 1.0; //
+		uniform float grainamount 		/* = 0.05 */; 	//grain amount
+		uniform bool colored 			/* = false */;	//colored noise?
+		uniform float coloramount 		/* = 0.6 */;
+		uniform float grainsize 		/* = 1.6 */; 	//grain particle size (1.5 - 2.5)
+		uniform float lumamount 		/* = 1.0 */; 	//
 
 		//a random texture generator, but you can also use a pre-computed perturbation texture
 		vec4 rnm(in vec2 tc)
@@ -52,7 +56,7 @@ class GrainShader extends FlxShader
 		}
 
 		float fade(in float t) {
-			return t*t*t*(t*(t*6.0-15.0)+10.0);
+			return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 		}
 
 		float pnoise3D(in vec3 p)
