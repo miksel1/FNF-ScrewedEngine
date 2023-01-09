@@ -1,0 +1,3 @@
+Turn otherAlphabet to ColorSwap using AlphaCharacter
+Organizate the options
+Add more shaders
