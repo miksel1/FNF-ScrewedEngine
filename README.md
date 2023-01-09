@@ -42,6 +42,8 @@ _____________________________________
 
 # Features
   * Some new Achievements for good spammers.
+  * A lot of new options for getting ***no lag***.
+  * Markdown event's description (go to the WIKI to see how it works).
 
 # D&B Features:
    * Adds multiple features from mods like Strident Crisis like:
@@ -55,14 +57,14 @@ _____________________________________
 ![](https://media.discordapp.net/attachments/1025448192491388998/1036759283724976232/unknown.png)
 ![](https://media.discordapp.net/attachments/936741759210389555/1036928314163613737/327416939.2150001_image.png)
 ### Chart Editor:
-   * In the chart editor, I added a few new features like:
+   * In the chart editor, I (Wither) added a few new features like:
      * Manual Zoom.
      * More Zoom.
-     * Drawing.
+     * Drawing. (miksel)
      * Autosave.
      * More buttons.
      * Strident Engine.
-     * More events (use them for lot-of-notes songs!)
+     * More events (use them for _lot-of-notes_ songs!)
      * Some new inputs.
 ### 7 events:
    * Upon pressing 7 on any song, by default it goes to the chart editor.
@@ -70,6 +72,10 @@ _____________________________________
 ### Shaders:
    * Glitch Effect:
      * Added into lua!
+   * Customizable Grain Effect (WIP):
+     * Source for now.
+   * Mosaic Effect:
+     * For Lua it isn't full done yet.
 ### Eyesores:
    * Rainbow Eyesore from Polygonized and Glitch, added into Psych (credits for ***Delta***)!
    * I may've forgotten a few...
