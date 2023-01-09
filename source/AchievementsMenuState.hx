@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import flixel.FlxSubState;
 import Achievements;
+import effects.ColorSwap;
 
 using StringTools;
 
@@ -27,10 +28,14 @@ class AchievementsMenuState extends MusicBeatState
 	private var achievementIndex:Array<Int> = [];
 	private var descText:FlxText;
 
+	var colorSwap:ColorSwap;
+
 	override function create() {
 		#if desktop
 		DiscordClient.changePresence("Achievements Menu", null);
 		#end
+
+		colorSwap = new ColorSwap();
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
@@ -52,15 +57,16 @@ class AchievementsMenuState extends MusicBeatState
 
 		for (i in 0...options.length) {
 			var achieveName:String = Achievements.achievementsStuff[achievementIndex[i]][2];
-			var image = (achieveName == 'bro_what') ? 'otherAlphabet' : 'alphabet';
+			var image = /*(achieveName == 'bro_what') ? 'otherAlphabet' : */'alphabet';
+			var unlocked:Bool = Achievements.isAchievementUnlocked(achieveName);
 			var optionText:Alphabet = new Alphabet(
 				280, // X
 				300, // Y
-				Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', // Text
-				false, // Bold (what is inBOLDved in this?)
+				unlocked ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', // Text
+				false, // Bold (what is inBOLDved in this?) .Edit: and no one laughed...
 				image // Image
 			);
-
+			optionText.useColorSwap = (achieveName == 'bro_what' /*&& unlocked*/);
 			optionText.isMenuItem = true;
 			optionText.targetY = i - curSelected;
 			optionText.snapToPosition();
@@ -68,6 +74,9 @@ class AchievementsMenuState extends MusicBeatState
 
 			var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
 			icon.sprTracker = optionText;
+			if(achieveName == 'bro_what' /*&& unlocked */)
+				icon.shader = colorSwap;
+
 			achievementArray.push(icon);
 			add(icon);
 		}
@@ -83,6 +92,9 @@ class AchievementsMenuState extends MusicBeatState
 	}
 
 	override function update(elapsed:Float) {
+		if(colorSwap != null)
+			colorSwap.hue += elapsed;
+
 		super.update(elapsed);
 
 		if (controls.UI_UP_P) {
