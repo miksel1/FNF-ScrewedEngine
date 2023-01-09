@@ -1169,7 +1169,7 @@ class PlayState extends MusicBeatState
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
-		timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
+		timeBar.numDivisions = ClientPrefs.timeBarDivisions;
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
 		add(timeBar);
