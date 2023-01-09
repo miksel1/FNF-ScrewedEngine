@@ -150,8 +150,8 @@ class CreditsState extends MusicBeatState
 		{
 			var isSelectable:Bool = !unselectableCheck(i);
 			var image = 'alphabet';
-			if(glitchedOnes.contains(creditsStuff[i][0]))
-			image = 'otherAlphabet';
+			/*if(glitchedOnes.contains(creditsStuff[i][0]))
+			image = 'otherAlphabet';*/ // no more use!
 			var optionText:Alphabet = new Alphabet(
 				FlxG.width / 2,
 				300,
@@ -159,10 +159,8 @@ class CreditsState extends MusicBeatState
 				!isSelectable,
 				image
 			);
-			if(grainedOnes.contains(creditsStuff[i][0])) {
-				optionText.forEach(function(spr:FlxSprite) {
-					//spr.shader = grainEffect.shader;
-				});
+			if(glitchedOnes.contains(creditsStuff[i][0])) {
+				optionText.useColorSwap = true;
 			}
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
