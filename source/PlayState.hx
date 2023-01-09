@@ -1172,6 +1172,7 @@ class PlayState extends MusicBeatState
 		timeBar.numDivisions = ClientPrefs.timeBarDivisions;
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
+	timeBar.canUpdate = showTime;
 		add(timeBar);
 		add(timeTxt);
 		timeBarBG.sprTracker = timeBar;
