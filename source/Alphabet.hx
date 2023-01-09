@@ -10,6 +10,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 import flixel.system.FlxSound;
 import flash.media.Sound;
+import effects.ColorSwap;
 
 using StringTools;
 
@@ -40,6 +41,8 @@ class Alphabet extends FlxSpriteGroup
 
 	public var distancePerItem:FlxPoint = new FlxPoint(20, 120);
 	public var startPosition:FlxPoint = new FlxPoint(0, 0); //for the calculations
+
+	public var useColorSwap(default, set):Bool = false;
 
 	public function new(x:Float, y:Float, text:String = "", bold:Bool = true, image:String = 'alphabet')
 	{
@@ -266,6 +269,13 @@ class Alphabet extends FlxSpriteGroup
 			alp.visible = newVisible;
 		});
 	}
+
+	function set_useColorSwap(v:Bool) {
+		forEach(function(spr:FlxSprite) {
+			spr.useSwap = v;
+		});
+		return useColorSwap = v;
+	}
 }
 
 
@@ -292,6 +302,9 @@ class AlphaCharacter extends FlxSprite
 	//public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
 
 	public var image(default, set):String;
+
+	var colorSwap:ColorSwap;
+	public var useSwap(default, set):Bool = false;
 
 	public static var allLetters:Map<String, Null<Letter>> = [
 		//alphabet
@@ -389,6 +402,8 @@ class AlphaCharacter extends FlxSprite
 			}
 		}
 
+		colorSwap = new ColorSwap();
+
 		var alphaAnim:String = lowercase;
 		if(curLetter != null && curLetter.anim != null) alphaAnim = curLetter.anim;
 
@@ -444,5 +459,25 @@ class AlphaCharacter extends FlxSprite
 		{
 			offset.y += -(110 - height);
 		}
+	}
+
+	function set_useSwap(v:Bool):Bool {
+		if(v) {
+			if(shader == null && colorSwap != null) {
+				shader = colorSwap.shader;
+			}
+		} else {
+			if(shader != null) {
+				shader = null;
+			}
+		}
+		return useSwap = v;
+	}
+
+	override function update(elapsed) {
+		if(useSwap && colorSwap != null) {
+			colorSwap.hue += elapsed;
+		}
+		super.update(elapsed);
 	}
 }
