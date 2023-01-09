@@ -36,6 +36,7 @@ class ClientPrefs {
 	public static var crazyCounter:Bool = true;
 	public static var maxNotes:Int = 5000;
 	public static var showHealth:Bool = true;
+	public static var timeBarDivisions:Int = 800;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -103,6 +104,7 @@ class ClientPrefs {
 	}
 
 	public static function saveSettings() {
+		FlxG.save.data.timeBarDivisions = timeBarDivisions;
 		FlxG.save.data.showHealth = showHealth;
 		FlxG.save.data.maxNotes = maxNotes;
 		FlxG.save.data.crazyCounter = crazyCounter;
@@ -153,6 +155,9 @@ class ClientPrefs {
 	}
 
 	public static function loadPrefs() {
+		if(FlxG.save.data.timeBarDivisions != null)
+			timeBarDivisions = FlxG.save.data.timeBarDivisions;
+
 		if(FlxG.save.data.showHealth != null)
 			showHealth = FlxG.save.data.showHealth;
 
