@@ -1,6 +1,8 @@
 # Friday Night Funkin' - Screwed Engine
 Engine originally created for (Screwed Edition)[link soon...] (a mod of Dave And Bambi), but it can be used for your mod too! Just credit us.
 
+### [Click here to skip this and go to **Features**.](https://github.com/miksel1/FNF-ScrewedEngine/blob/main/README.md#features)
+
 ## Join our discord now!
 It's a fun way to get **information**/**releases**/**teasers** about the engine ***and*** from the **mod**! Just take in mind the rules. [Link here: https://discord.gg/ACY3MQgB2A](https://discord.gg/ACY3MQgB2A)
 
@@ -43,12 +45,12 @@ _____________________________________
 # Features
   * Some new Achievements for good spammers.
   * A lot of new options for getting ***no lag***.
-  * Markdown event's description (go to the WIKI to see how it works).
+  * Markdown event's description (go to the [WIKI](https://github.com/miksel1/FNF-ScrewedEngine/wiki) to see how it works).
 
 # D&B Features:
    * Adds multiple features from mods like Strident Crisis like:
 ### Freeplay Sections:
-   * Explains itself, Freeplay Sections with a ***new system***: songs that start with "--" and end with "--", if will add it to a new section
+   * Explains itself, Freeplay Sections with a ***new system***: all the **songs that start with "--" and ends with "--"**, it will add it to a new section for organization.
 ### A search bar in Freeplay
 
 ### "Screw you!" and credits text:
@@ -64,17 +66,17 @@ _____________________________________
      * Autosave.
      * More buttons.
      * Strident Engine.
-     * More events (use them for _lot-of-notes_ songs!)
+     * **More events (use them for _lot-of-notes_ songs!)**
      * Some new inputs.
 ### 7 events:
-   * Upon pressing 7 on any song, by default it goes to the chart editor.
+   * Upon pressing 7 on any song, **by default it goes to the chart editor.**
    * You can change it in the chart editor.
 ### Shaders:
-   * Glitch Effect:
-     * Added into lua!
-   * Customizable Grain Effect (WIP):
+   * **Glitch Effect:**
+     * Added into **lua**!
+   * **Customizable Grain Effect (WIP):**
      * Source for now.
-   * Mosaic Effect:
+   * **Mosaic Effect:**
      * For Lua it isn't full done yet.
 ### Eyesores:
    * Rainbow Eyesore from Polygonized and Glitch, added into Psych (credits for ***Delta***)!
