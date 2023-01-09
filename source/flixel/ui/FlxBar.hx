@@ -125,6 +125,9 @@ class FlxBar extends FlxSprite
 	 */
 	public var fillDirection(default, set):FlxBarFillDirection;
 
+	// an extra variable for less lag
+	public var canUpdate:Bool = true;
+
 	var _fillHorizontal:Bool;
 
 	/**
@@ -822,17 +825,19 @@ class FlxBar extends FlxSprite
 
 	override public function update(elapsed:Float):Void
 	{
-		if (parent != null)
-		{
-			if (Reflect.getProperty(parent, parentVariable) != value)
+		if(canUpdate) {
+			if (parent != null)
 			{
-				updateValueFromParent();
-			}
+				if (Reflect.getProperty(parent, parentVariable) != value)
+				{
+					updateValueFromParent();
+				}
 
-			if (!fixedPosition)
-			{
-				x = parent.x + positionOffset.x;
-				y = parent.y + positionOffset.y;
+				if (!fixedPosition)
+				{
+					x = parent.x + positionOffset.x;
+					y = parent.y + positionOffset.y;
+				}
 			}
 		}
 
