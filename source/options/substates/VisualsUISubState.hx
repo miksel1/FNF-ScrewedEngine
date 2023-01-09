@@ -29,6 +29,9 @@ using StringTools;
 
 class VisualsUISubState extends BaseOptionsMenu
 {
+	var timeBarOption:Option; // because yes (its just a test)
+	var timeBarDivisionsOption:Option;
+
 	public function new()
 	{
 		title = 'Visuals and UI';
@@ -48,13 +51,24 @@ class VisualsUISubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Time Bar:',
+		timeBarOption = new Option('Time Bar:',
 			"What should the Time Bar display?",
 			'timeBarType',
 			'string',
 			'Time Left',
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
-		addOption(option);
+		addOption(timeBarOption);
+
+		timeBarDivisionsOption = new Option('Time Bar Divisions',
+			'How many divisions the Time Bar has.\n(CAN CAUSE LAG IF TOO HIGH)',
+			'timeBarDivisions',
+			'int',
+			800);
+		timeBarDivisionsOption.minValue = 100;
+		timeBarDivisionsOption.changeValue = 50;
+		timeBarDivisionsOption.scrollSpeed = 50;
+		timeBarDivisionsOption.changeValueShift = 4;
+		addOption(timeBarDivisionsOption);
 
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",
