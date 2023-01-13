@@ -75,7 +75,7 @@ class AchievementsMenuState extends MusicBeatState
 			var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
 			icon.sprTracker = optionText;
 			if(achieveName == 'bro_what' /*&& unlocked */)
-				icon.shader = colorSwap;
+				icon.shader = colorSwap.shader;
 
 			achievementArray.push(icon);
 			add(icon);
@@ -108,6 +108,11 @@ class AchievementsMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
+
+		if(controls.ACCEPT) {
+			if(Achievements.achievementsStuff[achievementIndex[curSelected]][2] == 'bro_what' && FlxG.camera != null)
+				FlxG.camera.shake(0.01, 0.01);
+		}
 	}
 
 	function changeSelection(change:Int = 0) {
@@ -136,6 +141,11 @@ class AchievementsMenuState extends MusicBeatState
 			}
 		}
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
+		if(Achievements.achievementsStuff[achievementIndex[curSelected]][2] == 'bro_what' && descText.shader == null && colorSwap != null) {
+			descText.shader = colorSwap.shader;
+		} else if(descText.shader != null) {
+			descText.shader = null;
+		}
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 	}
 	#end

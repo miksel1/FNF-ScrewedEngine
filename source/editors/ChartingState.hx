@@ -1,5 +1,6 @@
 package editors;
 
+import effects.ColorSwap;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -81,7 +82,8 @@ class ChartingState extends MusicBeatState
 		'Instakill Note',
 		'GF Sing',
 		'No Animation',
-		'Random Scroll'
+		'Random Scroll',
+		'Rainbow Note'
 	];
 	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
 	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
@@ -134,6 +136,8 @@ class ChartingState extends MusicBeatState
 	var strongFormat:FlxTextFormat;
 	var redFormat:FlxTextFormat;
 	var blackFormat:FlxTextFormat;
+
+	var colorSwap:ColorSwap;
 
 	var _file:FileReference;
 
@@ -205,6 +209,7 @@ class ChartingState extends MusicBeatState
 	 * ITS A `FLOAT` VALUE
 	 */
 	var manualZoomInput:FlxUINumericStepper;
+	var resetZoomText:FlxText;
 
 	var zoomList:Array<Float> = [
 		0.25,
@@ -450,7 +455,6 @@ class ChartingState extends MusicBeatState
 		\nHold Shift to move 4x faster
 		\nHold Control and click on an arrow to select it
 		\n" + keyBonds["zoom+"][0].toString() + "/" + keyBonds["zoom-"][0].toString() + " - Zoom in/out
-		\nG - Reset Manual Zoom
 		\n" + keyBonds["save"][0].toString() + " - Save Chart (Autosave it)
 		\nHold C - Drawing
 		\nEsc - Test your chart inside Chart Editor
@@ -460,7 +464,7 @@ class ChartingState extends MusicBeatState
 
 		var tipTextArray:Array<String> = text.split('\n');
 		for (i in 0...tipTextArray.length) {
-			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 7, 0, tipTextArray[i], 16);
+			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 7, 0, tipTextArray[i], 17);
 			tipText.y += i * 11;
 			tipText.setFormat(Paths.font("vcr.ttf"), 14, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 			//tipText.borderSize = 2;
@@ -498,6 +502,14 @@ class ChartingState extends MusicBeatState
 		manualZoomInput.setScrollFactor(0, 0);
 		manualZoomInput.value = zoomList[curZoom];
 		manualZoomInput.name = 'manual_zoom';
+		manualZoomInput.onPlus = function(newValue) {
+			if(newValue > manualZoomInput.max)
+				addTextToDebug('Exceeded maximum zoom!!', FlxColor.RED);
+		};
+		manualZoomInput.onMinus = function(newValue) {
+			if(newValue < manualZoomInput.min)
+				addTextToDebug('Exceeded minimum zoom!!', FlxColor.RED);
+		};
 		blockPressWhileTypingOnStepper.push(manualZoomInput);
 		add(manualZoomInput);
 
@@ -505,8 +517,15 @@ class ChartingState extends MusicBeatState
 		manualZoomTxt.scrollFactor.set();
 		add(manualZoomTxt);
 
+		resetZoomText = new FlxText(manualZoomInput.x, manualZoomInput.y + 20, 0, "Press G to reset Manual Zoom", 10);
+		resetZoomText.scrollFactor.set();
+		resetZoomText.visible = false;
+		add(resetZoomText);
+
 		debugGroup = new FlxTypedGroup<DebugLuaText>();
 		add(debugGroup);
+
+		colorSwap = new ColorSwap();
 
 		updateGrid();
 		super.create();
@@ -1769,6 +1788,9 @@ class ChartingState extends MusicBeatState
 	var colorSine:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if(colorSwap != null)
+			colorSwap.hue += elapsed * 0.1;
+
 		curStep = recalculateSteps();
 
 		if(FlxG.sound.music.time < 0) {
@@ -2283,6 +2305,9 @@ class ChartingState extends MusicBeatState
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
 		curRenderedNotes.forEachAlive(function(note:Note) {
+			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null)
+				note.shader = colorSwap.shader;
+
 			note.alpha = 1;
 			if(curSelectedNote != null) {
 				var noteDataToCheck:Int = note.noteData;
@@ -2304,7 +2329,7 @@ class ChartingState extends MusicBeatState
 					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
 
 					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
-					strumLineNotes.members[noteDataToCheck].resetAnim = (note.sustainLength / 1000) + 0.15;
+					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + 0.15) / playbackSpeed;
 
 					if(!playedSound[data])
 					{
@@ -2350,6 +2375,8 @@ class ChartingState extends MusicBeatState
 		if(daZoom < 1) zoomThing = Math.round(1 / daZoom) + ' / 1';
 		zoomTxt.text = 'Zoom: ' + zoomThing;
 		manualZoomInput.value = zoomList[curZoom];
+		resetZoomText.visible = zoomList != oldZoomList;
+
 		reloadGridLayer();
 	}
 

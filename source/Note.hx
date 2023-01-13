@@ -98,6 +98,8 @@ class Note extends FlxSprite
 
 	public var hitsoundDisabled:Bool = false;
 
+	public var rainbow(default, set):Bool = false;
+
 	private function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
 		multSpeed = value;
@@ -125,6 +127,21 @@ class Note extends FlxSprite
 		return value;
 	}
 
+	private function set_rainbow(value:Bool):Bool {
+		if(rainbow != value) {
+			if(value) {
+				if(colorSwap != null) {
+					colorSwap.brightness = 0;
+					colorSwap.hue = 0;
+					colorSwap.saturation = 0;
+				} else {
+					colorSwap = new ColorSwap();
+				}
+			}
+		}
+
+		return rainbow = value;
+	}
 	private function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG.splashSkin;
 		if (noteData > -1 && noteData < ClientPrefs.arrowHSV.length)
@@ -159,7 +176,9 @@ class Note extends FlxSprite
 				case 'GF Sing':
 					gfNote = true;
 				case 'Random Scroll':
-					multScroll = FlxG.random.float(eventVal1 == null ? 0.5 : Std.parseFloat(eventVal1), eventVal2 == null ? 1.6 : Std.parseFloat(eventVal2));
+					multScroll = FlxG.random.float(0.7, 1.3);
+				case 'Rainbow Note':
+					rainbow = true;
 			}
 			noteType = value;
 		}
@@ -352,6 +371,9 @@ class Note extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
+		if(rainbow && colorSwap != null) {
+			colorSwap.hue += 0.1; // :)))))))))))))))
+		}
 		super.update(elapsed);
 
 		if (mustPress)

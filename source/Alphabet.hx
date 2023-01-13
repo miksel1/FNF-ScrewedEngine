@@ -1,5 +1,6 @@
 package;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.addons.ui.FlxUI.NamedBool;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -21,7 +22,7 @@ enum Alignment
 	RIGHT;
 }
 
-class Alphabet extends FlxSpriteGroup
+class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 {
 	public var text(default, set):String;
 	public var image(default, set):String;
@@ -259,19 +260,19 @@ class Alphabet extends FlxSpriteGroup
 	}
 
 	public function setAlpha(newAlpha:Float) {
-		forEach(function(alp:FlxSprite) {
+		forEach(function(alp:AlphaCharacter) {
 			alp.alpha = newAlpha;
 		});
 	}
 
 	public function setVisible(newVisible:Bool) {
-		forEach(function(alp:FlxSprite) {
+		forEach(function(alp:AlphaCharacter) {
 			alp.visible = newVisible;
 		});
 	}
 
 	function set_useColorSwap(v:Bool) {
-		forEach(function(spr:FlxSprite) {
+		forEach(function(spr:AlphaCharacter) {
 			spr.useSwap = v;
 		});
 		return useColorSwap = v;
@@ -289,6 +290,7 @@ class Alphabet extends FlxSpriteGroup
 	NUMBER_OR_SYMBOL;
 }*/
 
+@:structInit
 typedef Letter = {
 	?anim:Null<String>,
 	?offsets:Array<Float>,
@@ -474,9 +476,9 @@ class AlphaCharacter extends FlxSprite
 		return useSwap = v;
 	}
 
-	override function update(elapsed) {
+	override function update(elapsed:Float) {
 		if(useSwap && colorSwap != null) {
-			colorSwap.hue += elapsed;
+			colorSwap.hue += elapsed * 0.1;
 		}
 		super.update(elapsed);
 	}
