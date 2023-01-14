@@ -88,6 +88,11 @@ class Option
 	public var description:String = '';
 	public var name:String = 'Unknown';
 
+	/**
+	 * If its like that, change alpha no a lower value
+	 */
+	public var notShowIf:Null<{clientName:String, value:Dynamic}> = null;
+
 	public function new(name:String, description:String = '', variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String>)
 	{
 		this.name = name;

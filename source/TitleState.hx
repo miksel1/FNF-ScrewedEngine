@@ -618,6 +618,11 @@ class TitleState extends MusicBeatState
 				image = 'otherAlphabet';
 
 			var money:Alphabet = new Alphabet(0, 0, textArray[i], true, image);
+			if(yess) {
+				money.useColorSwap = true;
+				money.colorEffect = null;
+			}
+
 			money.screenCenter(X);
 			money.y += (i * 60) + 200 + offset;
 			if(credGroup != null && textGroup != null) {
@@ -633,11 +638,11 @@ class TitleState extends MusicBeatState
 				money.forEach(function(spr:FlxSprite) {
 					spr.shader = mosaicc.shader;
 				});
-			} else {
+			}/* else {
 				money.forEach(function(spr:FlxSprite) {
 					spr.shader = swagShader.shader;
 				});
-			}
+			}*/
 		}
 	}
 
@@ -654,6 +659,11 @@ class TitleState extends MusicBeatState
 				image = 'otherAlphabet';
 
 			var coolText:Alphabet = new Alphabet(0, 0, text, true, image);
+			if(yess) {
+				coolText.useColorSwap = true;
+				coolText.colorEffect = null;
+			}
+
 			coolText.screenCenter(X);
 			coolText.y += (textGroup.length * 60) + 200 + offset;
 			credGroup.add(coolText);
@@ -667,11 +677,11 @@ class TitleState extends MusicBeatState
 				coolText.forEach(function(spr:FlxSprite) {
 					spr.shader = mosaicc.shader;
 				});
-			} else {
+			}/* else {
 				coolText.forEach(function(spr:FlxSprite) {
 					spr.shader = swagShader.shader;
 				});
-			}
+			}*/
 		}
 	}
 

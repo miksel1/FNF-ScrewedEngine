@@ -1,5 +1,6 @@
 package;
 
+import effects.Shaders.GlitchEffect;
 import effects.MosaicEffect;
 import openfl.display.BitmapData;
 #if LUA_ALLOWED
@@ -1224,26 +1225,48 @@ class FunkinLua {
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "addGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25,
+		Lua_helper.add_callback(lua, "addGlitchEffect", function(tag:String, ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25)
+		{
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				//if(useOtherTypeInsteadOfThe3DWorldEffect) {
+					var glitchShader:GlitchEffect = new GlitchEffect();
+					glitchShader.waveAmplitude = waveAmplitude;
+					glitchShader.waveFrequency = waveFrequency;
+					glitchShader.waveSpeed = waveSpeed;
+					glitchShader.Enabled = true;
+
+					stuff.shader = glitchShader.shader;
+					PlayState.instance.modchartGlitchEffects.set(tag, glitchShader);
+				/*} else {
+					stuff.shader = PlayState.the3DWorldEffect.shader;
+				}*/
+				return true;
+			} else {
+				luaTrace('addGlitchEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "addWiggleEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25,
 			useOtherTypeInsteadOfThe3DWorldEffect:Bool = true)
 		{
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 				if(useOtherTypeInsteadOfThe3DWorldEffect) {
-					var glitchShader:WiggleEffect = new WiggleEffect();
-					glitchShader.effectType = WiggleEffect.typeFromString(type);
-					glitchShader.waveAmplitude = waveAmplitude;
-					glitchShader.waveFrequency = waveFrequency;
-					glitchShader.waveSpeed = waveSpeed;
+					var wiggleShader:WiggleEffect = new WiggleEffect();
+					wiggleShader.effectType = WiggleEffect.typeFromString(type);
+					wiggleShader.waveAmplitude = waveAmplitude;
+					wiggleShader.waveFrequency = waveFrequency;
+					wiggleShader.waveSpeed = waveSpeed;
 
-					stuff.shader = glitchShader.shader;
-					PlayState.instance.modchartWiggleEffects.set(tag, glitchShader);
+					stuff.shader = wiggleShader.shader;
+					PlayState.instance.modchartWiggleEffects.set(tag, wiggleShader);
 				} else {
 					stuff.shader = PlayState.the3DWorldEffect.shader;
 				}
 				return true;
 			} else {
-				luaTrace('addGlitchEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+				luaTrace('addWiggleEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
 			}
 			return false;
 		});

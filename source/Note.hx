@@ -76,6 +76,9 @@ class Note extends FlxSprite
 	public var multAlpha:Float = 1;
 	public var multSpeed(default, set):Float = 1;
 	//public var scrollSpeedType:String = 'default';
+	/**
+	 * Basically the same, but without resizing and shit
+	 */
 	public var multScroll(default, set):Float = 1;
 
 	public var copyX:Bool = true;

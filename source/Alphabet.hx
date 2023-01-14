@@ -44,6 +44,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 	public var startPosition:FlxPoint = new FlxPoint(0, 0); //for the calculations
 
 	public var useColorSwap(default, set):Bool = false;
+	public var colorEffect(default, set):Null<Float> = 0.1;
 
 	public function new(x:Float, y:Float, text:String = "", bold:Bool = true, image:String = 'alphabet')
 	{
@@ -277,6 +278,12 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 		});
 		return useColorSwap = v;
 	}
+	function set_colorEffect(v:Null<Float>):Null<Float> {
+		forEach(function(spr:AlphaCharacter) {
+			spr.colorEffect = v;
+		});
+		return colorEffect = v;
+	}
 }
 
 
@@ -307,6 +314,7 @@ class AlphaCharacter extends FlxSprite
 
 	var colorSwap:ColorSwap;
 	public var useSwap(default, set):Bool = false;
+	public var colorEffect:Null<Float> = 0.1;
 
 	public static var allLetters:Map<String, Null<Letter>> = [
 		//alphabet
@@ -478,7 +486,10 @@ class AlphaCharacter extends FlxSprite
 
 	override function update(elapsed:Float) {
 		if(useSwap && colorSwap != null) {
-			colorSwap.hue += elapsed * 0.1;
+			if(colorEffect == null)
+				colorSwap.hue += elapsed;
+			else
+				colorSwap.hue += elapsed * colorEffect;
 		}
 		super.update(elapsed);
 	}

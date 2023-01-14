@@ -1,5 +1,6 @@
 package;
 
+import effects.Shaders.GlitchEffect;
 import lime.app.Application;
 import lime.system.System;
 import flixel.graphics.FlxGraphic;
@@ -113,7 +114,8 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map<String, effects.WiggleEffect>();
-	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map<String, effects.MosaicEffect>();
+	public var modchartGlitchEffects:Map<String, GlitchEffect> = new Map<String, GlitchEffect>();
+	public var modchartMosaicEffects:Map<String, MosaicEffect> = new Map<String, MosaicEffect>();
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
@@ -3238,6 +3240,9 @@ class PlayState extends MusicBeatState
 
 		for (effect => value in modchartWiggleEffects)
 		{
+			value.update(elapsed);
+		}
+		for(effect => value in modchartGlitchEffects) {
 			value.update(elapsed);
 		}
 
