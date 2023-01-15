@@ -182,6 +182,9 @@ class Note extends FlxSprite
 					multScroll = FlxG.random.float(0.7, 1.3);
 				case 'Rainbow Note':
 					rainbow = true;
+				case 'Rainbow Random Scroll':
+					multScroll = FlxG.random.float(0.7, 1.3);
+					rainbow = true;
 			}
 			noteType = value;
 		}
