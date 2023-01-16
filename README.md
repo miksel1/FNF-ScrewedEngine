@@ -62,7 +62,7 @@ _____________________________________
    * In the chart editor, I (Wither) added a few new features like:
      * Manual Zoom.
      * More Zoom.
-     * Drawing. (miksel)
+     * Drawing (press C to put notes where is the mouse). (miksel)
      * Autosave.
      * More buttons.
      * Strident Engine.
