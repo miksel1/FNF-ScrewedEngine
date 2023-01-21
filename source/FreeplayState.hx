@@ -35,6 +35,13 @@ class FreeplayState extends MusicBeatState
 	var notSongs:Array<Int> = [];
 
 	var sections:Array<String> = [];
+	var curFreeplaySection(get, null):String;
+
+	function get_curFreeplaySection():String {
+		if(curSelected < 0)
+			return 'MAIN';
+		return sections[curSelected];
+	}
 
 	var selector:FlxText;
 
@@ -69,6 +76,11 @@ class FreeplayState extends MusicBeatState
 	var ahg:Bool = true;
 
 	var originalTitlePosition:Null<Float> = null;
+
+	var coolSongs:Array<String> = [
+		'dad-battle',
+		'blammed'
+	];
 
 	override function create()
 	{
@@ -139,40 +151,6 @@ class FreeplayState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 
-		searcher = new FlxUIInputText(90, 30);
-		searcher.scrollFactor.set();
-		searcher.resize(searcher.width *= 1.3, searcher.height *= 1.3);
-		searcher.screenCenter(X);
-		searcher.x -= 10;
-		searcher.callback = function(text, action)
-		{
-			ahg = false;
-			if (action == FlxInputText.INPUT_ACTION)
-			{
-				for (i in 0...songs.length)
-				{
-					if (songs[i].songName.toLowerCase().trim().contains(text.toLowerCase().trim()))
-					{
-						curSelected = i;
-						holdTime = 0;
-						changeSelection(0, FlxG.random.bool(30.4));
-						changeDiff();
-						return; // fucking fuck it
-					}
-				}
-			}
-			else if (action == FlxInputText.ENTER_ACTION)
-			{
-				searcher.hasFocus = false;
-				new FlxTimer().start(0.003, function(tmr:FlxTimer)
-				{
-					ahg = true;
-				});
-			}
-		};
-		add(searcher);
-		blockPressWhileTypingOn.push(searcher);
-
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
@@ -202,7 +180,18 @@ class FreeplayState extends MusicBeatState
 					sections[j] = songName.toUpperCase().replace('--', '');
 				}
 			}
-			var songText:Alphabet = new Alphabet(isValid ? 90 : 120, 320, songName, true);
+			var image:String = coolSongs.contains(Paths.formatToSongPath(songName)) ? 'otherAlphabet' : 'alphabet';
+
+			var songText:Alphabet = new Alphabet(
+				isValid ? 90 : 120,
+				320,
+				songName,
+				true,
+				image);
+			if(coolSongs.contains(Paths.formatToSongPath(songName))) {
+				songText.useColorSwap = true;
+				songText.colorEffect = 0.5;
+			}
 			songText.isMenuItem = true;
 			songText.targetY = i - curSelected;
 			grpSongs.add(songText);
@@ -269,22 +258,40 @@ class FreeplayState extends MusicBeatState
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
-		// JUST DOIN THIS SHIT FOR TESTING!!!
-		/* 
-			var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
 
-			var texFel:TextField = new TextField();
-			texFel.width = FlxG.width;
-			texFel.height = FlxG.height;
-			// texFel.
-			texFel.htmlText = md;
-
-			FlxG.stage.addChild(texFel);
-
-			// scoreText.textField.htmlText = md;
-
-			trace(md);
-		 */
+		searcher = new FlxUIInputText(90, 30);
+		searcher.scrollFactor.set();
+		searcher.resize(searcher.width *= 1.3, searcher.height *= 1.3);
+		searcher.screenCenter(X);
+		searcher.x -= 10;
+		searcher.callback = function(text, action)
+		{
+			ahg = false;
+			if (action == FlxInputText.INPUT_ACTION)
+			{
+				for (i in 0...songs.length)
+				{
+					if (songs[i].songName.toLowerCase().trim().contains(text.toLowerCase().trim()))
+					{
+						curSelected = i;
+						holdTime = 0;
+						changeSelection(0, FlxG.random.bool(30.4));
+						changeDiff();
+						return; // fucking fuck it
+					}
+				}
+			}
+			else if (action == FlxInputText.ENTER_ACTION)
+			{
+				searcher.hasFocus = false;
+				new FlxTimer().start(0.003, function(tmr:FlxTimer)
+				{
+					ahg = true;
+				});
+			}
+		};
+		add(searcher);
+		blockPressWhileTypingOn.push(searcher);
 
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
@@ -467,6 +474,9 @@ class FreeplayState extends MusicBeatState
 				{
 					colorTween.cancel();
 				}
+				if(titleTxtTween != null)
+					titleTxtTween.cancel();
+
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new MainMenuState());
 			}
@@ -503,66 +513,84 @@ class FreeplayState extends MusicBeatState
 			}
 			else if (accepted /*&& !notSongs.contains(curSelected)*/ && Song.isValidSong(songs[curSelected].songName))
 			{
+				var cannn:Bool = true;
 				persistentUpdate = false;
 				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-				/*#if MODS_ALLOWED
-					if(!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop)) && !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop))) {
+				var freeplaySection:String = '';
+
+				function works(song:String, asas:String):Bool {
+					#if MODS_ALLOWED
+					if(!FileSystem.exists(Paths.modsJson(song + '/' + asas)) && !FileSystem.exists(Paths.json(song + '/' + asas)))
 					#else
-					if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
+					if(!OpenFlAssets.exists(Paths.json(song + '/' + asas)))
 					#end
-						poop = songLowercase;
-						curDifficulty = 1;
-						trace('Couldnt find file');
-				}*/
-				trace(poop);
-
-				var songnsn = Song.loadFromJson(poop, songLowercase);
-
-				var max = 0;
-				for (section in songnsn.notes)
-				{
-					if (section.sectionNotes.length > max)
-						max = section.sectionNotes.length;
-				}
-				function play()
-				{
-					PlayState.SONG = songnsn;
-					PlayState.isStoryMode = false;
-					PlayState.storyDifficulty = curDifficulty;
-
-					trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
-					if (colorTween != null)
 					{
-						colorTween.cancel();
+						return false;
 					}
+					return true;
+				}
+				if(!works(songLowercase, poop) && works(curFreeplaySection.toLowerCase() + '/' + songLowercase, poop))
+				{
+					freeplaySection = curFreeplaySection.toLowerCase();
+					trace('yeiii');
+				} else if(!works(songLowercase, poop)) {
+					trace('nonononononoooooo');
+					cannn = false;
+				}
+				if (cannn)
+				{
+					trace(poop);
 
-					if (FlxG.keys.pressed.SHIFT)
+					var songnsn = Song.loadFromJson(poop, songLowercase, freeplaySection);
+
+					var max = 0;
+					for (section in songnsn.notes)
 					{
-						LoadingState.loadAndSwitchState(new ChartingState());
+						if (section.sectionNotes.length > max)
+							max = section.sectionNotes.length;
+					}
+					function play()
+					{
+						PlayState.SONG = songnsn;
+						PlayState.isStoryMode = false;
+						PlayState.storyDifficulty = curDifficulty;
+
+						trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
+						if (colorTween != null)
+						{
+							colorTween.cancel();
+						}
+						if(titleTxtTween != null)
+							titleTxtTween.cancel();
+
+						if (FlxG.keys.pressed.SHIFT)
+						{
+							LoadingState.loadAndSwitchState(new ChartingState());
+						}
+						else
+						{
+							LoadingState.loadAndSwitchState(new PlayState());
+						}
+
+						FlxG.sound.music.volume = 0;
+
+						destroyFreeplayVocals();
+					}
+					if (max > ClientPrefs.maxNotes)
+					{
+						openSubState(new Prompt("The actual song has more than " + ClientPrefs.maxNotes + " notes\n\nProceed?", 0, function()
+						{
+							play();
+						}, function()
+						{
+							FlxG.sound.play(Paths.sound('cancelMenu'));
+						}));
 					}
 					else
 					{
-						LoadingState.loadAndSwitchState(new PlayState());
-					}
-
-					FlxG.sound.music.volume = 0;
-
-					destroyFreeplayVocals();
-				}
-				if (max > ClientPrefs.maxNotes)
-				{
-					openSubState(new Prompt("The actual song has more than " + ClientPrefs.maxNotes + " notes\n\nProceed?", 0, function()
-					{
 						play();
-					}, function()
-					{
-						FlxG.sound.play(Paths.sound('cancelMenu'));
-					}));
-				}
-				else
-				{
-					play();
+					}
 				}
 			}
 			else if (reset && Song.isValidSong(songs[curSelected].songName))
@@ -621,6 +649,12 @@ class FreeplayState extends MusicBeatState
 	}
 
 	var resetVisibility:Bool = false; // less lag
+
+	var titleTxtTween:FlxTween;
+	/**
+	 * 0 for nothing, 1 for reseting, 2 for moving
+	 */
+	var titleTweenSite:Int = 0;
 
 	function changeSelection(change:Int = 0, playSound:Bool = true)
 	{
@@ -742,6 +776,35 @@ class FreeplayState extends MusicBeatState
 			resetVisibility = false;
 		}
 
+		if (curSelected > -1 && titleTxt != null)
+		{
+			if (songs[curSelected].songName.length > 11)
+			{
+				var num = songs[curSelected].songName.length > 16 ? 15 + songs[curSelected].songName.length / 4 : 10;
+				if (titleTxtTween != null)
+					titleTxtTween.cancel();
+
+				titleTxtTween = FlxTween.tween(titleTxt, {x: originalTitlePosition + songs[curSelected].songName.length * num}, 1, {
+					onComplete: function(twn:FlxTween)
+					{
+						titleTxtTween = null;
+					}
+				});
+				// titleTxt.x += songs[curSelected].songName.length * 10;
+			}
+			else if (titleTxt.x != originalTitlePosition)
+			{
+				if (titleTxtTween != null)
+					titleTxtTween.cancel();
+
+				titleTxtTween = FlxTween.tween(titleTxt, {x: originalTitlePosition}, 1, {
+					onComplete: function(twn:FlxTween)
+					{
+						titleTxtTween = null;
+					}
+				});
+			}
+		}
 		changeTitleText();
 	}
 
