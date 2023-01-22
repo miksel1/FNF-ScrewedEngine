@@ -149,7 +149,7 @@ class TitleState extends MusicBeatState
 
 		super.create();
 
-		FlxG.save.bind('funkin' #if (flixel < "5.0.0"), 'ninjamuffin99' #end);
+		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 
 		shadweeeerrr = FlxG.random.bool(10);
 

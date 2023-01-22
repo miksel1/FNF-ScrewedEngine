@@ -37,30 +37,30 @@ class VisualsUISubState extends BaseOptionsMenu
 		title = 'Visuals and UI';
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Note Splashes',
-			"If unchecked, hitting \"Sick!\" notes won't show particles.",
+		var option:Option = new Option({s: 'Note Splashes'},
+			{s: "If unchecked, hitting \"Sick!\" notes won't show particles.", spanish: 'Si está desactivado, al hacer "Sick!" no saldrán partículas\nde la nota.'},
 			'noteSplashes',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Hide HUD',
-			'If checked, hides most HUD elements.',
+		var option:Option = new Option({s: 'Hide HUD', spanish: 'Ocultar HUD'},
+			{s: 'If checked, hides most HUD elements.', spanish: 'Si está activado, oculta la mayoría de los elementos del HUD.'},
 			'hideHud',
 			'bool',
 			false);
 		addOption(option);
 
-		timeBarOption = new Option('Time Bar:',
-			"What should the Time Bar display?",
+		timeBarOption = new Option({s: 'Time Bar:', spanish: 'Barra de Tiempo:'},
+			{s: "What should the Time Bar display?", spanish: '¿Qué debería mostrar la Barra de Tiempo?'},
 			'timeBarType',
 			'string',
 			'Time Left',
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(timeBarOption);
 
-		timeBarDivisionsOption = new Option('Time Bar Divisions',
-			'How many divisions the Time Bar has.\n(CAN CAUSE LAG IF TOO HIGH)',
+		timeBarDivisionsOption = new Option({s: 'Time Bar Divisions', spanish: 'Divisiones de la Barra de Tiempo'},
+			{s: 'How many divisions the Time Bar has.\n(CAN CAUSE LAG IF TOO HIGH)', spanish: '¿Cuántas divisiones tiene la Barra de Tiempo?\n(PUEDE CAUSAR LAG SI ESTÁ MUY ALTO)'},
 			'timeBarDivisions',
 			'int',
 			800);
@@ -70,29 +70,29 @@ class VisualsUISubState extends BaseOptionsMenu
 		timeBarDivisionsOption.changeValueShift = 4;
 		addOption(timeBarDivisionsOption);
 
-		var option:Option = new Option('Flashing Lights',
-			"Uncheck this if you're sensitive to flashing lights!",
+		var option:Option = new Option({s: 'Flashing Lights', spanish: 'Luces Parpadeantes'},
+			{s: "Uncheck this if you're sensitive to flashing lights!", spanish: '¡Desactiva esto si eres sensible a las luces parpadeantes!'},
 			'flashing',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Camera Zooms',
-			"If unchecked, the camera won't zoom in on a beat hit.",
+		var option:Option = new Option({s: 'Camera Zooms', spanish: 'Zoom de Cámara'},
+			{s: "If unchecked, the camera won't zoom in on a beat hit.", spanish: 'Si está desactivado, la cámara no hará zoom en un "beat hit".'},
 			'camZooms',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Score Text Zoom on Hit',
-			"If unchecked, disables the Score text zooming\neverytime you hit a note.",
+		var option:Option = new Option({s: 'Score Text Zoom on Hit', spanish: 'Zoom del Texto de Puntuación'},
+			{s: "If unchecked, disables the Score text zooming\neverytime you hit a note.", spanish: 'Si está desactivado, el texto de puntuación no hará zoom\ncuando pulses una nota.'},
 			'scoreZoom',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Health Bar Transparency',
-			'How much transparent should the health bar and icons be.',
+		var option:Option = new Option({s: 'Health Bar Transparency', spanish: 'Transparencia de la Barra de Vida'},
+			{s: 'How much transparent should the health bar and icons be.', spanish: 'Cuánta transparencia la barra de vida y los iconos deberían tener.'},
 			'healthBarAlpha',
 			'percent',
 			1);
@@ -103,8 +103,8 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.decimals = 1;
 		addOption(option);
 
-		var option:Option = new Option('Max Notes in Freeplay',
-			'How much notes you can play?',
+		var option:Option = new Option({s: 'Max Notes in Freeplay', spanish: 'Máximo de notas en Freeplay'},
+			{s: 'How much notes can you play?', spanish: '¿Cuánto es el máximo de notas que puedes tocar?'},
 			'maxNotes',
 			'int',
 			5000);
@@ -115,8 +115,8 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		#if !mobile
-		var option:Option = new Option('FPS Counter',
-			'If unchecked, hides FPS Counter.',
+		var option:Option = new Option({s: 'FPS Counter', spanish: 'Mostrar FPS'},
+			{s: 'If unchecked, hides FPS Counter.', spanish: 'Si está desactivado, oculta el texto de FPS.'},
 			'showFPS',
 			'bool',
 			true);
@@ -124,15 +124,15 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangeFPSCounter;
 		#end
 
-		var option:Option = new Option('Judgement Counter',
-			'If checked, a counter at the left side',
+		var option:Option = new Option({s: 'Judgement Counter', spanish: 'Contador de Notas'},
+			{s: 'If checked, a counter at the left side.', spanish: 'Si está activado, un contador aparecerá a la izquierda.'},
 			'crazyCounter',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Pause Screen Song:',
-			"What song do you prefer for the Pause Screen?",
+		var option:Option = new Option({s: 'Pause Screen Song:', spanish: 'Música del Menú de Pausa:'},
+			{s: "What song do you prefer for the Pause Screen?", spanish: '¿Qué música prefieres para el Menú de Pausa?'},
 			'pauseMusic',
 			'string',
 			'Tea Time',
@@ -141,16 +141,16 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangePauseMusic;
 
 		#if CHECK_FOR_UPDATES
-		var option:Option = new Option('Check for Updates',
-			'On Release builds, turn this on to check for updates when you start the game.',
+		var option:Option = new Option({s: 'Check for Updates', spanish: 'Buscar Actualizaciones'},
+			{s: 'On Release builds, turn this ON to check for updates when you start the game.', spanish: 'Si está activado, buscará actualizaciones más recientes\ncuando inicias el juego.'},
 			'checkForUpdates',
 			'bool',
 			true);
 		addOption(option);
 		#end
 
-		var option:Option = new Option('Combo Stacking',
-			"If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read",
+		var option:Option = new Option({s: 'Combo Stacking'},
+			{s: "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", spanish: 'Si está desactivado, el "Rating" y el Combo no se quedarán atascados\nguardándolos en el sistema de memoria y haciéndolos más fácil de leer.'},
 			'comboStacking',
 			'bool',
 			true);

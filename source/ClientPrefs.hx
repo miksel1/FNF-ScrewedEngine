@@ -31,7 +31,7 @@ class ClientPrefs {
 	public static var hitsoundVolume:Float = 0;
 	public static var pauseMusic:String = 'Tea Time';
 	public static var checkForUpdates:Bool = true;
-	public static var comboStacking = true;
+	public static var comboStacking:Bool = true;
 	public static var crazyCounter:Bool = true;
 	public static var maxNotes:Int = 5000;
 	public static var showHealth:Bool = true;
@@ -66,6 +66,8 @@ class ClientPrefs {
 	public static var shaders:Bool = true;
 	public static var grainEffect:Bool = true;
 	public static var mosaicEffect:Bool = true;
+
+	public static var language:String = 'English';
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
@@ -146,17 +148,21 @@ class ClientPrefs {
 		FlxG.save.data.pauseMusic = pauseMusic;
 		FlxG.save.data.checkForUpdates = checkForUpdates;
 		FlxG.save.data.comboStacking = comboStacking;
+		FlxG.save.data.language = language;
 	
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2' #if (flixel < "5.0.0"), 'ninjamuffin99' #end); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
+		save.bind('controls_v2', CoolUtil.getSavePath()); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 		save.data.customControls = keyBinds;
 		save.flush();
 		FlxG.log.add("Settings saved!");
 	}
 
 	public static function loadPrefs() {
+		if(FlxG.save.data.language != null) {
+			language = FlxG.save.data.language;
+		}
 		if(FlxG.save.data.timeBarDivisions != null)
 			timeBarDivisions = FlxG.save.data.timeBarDivisions;
 
@@ -296,7 +302,7 @@ class ClientPrefs {
 			comboStacking = FlxG.save.data.comboStacking;
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2' #if (flixel < "5.0.0"), 'ninjamuffin99' #end);
+		save.bind('controls_v2', CoolUtil.getSavePath());
 		if(save != null && save.data.customControls != null) {
 			var loadedControls:Map<String, Array<FlxKey>> = save.data.customControls;
 			for (control => keys in loadedControls) {

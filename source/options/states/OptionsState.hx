@@ -1,5 +1,6 @@
 package options.states;
 
+import Language.LanguageArray;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -29,25 +30,55 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'];
+	var defaults:Array<String> = [
+		'Note Colors',
+		'Controls',
+		'Adjust Delay and Combo',
+		'Graphics',
+		'Visuals and UI',
+		'Gameplay',
+		'Language'
+	];
+	var options:LanguageArray = {
+		a: [
+			'Note Colors',
+			'Controls',
+			'Adjust Delay and Combo',
+			'Graphics',
+			'Visuals and UI',
+			'Gameplay',
+			'Language'
+		],
+		spanish: [
+			'Colores de Notas',
+			'Controles',
+			'Ajustar Retraso y Combo',
+			'Gráficos',
+			'Visualización y UI',
+			'Gameplay',
+			'Idioma'
+		]
+	};
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
-			case 'Note Colors':
+			case 'Note Colors' | 'Colores de Notas':
 				openSubState(new options.substates.NotesSubState());
-			case 'Controls':
+			case 'Controls' | 'Controles':
 				openSubState(new options.substates.ControlsSubState());
-			case 'Graphics':
+			case 'Graphics' | 'Gráficos':
 				openSubState(new options.substates.GraphicsSettingsSubState());
-			case 'Visuals and UI':
+			case 'Visuals and UI' | 'Visualización y UI':
 				openSubState(new options.substates.VisualsUISubState());
 			case 'Gameplay':
 				openSubState(new options.substates.GameplaySettingsSubState());
-			case 'Adjust Delay and Combo':
+			case 'Adjust Delay and Combo' | 'Ajustar Retraso y Combo':
 				LoadingState.loadAndSwitchState(new options.states.NoteOffsetState());
+			case 'Language' | 'Idioma':
+				openSubState(new options.substates.LanguageSettingsSubState());
 		}
 	}
 
@@ -70,11 +101,13 @@ class OptionsState extends MusicBeatState
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		for (i in 0...options.length)
+		for (i in 0...Language.getArray(options).length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true);
+			var option = Language.getArray(options)[i];
+
+			var optionText:Alphabet = new Alphabet(0, 0, option, true);
 			optionText.screenCenter();
-			optionText.y += (100 * (i - (options.length / 2))) + 50;
+			optionText.y += (100 * (i - (Language.getArray(options).length / 2))) + 50;
 			grpOptions.add(optionText);
 		}
 
@@ -114,15 +147,15 @@ class OptionsState extends MusicBeatState
 		}
 
 		if (controls.ACCEPT) {
-			openSelectedSubstate(options[curSelected]);
+			openSelectedSubstate(Language.getArray(options)[curSelected]);
 		}
 	}
 
 	function changeSelection(change:Int = 0) {
 		curSelected += change;
 		if (curSelected < 0)
-			curSelected = options.length - 1;
-		if (curSelected >= options.length)
+			curSelected = Language.getArray(options).length - 1;
+		if (curSelected >= Language.getArray(options).length)
 			curSelected = 0;
 
 		var bullShit:Int = 0;

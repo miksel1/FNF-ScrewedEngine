@@ -45,7 +45,7 @@ class CreditsState extends MusicBeatState
 
 	var glitchedOnes:Array<String> = ['Wither362', 'Delta', 'miksel'];
 	var grainedOnes:Array<String> = ['Wither362', 'BeastlyGhost']; // time to credit them ;)
-	var coolTitleOnes:Array<String> = ['Wither362', 'Delta', 'Join our Discord!', 'miksel', 'Meme Hoovy', 'BeastlyGhost']; // yes dude ;D
+	var coolTitleOnes:Array<String> = ['Wither362', 'Delta', 'Join our Discord!', 'miksel', 'Meme Hoovy', 'BeastlyGhost', 'tposejank']; // yes dude ;D
 
 	var glitchEffect:FlxGlitchEffect;
 	var glitchBg:FlxEffectSprite;
@@ -113,9 +113,10 @@ class CreditsState extends MusicBeatState
 			['miksel',				'miksel',			'Features and Idea Creator',									'https://www.youtube.com/@miksel_fnf',	'371893'],
 			['Join our Discord!',	'discord',			'Yeah! join us for features and more!',							'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
-			['Screwed Engine Contributors'],
+			['Screwed Engine Contributors and Others...'],
 			['Meme Hoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
-			['BeastlyGhost',		'beast',			'Icons help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
+			['BeastlyGhost',		'beast',			'Icons and other help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
+			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
 			[''],
 			['Original Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],

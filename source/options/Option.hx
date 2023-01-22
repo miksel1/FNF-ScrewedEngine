@@ -1,5 +1,7 @@
 package options;
 
+import Language.LanguageArray;
+import Language.LanguageString;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -85,15 +87,15 @@ class Option
 	 * %v = Current value, %d = Default value
 	 */
 	public var displayFormat:String = '%v';
-	public var description:String = '';
-	public var name:String = 'Unknown';
+	public var description:LanguageString = {s: ''};
+	public var name:LanguageString = {s: 'Unknown', spanish: 'Desconocido'};
 
 	/**
 	 * If its like that, change alpha no a lower value
 	 */
 	public var notShowIf:Null<{clientName:String, value:Dynamic}> = null;
 
-	public function new(name:String, description:String = '', variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String>)
+	public function new(name:LanguageString, description:LanguageString, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String>)
 	{
 		this.name = name;
 		this.description = description;
@@ -114,8 +116,8 @@ class Option
 					defaultValue = 1;
 				case 'string':
 					defaultValue = '';
-					if(options.length > 0) {
-						defaultValue = options[0];
+					if(/*Language.getArray(*/options/*)*/.length > 0) {
+						defaultValue = /*Language.getArray(*/options/*)*/[0];
 					}
 			}
 		}
@@ -127,7 +129,7 @@ class Option
 		switch(type)
 		{
 			case 'string':
-				var num:Int = options.indexOf(getValue());
+				var num:Int = /*Language.getArray(*/options/*)*/.indexOf(getValue());
 				if(num > -1) {
 					curOption = num;
 				}

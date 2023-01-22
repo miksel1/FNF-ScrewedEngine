@@ -89,7 +89,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		for (i in 0...optionsArray.length)
 		{
-			var optionText:Alphabet = new Alphabet(290, 260, optionsArray[i].name, false);
+			var optionText:Alphabet = new Alphabet(290, 260, Language.getString(optionsArray[i].name), false);
 			optionText.isMenuItem = true;
 			/*optionText.forceX = 300;
 			optionText.yMult = 90;*/
@@ -206,13 +206,13 @@ class BaseOptionsMenu extends MusicBeatSubstate
 									else num++;
 
 									if(num < 0) {
-										num = curOption.options.length - 1;
-									} else if(num >= curOption.options.length) {
+										num = /*Language.getArray(*/curOption.options/*)*/.length - 1;
+									} else if(num >= /*Language.getArray(*/curOption.options/*)*/.length) {
 										num = 0;
 									}
 
 									curOption.curOption = num;
-									curOption.setValue(curOption.options[num]); //lol
+									curOption.setValue(/*Language.getArray(*/curOption.options/*)*/[num]); //lol
 									//trace(curOption.options[num]);
 							}
 							updateTextFrom(curOption);
@@ -254,7 +254,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					{
 						if(leOption.type == 'string')
 						{
-							leOption.curOption = leOption.options.indexOf(leOption.getValue());
+							leOption.curOption = /*Language.getArray(*/leOption.options/*)*/.indexOf(leOption.getValue());
 						}
 						updateTextFrom(leOption);
 					}
@@ -299,7 +299,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if (curSelected >= optionsArray.length)
 			curSelected = 0;
 
-		descText.text = optionsArray[curSelected].description;
+		descText.text = Language.getString(optionsArray[curSelected].description);
 		descText.screenCenter(Y);
 		descText.y += 270;
 
