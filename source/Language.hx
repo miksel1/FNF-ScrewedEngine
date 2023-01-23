@@ -1,18 +1,21 @@
 package;
 
+@:structInit
 typedef LanguageString = {
 	var s:String;
 	@:optional var spanish:String;
 	@:optional var german:String;
 }
 
+@:structInit
 typedef LanguageArray = {
 	var a:Array<String>;
 	@:optional var spanish:Array<String>;
 	@:optional var german:Array<String>;
 }
 
-/*typedef LanguageDynamic = {
+/*@:structInit
+typedef LanguageDynamic = {
 	var d:Dynamic;
 	@:optional var spanish:Dynamic;
 }*/
