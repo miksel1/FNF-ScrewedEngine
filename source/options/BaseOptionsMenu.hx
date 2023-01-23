@@ -166,6 +166,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					curOption.setValue((curOption.getValue() == true) ? false : true);
 					curOption.change();
+					//if(curOption.id == 'lang')
+
 					reloadCheckboxes();
 				}
 			} else {
@@ -354,6 +356,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	function reloadCheckboxes() {
 		for (checkbox in checkboxGroup) {
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
+		}
+	}
+	function reload() {
+		for(option in optionsArray) {
+			//option.
 		}
 	}
 }

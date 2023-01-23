@@ -11,6 +11,7 @@ class LanguageSettingsSubState extends BaseOptionsMenu {
 			'string',
 			'English',
 			Language.getLanguages());
+		option.id = 'lang';
 		addOption(option);
 
 		super();

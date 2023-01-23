@@ -95,6 +95,7 @@ class Option
 	 */
 	public var notShowIf:Null<{clientName:String, value:Dynamic}> = null;
 
+	public var id:String = '';
 	public function new(name:LanguageString, description:LanguageString, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String>)
 	{
 		this.name = name;
