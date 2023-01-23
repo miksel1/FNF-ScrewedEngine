@@ -3,11 +3,13 @@ package;
 typedef LanguageString = {
 	var s:String;
 	@:optional var spanish:String;
+	@:optional var german:String;
 }
 
 typedef LanguageArray = {
 	var a:Array<String>;
 	@:optional var spanish:Array<String>;
+	@:optional var german:Array<String>;
 }
 
 /*typedef LanguageDynamic = {
@@ -25,10 +27,16 @@ class Language {
 			return s.spanish;
 		return s.s;
 	}
+	public static var getGerman(s:LanguageString):String {
+		if(s.german != null)
+			return s.german;
+		return s.s;
+	}
 
 	public static function getString(s:LanguageString):String {
-		if(ClientPrefs.language == 'Spanish') {
-			return getSpanish(s);
+		switch(ClientPrefs.language) {
+			case 'Español':
+				return getSpanish(s);
 		}
 		return s.s;
 	}
@@ -38,10 +46,16 @@ class Language {
 			return a.spanish;
 		return a.a;
 	}
+	public static function getArrayGerman(a:LanguageArray):Array<String> {
+		if(a.german != null)
+			return a.german;
+		return a.a;
+	}
 
 	public static function getArray(a:LanguageArray):Array<String> {
-		if(ClientPrefs.language == 'Spanish') {
-			return getArraySpanish(a);
+		switch(ClientPrefs.language) {
+			case 'Español':
+				return getArraySpanish(a);
 		}
 		return a.a;
 	}
