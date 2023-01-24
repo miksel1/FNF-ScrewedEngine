@@ -30,7 +30,7 @@ class Language {
 			return s.spanish;
 		return s.s;
 	}
-	public static var getGerman(s:LanguageString):String {
+	public static function getGerman(s:LanguageString):String {
 		if(s.german != null)
 			return s.german;
 		return s.s;
