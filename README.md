@@ -1,6 +1,8 @@
 # Friday Night Funkin' - Screwed Engine
 Engine originally created for (Screwed Edition)[link soon...] (a mod of Dave And Bambi), but it can be used for your mod too! Just credit us.
 
+**This engine adds languages!!!!**
+
 ### [Click here to skip this and go to **Features**.](https://github.com/miksel1/FNF-ScrewedEngine/blob/main/README.md#features)
 
 ## Join our discord now!
