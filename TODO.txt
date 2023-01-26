@@ -1,3 +1,4 @@
 Add more shaders
 Add images to freeplay
-Recreate the data folder
+Add more languages
+Add a new warning screen
