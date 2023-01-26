@@ -2793,6 +2793,16 @@ class PlayState extends MusicBeatState
 								sustainNote.x += FlxG.width / 2 + 25;
 							}
 						}
+						if (swagNote.mustPress)
+						{ // fixeeeeddd
+							if (SONG.arrowSkin != SONG.playerArrowSkin && SONG.playerArrowSkin != '')
+							{
+								if ((swagNote.noteType == '' || swagNote.noteType == null) && swagNote.texture != SONG.playerArrowSkin)
+								{
+									sustainNote.texture = SONG.playerArrowSkin;
+								}
+							}
+						}
 					}
 				}
 				if (swagNote.mustPress)
