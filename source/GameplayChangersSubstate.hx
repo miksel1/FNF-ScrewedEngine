@@ -1,5 +1,8 @@
 package;
 
+import Language.LanguageArray;
+import Language.LanguageDynamic;
+import Language.LanguageString;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -39,14 +42,16 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 	function getOptions()
 	{
-		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]);
+		var goption:GameplayOption = new GameplayOption({s: 'Scroll Type'}, 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]);
+		goption.id = 'ST';
 		optionsArray.push(goption);
 
-		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollspeed', 'float', 1);
+		var option:GameplayOption = new GameplayOption({s: 'Scroll Speed'}, 'scrollspeed', 'float', 1);
 		option.scrollSpeed = 2.0;
 		option.minValue = 0.35;
 		option.changeValue = 0.05;
 		option.decimals = 2;
+		option.id = 'SS';
 		if (goption.getValue() != "constant")
 		{
 			option.displayFormat = '%vX';
@@ -60,7 +65,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		optionsArray.push(option);
 
 		#if !html5
-		var option:GameplayOption = new GameplayOption('Playback Rate', 'songspeed', 'float', 1);
+		var option:GameplayOption = new GameplayOption({s: 'Playback Rate', spanish: 'Velocidad de Playback'}, 'songspeed', 'float', 1);
 		option.scrollSpeed = 1;
 		option.minValue = 0.5;
 		option.maxValue = 3.0;
@@ -70,7 +75,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		optionsArray.push(option);
 		#end
 
-		var option:GameplayOption = new GameplayOption('Health Gain Multiplier', 'healthgain', 'float', 1);
+		var option:GameplayOption = new GameplayOption({s: 'Health Gain Multiplier', spanish: 'Multiplicador de Ganancia'}, 'healthgain', 'float', 1);
 		option.scrollSpeed = 2.5;
 		option.minValue = 0;
 		option.maxValue = 5;
@@ -78,7 +83,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.displayFormat = '%vX';
 		optionsArray.push(option);
 
-		var option:GameplayOption = new GameplayOption('Health Loss Multiplier', 'healthloss', 'float', 1);
+		var option:GameplayOption = new GameplayOption({s: 'Health Loss Multiplier', spanish: 'Multiplicador de Pérdida'}, 'healthloss', 'float', 1);
 		option.scrollSpeed = 2.5;
 		option.minValue = 0.5;
 		option.maxValue = 5;
@@ -86,22 +91,22 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.displayFormat = '%vX';
 		optionsArray.push(option);
 
-		var option:GameplayOption = new GameplayOption('Instakill on Miss', 'instakill', 'bool', false);
+		var option:GameplayOption = new GameplayOption({s: 'Instakill on Miss', spanish: 'Instakill al Fallar'}, 'instakill', 'bool', false);
 		optionsArray.push(option);
 
-		var option:GameplayOption = new GameplayOption('Practice Mode', 'practice', 'bool', false);
+		var option:GameplayOption = new GameplayOption({s: 'Practice Mode', spanish: 'Modo Práctica'}, 'practice', 'bool', false);
 		optionsArray.push(option);
 
-		var option:GameplayOption = new GameplayOption('Botplay', 'botplay', 'bool', false);
+		var option:GameplayOption = new GameplayOption({s: 'Botplay'}, 'botplay', 'bool', false);
 		optionsArray.push(option);
 	}
 
-	public function getOptionByName(name:String)
+	public function getOptionByID(name:String):GameplayOption
 	{
 		for(i in optionsArray)
 		{
 			var opt:GameplayOption = i;
-			if (opt.name == name)
+			if (opt.id == name)
 				return opt;
 		}
 		return null;
@@ -110,7 +115,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	public function new()
 	{
 		super();
-		
+
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0.6;
 		add(bg);
@@ -241,9 +246,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
 									
-									if (curOption.name == "Scroll Type")
+									if (curOption.id == "ST")
 									{
-										var oOption:GameplayOption = getOptionByName("Scroll Speed");
+										var oOption:GameplayOption = getOptionByID("SS");
 										if (oOption != null)
 										{
 											if (curOption.getValue() == "constant")
@@ -305,7 +310,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 						updateTextFrom(leOption);
 					}
 
-					if(leOption.name == 'Scroll Speed')
+					if(leOption.id == 'SS')
 					{
 						leOption.displayFormat = "%vX";
 						leOption.maxValue = 3;
@@ -394,19 +399,23 @@ class GameplayOption
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
 
 	private var variable:String = null; //Variable from ClientPrefs.hx's gameplaySettings
-	public var defaultValue:Dynamic = null;
+	public var defaultValue:LanguageDynamic = null;
 
 	public var curOption:Int = 0; //Don't change this
-	public var options:Array<String> = null; //Only used in string type
+	/**
+	 * Only used in string type
+	 */
+	public var options:Array<String> = null;
 	public var changeValue:Dynamic = 1; //Only used in int/float/percent type, how much is changed when you PRESS
 	public var minValue:Dynamic = null; //Only used in int/float/percent type
 	public var maxValue:Dynamic = null; //Only used in int/float/percent type
 	public var decimals:Int = 1; //Only used in float/percent type
 
 	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
-	public var name:String = 'Unknown';
+	public var name:LanguageString = {s: 'Unknown', spanish: 'Desconocido'};
+	public var id:String = '';
 
-	public function new(name:String, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null)
+	public function new(name:LanguageString, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null)
 	{
 		this.name = name;
 		this.variable = variable;

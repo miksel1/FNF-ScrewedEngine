@@ -1,5 +1,7 @@
 package;
 
+import Warnings.LanguageState;
+import Warnings.FlashingState;
 import lime.graphics.OpenGLES2RenderContext;
 import effects.WiggleEffect;
 import effects.WiggleEffect.WiggleEffectType;
@@ -238,6 +240,21 @@ class TitleState extends MusicBeatState
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
+		} else {
+			if (initialized)
+				startIntro();
+			else
+			{
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					startIntro();
+				});
+			}
+		}
+		if(FlxG.save.data.language == null && !LanguageState.leftState) {
+			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.switchState(new LanguageState());
 		} else {
 			if (initialized)
 				startIntro();

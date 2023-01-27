@@ -14,17 +14,19 @@ typedef LanguageArray = {
 	@:optional var german:Array<String>;
 }
 
-/*@:structInit
+@:structInit
 typedef LanguageDynamic = {
 	var d:Dynamic;
 	@:optional var spanish:Dynamic;
-}*/
+	@:optional var german:Dynamic;
+}
 
 class Language {
 	public static function getLanguages():Array<String> {
 		return ['English', 'Español'];
 	}
 
+	// strings
 	public static function getSpanish(s:LanguageString):String {
 		if(s.spanish != null)
 			return s.spanish;
@@ -40,10 +42,16 @@ class Language {
 		switch(ClientPrefs.language) {
 			case 'Español':
 				return getSpanish(s);
+			case 'Deutsch':
+				return getGerman(s);
 		}
 		return s.s;
 	}
+	public static function stringEqual(s:LanguageString, a:Array<String>) {
+		return a.contains(getString(s));
+	}
 
+	// arrays
 	public static function getArraySpanish(a:LanguageArray):Array<String> {
 		if(a.spanish != null)
 			return a.spanish;
@@ -59,7 +67,30 @@ class Language {
 		switch(ClientPrefs.language) {
 			case 'Español':
 				return getArraySpanish(a);
+			case 'Deutsch':
+				return getArrayGerman(a);
 		}
 		return a.a;
+	}
+
+	// dynamics
+	public static function getDynamicSpanish(d:LanguageDynamic):Dynamic {
+		if(d.spanish != null)
+			return d.spanish;
+		return d.d;
+	}
+	public static function getDynamicGerman(d:LanguageDynamic):Dynamic {
+		if(d.german != null)
+			return d.german;
+		return d.d;
+	}
+	public static function getDynamic(d:LanguageDynamic):Dynamic {
+		switch(ClientPrefs.language) {
+			case 'Español':
+				return getDynamicSpanish(d);
+			case 'Deutsch':
+				return getDynamicGerman(d);
+		}
+		return d.d;
 	}
 }

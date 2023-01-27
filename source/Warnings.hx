@@ -67,3 +67,43 @@ class FlashingState extends MusicBeatState
 		super.update(elapsed);
 	}
 }
+
+class LanguageState extends MusicBeatState
+{
+	public static var leftState:Bool = false;
+
+	var warnText:FlxText;
+	override function create()
+	{
+		super.create();
+
+		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		add(bg);
+
+		warnText = new FlxText(0, 0, FlxG.width,
+			"Hey, looks like you didn't selected language!\n
+			Select the one you prefer in the options menu!\n
+			Click A to go to options menu",
+			32);
+		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
+		warnText.screenCenter(Y);
+		add(warnText);
+	}
+
+	override function update(elapsed:Float)
+	{
+		if(!leftState) {
+			if (controls.ACCEPT) {
+				leftState = true;
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
+				FlxTween.tween(warnText, {alpha: 0}, 1, {
+					onComplete: function (twn:FlxTween) {
+						MusicBeatState.switchState(new TitleState());
+					}
+				});
+			}
+		}
+		super.update(elapsed);
+	}
+}

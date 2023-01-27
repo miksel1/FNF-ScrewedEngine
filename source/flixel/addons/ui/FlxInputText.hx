@@ -159,6 +159,12 @@ class FlxInputText extends FlxText
 	 */
 	public var backgroundColor(default, set):Int = FlxColor.WHITE;
 
+	public var capitalActivated(get, null):Bool;
+
+	private var bloqCapital:Bool = false;
+
+	private var shifted:Bool = false;
+
 	/**
 	 * A FlxSprite representing the background sprite
 	 */
@@ -354,10 +360,11 @@ class FlxInputText extends FlxText
 			  // This copies the entire input, because i'm too lazy to do caret selection, and if i did it i whoud probabbly make it a pr in flixel-ui.
 
 			  #if (macos)
-			  if (key == 67 && e.commandKey) {
+			  if (key == 67 && e.commandKey)
 			  #else
-			  if (key == 67 && e.ctrlKey) {
+			  if (key == 67 && e.ctrlKey)
 		 	  #end
+			  {
 				Clipboard.text = text;
 
 				onChange(COPY_ACTION);
@@ -368,10 +375,11 @@ class FlxInputText extends FlxText
 
 			  //// Crtl/Cmd + V to paste in the clipboard text to the input
 			  #if (macos)
-			  if (key == 86 && e.commandKey) {
+			  if (key == 86 && e.commandKey)
 			  #else
-			  if (key == 86 && e.ctrlKey) {
+			  if (key == 86 && e.ctrlKey)
 			  #end
+			  {
 				var newText:String = filter(Clipboard.text);
 
 				if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) < maxLength)) {
@@ -388,10 +396,11 @@ class FlxInputText extends FlxText
 			//// Crtl/Cmd + X to cut the text from the input to the clipboard
 			// Again, this copies the entire input text because there is no caret selection.
 			#if (macos)
-			if (key == 88 && e.commandKey) {
+			if (key == 88 && e.commandKey)
 			#else
-			if (key == 88 && e.ctrlKey) {
+			if (key == 88 && e.ctrlKey)
 			#end
+			{
 				Clipboard.text = text;
 				text = '';
 				caretIndex = 0;
@@ -403,6 +412,14 @@ class FlxInputText extends FlxText
 				return;
 			}
 
+			// Shift
+			if(key == 16) {
+				shifted = true;
+			}
+			// BLOQ MAYÚS
+			if(key == 20) {
+				bloqCapital = true;
+			}
 			// Do nothing for Shift, Ctrl, Esc, and flixel console hotkey
 			if (key == 16 || key == 17 || key == 220 || key == 27)
 			{
@@ -1077,5 +1094,12 @@ class FlxInputText extends FlxText
 		backgroundColor = Value;
 		calcFrame();
 		return backgroundColor;
+	}
+
+	private function get_capitalActivated():Bool {
+		if(shifted && !bloqCapital)  {
+			return true;
+		}
+		return bloqCapital;
 	}
 }
