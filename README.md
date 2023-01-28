@@ -21,7 +21,7 @@ If you want video support on your mod, simply do `haxelib install hxCodec` on a 
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Screwed Engine Credits:
-* [@Wither362](www.github.com/Wither362) - Basically making everything on the engine (ALL).
+* [@Wither362](https://github.com/Wither362) - Basically making everything on the engine (ALL).
 * miksel1 - The one who broke most of the code at the beginning
 * Dante - Strident Engine coder
 * not capcha - Helping with _Legacy_ Freeplay Sections
