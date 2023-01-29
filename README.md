@@ -11,7 +11,23 @@ It's a fun way to get **information**/**releases**/**teasers** about the engine 
 ## How to compile:
 Please, keep in mind that you can not seem to compile FNF on Windows 7.
 
-Just watch longestsoloever's video, I've used his tutorial and I've been successful with it. 
+open up a Command Prompt/PowerShell or Terminal, type `haxelib install hmm`
+
+after it finishes, simply type `haxelib run hmm install` in order to install all the needed libraries for *Psych Engine!*
+
+### Customization:
+
+if you wish to disable things like *Lua Scripts* or *Video Cutscenes*, you can read over to `Project.xml`
+
+inside `Project.xml`, you will find several variables to customize Psych Engine to your liking
+
+to start you off, disabling Videos should be simple, simply Delete the line `"VIDEOS_ALLOWED"` or comment it out by wrapping the line in XML-like comments, like this `<!-- YOUR_LINE_HERE -->`
+
+same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, this and other customization options are all available within the `Project.xml` file
+
+### Old Customization:
+
+Just watch longestsoloever's video, I've used his tutorial and I've been successful with it.
 https://www.youtube.com/watch?v=4IuC8ti6_4o _-miksel_
 
 If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then _re-install linc_luajit_.
@@ -34,7 +50,7 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ### Special Thanks
 * bbpanzu - Ex-Programmer
-* shubs - New Input System
+* Yoshubs - New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds

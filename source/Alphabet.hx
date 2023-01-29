@@ -353,7 +353,7 @@ class AlphaCharacter extends FlxSprite
 		'-'  => {offsets: [0, 16], offsetsBold: [0, -30]},
 		'<'  => {offsetsBold: [0, 4]},
 		'>'  => {offsetsBold: [0, 4]},
-		'\'' => {anim: 'apostrophe', offsets: [0, 32]},
+		"'" => {anim: 'apostrophe', offsets: [0, 32]},
 		'"'  => {anim: 'quote', offsets: [0, 32], offsetsBold: [0, 0]},
 		'!'  => {anim: 'exclamation', offsetsBold: [0, 10]},
 		'?'  => {anim: 'question', offsetsBold: [0, 4]},			//also used for "unknown"

@@ -24,6 +24,8 @@ class Note extends FlxSprite
 
 	public var strumTime:Float = 0;
 	public var mustPress:Bool = false;
+	@:isVar
+	public var botplayMustHit(get, set):Null<Bool>;
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
@@ -111,6 +113,14 @@ class Note extends FlxSprite
 	}
 	private function set_multScroll(v:Float):Float {
 		return multScroll = v;
+	}
+	private function set_botplayMustHit(v:Bool):Bool {
+		return botplayMustHit = v;
+	}
+	private function get_botplayMustHit():Bool {
+		if(botplayMustHit == null)
+			return mustPress;
+		return botplayMustHit;
 	}
 
 	public function resizeByRatio(ratio:Float) //haha funny twitter shit
