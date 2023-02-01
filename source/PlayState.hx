@@ -5605,9 +5605,9 @@ class PlayState extends MusicBeatState
 		// trace('Car drive');
 		FlxG.sound.play(Paths.soundRandom('carPass', 0, 1), 0.7);
 
-		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
+		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed / playbackRate) * 3;
 		fastCarCanDrive = false;
-		carTimer = new FlxTimer().start(2, function(tmr:FlxTimer)
+		carTimer = new FlxTimer().start(2 / playbackRate, function(tmr:FlxTimer)
 		{
 			resetFastCar();
 			carTimer = null;
@@ -5769,10 +5769,10 @@ class PlayState extends MusicBeatState
 	{
 		if (!inCutscene)
 		{
-			tankAngle += elapsed * tankSpeed;
-			tankGround.angle = tankAngle - 90 + 15;
-			tankGround.x = tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180));
-			tankGround.y = 1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180));
+			tankAngle += elapsed * tankSpeed / playbackRate;
+			tankGround.angle = (tankAngle - 90 + 15) / playbackRate;
+			tankGround.x = (tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180))) / playbackRate;
+			tankGround.y = (1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180))) / playbackRate;
 		}
 	}
 

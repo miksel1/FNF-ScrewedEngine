@@ -240,22 +240,13 @@ class TitleState extends MusicBeatState
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
-		} else {
-			if (initialized)
-				startIntro();
-			else
-			{
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					startIntro();
-				});
-			}
 		}
 		if(FlxG.save.data.language == null && !LanguageState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new LanguageState());
-		} else {
+		}
+		if(LanguageState.leftState || FlashingState.leftState) {
 			if (initialized)
 				startIntro();
 			else

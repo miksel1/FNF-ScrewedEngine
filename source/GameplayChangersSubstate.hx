@@ -34,7 +34,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 {
 	private var curOption:GameplayOption = null;
 	private var curSelected:Int = 0;
-	private var optionsArray:Array<Dynamic> = [];
+	private var optionsArray:Array<GameplayOption> = [];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
@@ -134,7 +134,11 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		for (i in 0...optionsArray.length)
 		{
-			var optionText:Alphabet = new Alphabet(200, 360, optionsArray[i].name, true);
+			var namee = Language.getString(optionsArray[i].name);
+			/*if(!namee.endsWith(':') && optionsArray[i].type == 'string') {
+				namee = namee + ':';
+			}*/
+			var optionText:Alphabet = new Alphabet(200, 360, namee, true);
 			optionText.isMenuItem = true;
 			optionText.scaleX = 0.8;
 			optionText.scaleY = 0.8;
@@ -245,7 +249,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
-									
+
 									if (curOption.id == "ST")
 									{
 										var oOption:GameplayOption = getOptionByID("SS");
@@ -277,7 +281,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 							{
 								case 'int':
 									curOption.setValue(Math.round(holdValue));
-								
+
 								case 'float' | 'percent':
 									var blah:Float = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.changeValue - (holdValue % curOption.changeValue)));
 									curOption.setValue(FlxMath.roundDecimal(blah, curOption.decimals));
@@ -348,7 +352,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		}
 		holdTime = 0;
 	}
-	
+
 	function changeSelection(change:Int = 0)
 	{
 		curSelected += change;
@@ -411,7 +415,9 @@ class GameplayOption
 	public var maxValue:Dynamic = null; //Only used in int/float/percent type
 	public var decimals:Int = 1; //Only used in float/percent type
 
-	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
+	/**How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
+	*/
+	public var displayFormat:String = '%v'; 
 	public var name:LanguageString = {s: 'Unknown', spanish: 'Desconocido'};
 	public var id:String = '';
 
