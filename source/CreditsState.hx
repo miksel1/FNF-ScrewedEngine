@@ -45,7 +45,14 @@ class CreditsState extends MusicBeatState
 
 	var glitchedOnes:Array<String> = ['Wither362', 'Delta', 'miksel'];
 	var grainedOnes:Array<String> = ['Wither362', 'BeastlyGhost']; // time to credit them ;)
-	var coolTitleOnes:Array<String> = ['Wither362', 'Delta', 'Join our Discord!', 'miksel', 'Meme Hoovy', 'BeastlyGhost', 'tposejank']; // yes dude ;D
+	var coolTitleOnes:Array<String> = [
+		'Wither362',
+		'Delta',
+		'Join our Discord!', '¡Únete al Discord!',
+		'miksel',
+		'Meme Hoovy',
+		'BeastlyGhost',
+		'tposejank']; // yes dude ;D
 
 	var glitchEffect:FlxGlitchEffect;
 	var glitchBg:FlxEffectSprite;
@@ -106,14 +113,14 @@ class CreditsState extends MusicBeatState
 		}
 		#end
 
-		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
-			['Screwed Engine'],
-			['Wither362',			'Wither',			'Main Programmer of this engine',								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'FF5F5F'],
-			['Delta',				'delta',			'Strident Engine',												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
-			['miksel',				'miksel',			'Features and Idea Creator',									'https://www.youtube.com/@miksel_fnf',	'371893'],
-			['Join our Discord!',	'discord',			'Yeah! join us for features and more!',							'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
+		var pisspoop:Array<Array<LanguageString /*Dynamic*/>> = [ //Name - Icon name - Description - Link - BG Color
+			[{s: 'Screwed Engine'}],
+			[{s: 'Wither362'},			    'Wither',			{s: 'Main Programmer of this engine'},								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'FF5F5F'],
+			[{s: 'Delta'},				    'delta',			{s: 'Strident Engine'},												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
+			[{s: 'miksel'},				    'miksel',			{s: 'Features and Ideas'},									        'https://www.youtube.com/@miksel_fnf',	                                '371893'],
+			[{s: 'Join our Discord!', spanish: '¡Únete al Discord!'},	'discord',			{s: 'Yeah! Join us for features and more!', spanish: '¡Sí! ¡Únete para información y más!'},						'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
-			['Screwed Engine Contributors and Others...'],
+			[{s: 'Screwed Engine Contributors and Others...', spanish: 'Contribudores del Screwed Engine y Otros...'}],
 			['Meme Hoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
 			['BeastlyGhost',		'beast',			'Icons and other help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
 			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
@@ -144,7 +151,14 @@ class CreditsState extends MusicBeatState
 		];
 
 		for (i in pisspoop) {
-			creditsStuff.push(i);
+			var t:Array<String> = [];
+			for(j in i) {
+				/*if(j is String)
+					t.push(j);
+				else if(t.s != null)*/
+					t.push(Language.getString(j));
+			}
+			creditsStuff.push(t);
 		}
 
 		for (i in 0...creditsStuff.length)
