@@ -83,7 +83,7 @@ class CreditsState extends MusicBeatState
 		add(grpOptions);
 
 		grainEffect = new GrainEffect();
-		grainEffect.lumAmount *= 2;
+		//grainEffect.lumAmount *= 2;
 
 		#if MODS_ALLOWED
 		var path:String = 'modsList.txt';
