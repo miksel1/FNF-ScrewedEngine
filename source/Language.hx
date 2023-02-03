@@ -57,10 +57,24 @@ class Language {
 			return a.spanish;
 		return a.a;
 	}
+	public static function getStringArraySpanish(a:Array<LanguageString>):Array<String> {
+		var t:Array<String> = [];
+		for(i in a) {
+			t.push(getSpanish(i));
+		}
+		return t;
+	}
 	public static function getArrayGerman(a:LanguageArray):Array<String> {
 		if(a.german != null)
 			return a.german;
 		return a.a;
+	}
+	public static function getStringArrayGerman(a:Array<LanguageString>):Array<String> {
+		var t:Array<String> = [];
+		for(i in a) {
+			t.push(getGerman(i));
+		}
+		return t;
 	}
 
 	public static function getArray(a:LanguageArray):Array<String> {
@@ -71,6 +85,19 @@ class Language {
 				return getArrayGerman(a);
 		}
 		return a.a;
+	}
+	public static function getStringArray(a:Array<LanguageString>):Array<String> {
+		switch(ClientPrefs.language) {
+			case 'Español':
+				return getStringArraySpanish(a);
+			case 'Deutsch':
+				return getStringArrayGerman(a);
+		}
+		var t:Array<String> = [];
+		for(i in a) {
+			t.push(i.s);
+		}
+		return t;
 	}
 
 	// dynamics
