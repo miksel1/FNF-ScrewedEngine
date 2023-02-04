@@ -29,7 +29,13 @@ typedef WeekFile =
 }
 
 class WeekData {
+	/**
+	 * Information about the loaded weeks
+	 */
 	public static var weeksLoaded:Map<String, WeekData> = new Map<String, WeekData>();
+	/**
+	 * All the Weeks names
+	 */
 	public static var weeksList:Array<String> = [];
 	public var folder:String = '';
 	

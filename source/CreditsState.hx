@@ -1,5 +1,6 @@
 package;
 
+import Language.LanguageString;
 import flixel.ui.FlxButton.FlxTypedButton;
 import effects.GrainEffect;
 import flixel.addons.effects.chainable.FlxEffectSprite;
@@ -113,7 +114,7 @@ class CreditsState extends MusicBeatState
 		}
 		#end
 
-		var pisspoop:Array<Array<LanguageString /*Dynamic*/>> = [ //Name - Icon name - Description - Link - BG Color
+		var pisspoop:Array<Array<Dynamic /*Dynamic*/>> = [ //Name - Icon name - Description - Link - BG Color
 			[{s: 'Screwed Engine'}],
 			[{s: 'Wither362'},			    'Wither',			{s: 'Main Programmer of this engine'},								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'FF5F5F'],
 			[{s: 'Delta'},				    'delta',			{s: 'Strident Engine'},												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
@@ -153,9 +154,9 @@ class CreditsState extends MusicBeatState
 		for (i in pisspoop) {
 			var t:Array<String> = [];
 			for(j in i) {
-				/*if(j is String)
+				if(j is String)
 					t.push(j);
-				else if(t.s != null)*/
+				else
 					t.push(Language.getString(j));
 			}
 			creditsStuff.push(t);

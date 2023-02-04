@@ -173,13 +173,31 @@ class FreeplayState extends MusicBeatState
 		{
 			var songName = songs[i].songName;
 			var isValid = Song.isValidSong(songName);
-			if (!sections.contains(songName.toUpperCase().replace('--', '')) && !isValid)
+			/**
+			 * 0 is false, 1 is for sections, 2 is for folder
+			 */
+			var canType:Int = 0;
+			if(!sections.contains(songName.toUpperCase().replace('--', '')) && !isValid) canType = 1;
+
+			if(i > 0) {
+				if(songs[i].folder != songs[i - 1].folder) {
+					canType = 2;
+				}
+			}
+			if(canType == 2) {
+				for (j in i...songs.length)
+				{
+					sections[j] = songs[i].folder.toUpperCase();
+				}
+			}
+			else if (canType == 1)
 			{
 				for (j in i...songs.length)
 				{
 					sections[j] = songName.toUpperCase().replace('--', '');
 				}
 			}
+
 			var image:String = coolSongs.contains(Paths.formatToSongPath(songName)) ? 'otherAlphabet' : 'alphabet';
 
 			var songText:Alphabet = new Alphabet(
@@ -278,6 +296,13 @@ class FreeplayState extends MusicBeatState
 						changeSelection(0, FlxG.random.bool(30.4));
 						changeDiff();
 						return; // fucking fuck it
+					} else if (songs[i].folder.toLowerCase().trim().contains(text.toLowerCase().trim()))
+					{
+						curSelected = i;
+						holdTime = 0;
+						changeSelection(0, FlxG.random.bool(30.4));
+						changeDiff();
+						return; // fucking fuck it
 					}
 				}
 			}
@@ -324,7 +349,7 @@ class FreeplayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
+	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int, ?folder:String)
 	{
 		songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
 	}
@@ -609,7 +634,11 @@ class FreeplayState extends MusicBeatState
 					blockPressWhileTypingOn[i].hasFocus = false;
 				}
 			}
+			ahg = true;
 		}
+
+		if(FlxG.mouse.justPressed)
+			ahg = true;
 
 		super.update(elapsed);
 	}

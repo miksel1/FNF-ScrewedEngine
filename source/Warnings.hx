@@ -83,7 +83,8 @@ class LanguageState extends MusicBeatState
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Hey, looks like you didn't selected language!\n
 			Select the one you prefer in the options menu!\n
-			Click A to go to options menu",
+			Click " + Std.string(Controls.Action.BACK).toUpperCase() + " to select it later\n
+			Click " + Std.string(Controls.Action.ACCEPT).toUpperCase() + " to go to options menu",
 			32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
@@ -93,12 +94,23 @@ class LanguageState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if(!leftState) {
+			if (controls.BACK) {
+				leftState = true;
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
+				FlxTween.tween(warnText, {alpha: 0}, 1, {
+					onComplete: function (twn:FlxTween) {
+						MusicBeatState.switchState(new TitleState());
+					}
+				});
+			}
 			if (controls.ACCEPT) {
 				leftState = true;
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 				FlxTween.tween(warnText, {alpha: 0}, 1, {
 					onComplete: function (twn:FlxTween) {
+						TitleState.goToOptions = true;
 						MusicBeatState.switchState(new TitleState());
 					}
 				});

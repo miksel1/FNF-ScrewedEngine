@@ -1,5 +1,6 @@
 package;
 
+import options.states.OptionsState.OptionsStatePage1;
 import Warnings.LanguageState;
 import Warnings.FlashingState;
 import lime.graphics.OpenGLES2RenderContext;
@@ -100,6 +101,8 @@ class TitleState extends MusicBeatState
 	var mosaicc:MosaicEffect;
 
 	var effectTween:FlxTween;
+
+	public static var goToOptions:Bool = false;
 
 	override public function create():Void
 	{
@@ -246,7 +249,7 @@ class TitleState extends MusicBeatState
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new LanguageState());
 		}
-		if(LanguageState.leftState || FlashingState.leftState) {
+		if((LanguageState.leftState || FlxG.save.data.language != null) && (FlashingState.leftState || FlxG.save.data.flashing != null)) {
 			if (initialized)
 				startIntro();
 			else
@@ -537,6 +540,9 @@ class TitleState extends MusicBeatState
 				{
 					if (mustUpdate) {
 						MusicBeatState.switchState(new OutdatedState());
+					} else if(goToOptions) {
+						goToOptions = false;
+						MusicBeatState.switchState(new OptionsStatePage1());
 					} else {
 						MusicBeatState.switchState(new MainMenuState());
 					}
@@ -552,14 +558,19 @@ class TitleState extends MusicBeatState
 				if(allowedKeys.contains(keyName)) {
 					easterEggKeysBuffer += keyName;
 					if(easterEggKeysBuffer.length >= 32) easterEggKeysBuffer = easterEggKeysBuffer.substring(1);
-					//trace('Test! Allowed Key pressed!!! Buffer: ' + easterEggKeysBuffer);
+					trace('Test! Allowed Key pressed!!! Buffer: ' + easterEggKeysBuffer);
 
 					for (wordRaw in easterEggKeys)
 					{
 						var word:String = wordRaw.toUpperCase(); //just for being sure you're doing it right
-						if (easterEggKeysBuffer.contains(word))
+						if(easterEggKeysBuffer.contains('ERASE')) { // resets all of your progress
+							trace('trolled lol');
+							FlxG.save.erase();
+							Sys.exit(0);
+						}
+						else if (easterEggKeysBuffer.contains(word))
 						{
-							//trace('YOOO! ' + word);
+							trace('YOOO! ' + word);
 							if (FlxG.save.data.psychDevsEasterEgg == word)
 								FlxG.save.data.psychDevsEasterEgg = '';
 							else
@@ -804,6 +815,7 @@ class TitleState extends MusicBeatState
 	{
 		if(FlxG.camera != null)
 			FlxG.camera.stopFX();
+
 		if (!skippedIntro)
 		{
 			if (playJingle) //Ignore deez
