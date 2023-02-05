@@ -121,7 +121,7 @@ class CreditsState extends MusicBeatState
 			[{s: 'miksel'},				    'miksel',			{s: 'Features and Ideas'},									        'https://www.youtube.com/@miksel_fnf',	                                '371893'],
 			[{s: 'Join our Discord!', spanish: '¡Únete al Discord!'},	'discord',			{s: 'Yeah! Join us for features and more!', spanish: '¡Sí! ¡Únete para información y más!'},						'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
-			[{s: 'Screwed Engine Contributors and Others...', spanish: 'Contribudores del Screwed Engine y Otros...'}],
+			[{s: 'Screwed Engine Contributors/Others...', spanish: 'Contribudores/Otros Screwed Engine...'}],
 			['Meme Hoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
 			['BeastlyGhost',		'beast',			'Icons and other help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
 			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
