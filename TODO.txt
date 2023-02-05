@@ -5,3 +5,4 @@ Add playmodes (only-notes, and more)
 Add a freeplay grid
 Turn notes to red when passed x notes
 Mod credits in other languages
+Auto-chart

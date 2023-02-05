@@ -212,6 +212,16 @@ class ChartingState extends MusicBeatState
 	var manualZoomInput:FlxUINumericStepper;
 	var resetZoomText:FlxText;
 
+	var debugWaveform:FlxUICheckBox;
+	var waveformLeftActiveLeft:FlxUICheckBox;
+	var waveformLeftActiveRight:FlxUICheckBox;
+	var waveformRightActiveLeft:FlxUICheckBox;
+	var waveformRightActiveRight:FlxUICheckBox;
+	var waveformLeftMin:FlxUICheckBox;
+	var waveformLeftMax:FlxUICheckBox;
+	var waveformRightMin:FlxUICheckBox;
+	var waveformRightMax:FlxUICheckBox;
+
 	var zoomList:Array<Float> = [
 		0.25,
 		0.5,
@@ -523,6 +533,15 @@ class ChartingState extends MusicBeatState
 		resetZoomText.visible = false;
 		add(resetZoomText);
 
+		debugWaveform = new FlxUICheckBox(resetZoomText.x, resetZoomText.y + 50, null, null, "Debug Waveform (BETA)", 200);
+		debugWaveform.checked = false;
+		debugWaveform.callback = function() {
+			createWaveformThings();
+			debugWaveform.destroy();
+		};
+		debugWaveform.scrollFactor.set();
+		add(debugWaveform);
+
 		debugGroup = new FlxTypedGroup<DebugLuaText>();
 		add(debugGroup);
 
@@ -530,6 +549,38 @@ class ChartingState extends MusicBeatState
 
 		updateGrid();
 		super.create();
+	}
+
+	function createWaveformThings() {
+		//#if debug
+		var size2 = 200;
+		waveformLeftActiveLeft = new FlxUICheckBox(resetZoomText.x, resetZoomText.y + 80, null, null, 'Waveform Blue Active left', 500);
+		waveformLeftActiveRight = new FlxUICheckBox(resetZoomText.x, waveformLeftActiveLeft.y + 20, null, null, 'Waveform Blue Active right', 500);
+		waveformRightActiveLeft = new FlxUICheckBox(resetZoomText.x, waveformLeftActiveRight.y + 20, null, null, 'Waveform Red Active left', 500);
+		waveformRightActiveRight = new FlxUICheckBox(resetZoomText.x, waveformRightActiveLeft.y + 20, null, null, 'Waveform Red Active right', 500);
+		waveformLeftMax = new FlxUICheckBox(resetZoomText.x, waveformRightActiveRight.y + 40, null, null, 'Waveform Maximum left', size2);
+		waveformLeftMin = new FlxUICheckBox(waveformLeftMax.x, waveformLeftMax.y + 20, null, null, 'Waveform Minimum left', size2);
+		waveformRightMax = new FlxUICheckBox(waveformLeftMin.x, waveformLeftMin.y + 20, null, null, 'Waveform Maximum right', size2);
+		waveformRightMin = new FlxUICheckBox(waveformRightMax.x, waveformRightMax.y + 20, null, null, 'Waveform Minimum right', size2);
+
+		for(thing in [ // WHAT IT COULD BE ABOUT 70 LINES LONG, THIS TURNS THEM INTO LESS THAN 14!!!!!!!!!!
+			waveformLeftActiveLeft,
+			waveformLeftActiveRight,
+			waveformRightActiveLeft,
+			waveformRightActiveRight,
+			waveformLeftMin,
+			waveformLeftMax,
+			waveformRightMin,
+			waveformRightMax])
+		{
+			thing.checked = true;
+			thing.callback = function() {
+				updateWaveform();
+			};
+			thing.scrollFactor.set();
+			add(thing);
+		}
+		//#end
 	}
 
 	var maxBpm = 1000;
@@ -1640,26 +1691,30 @@ class ChartingState extends MusicBeatState
 		if (id == FlxUICheckBox.CLICK_EVENT)
 		{
 			var check:FlxUICheckBox = cast sender;
-			var label = check.getLabel().text;
-			switch (label)
-			{
-				case 'Must hit section':
-					_song.notes[curSec].mustHitSection = check.checked;
+			if (check != null) {
+				if (!check.destroyed) {
+					var label = check.getLabel().text;
+					switch (label)
+					{
+						case 'Must hit section':
+							_song.notes[curSec].mustHitSection = check.checked;
 
-					updateGrid();
-					updateHeads();
+							updateGrid();
+							updateHeads();
 
-				case 'GF section':
-					_song.notes[curSec].gfSection = check.checked;
+						case 'GF section':
+							_song.notes[curSec].gfSection = check.checked;
 
-					updateGrid();
-					updateHeads();
+							updateGrid();
+							updateHeads();
 
-				case 'Change BPM':
-					_song.notes[curSec].changeBPM = check.checked;
-					addTextToLog('changed bpm shit');
-				case "Alt Animation":
-					_song.notes[curSec].altAnim = check.checked;
+						case 'Change BPM':
+							_song.notes[curSec].changeBPM = check.checked;
+							addTextToLog('changed bpm shit');
+						case "Alt Animation":
+							_song.notes[curSec].altAnim = check.checked;
+					}
+				}
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
@@ -2370,7 +2425,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function updateZoom() {
-		if(curZoom >= zoomList.length) curZoom = 2;
+		if(curZoom >= zoomList.length) curZoom = zoomList.indexOf(1);
 		var daZoom:Float = zoomList[curZoom];
 		var zoomThing:String = '1 / ' + daZoom;
 		if(daZoom < 1) zoomThing = Math.round(1 / daZoom) + ' / 1';
@@ -2524,13 +2579,57 @@ class ChartingState extends MusicBeatState
 		for (i in 0...length) {
 			index = i;
 
-			lmin = FlxMath.bound(((index < wavData[0][0].length && index >= 0) ? wavData[0][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-			lmax = FlxMath.bound(((index < wavData[0][1].length && index >= 0) ? wavData[0][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			function thing(j:Int, k:Int) {
+				return FlxMath.bound(((index < wavData[j][k].length && index >= 0) ? wavData[j][k][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			}
 
-			rmin = FlxMath.bound(((index < wavData[1][0].length && index >= 0) ? wavData[1][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-			rmax = FlxMath.bound(((index < wavData[1][1].length && index >= 0) ? wavData[1][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			lmin = thing(0, 0);
+			lmax = thing(0, 1);
 
-			waveformSprite.pixels.fillRect(new Rectangle(hSize - (lmin + rmin), i * size, (lmin + rmin) + (lmax + rmax), size), FlxColor.BLUE);
+			rmin = thing(1, 0);
+			rmax = thing(1, 1);
+
+			var leftActiveLeft = true;
+			if(waveformLeftActiveLeft != null)
+				leftActiveLeft = waveformLeftActiveLeft.checked;
+			var leftActiveRight = true;
+			if(waveformLeftActiveRight != null)
+				leftActiveRight = waveformLeftActiveRight.checked;
+			var rightActiveLeft = true;
+			if(waveformRightActiveLeft != null)
+				rightActiveLeft = waveformRightActiveLeft.checked;
+			var rightActiveRight = true;
+			if(waveformRightActiveRight != null)
+				rightActiveRight = waveformRightActiveRight.checked;
+
+			var leftMax = true;
+			if(waveformLeftMax != null)
+				leftMax = waveformLeftMax.checked;
+			var leftMin = true;
+			if(waveformLeftMin != null)
+				leftMin = waveformLeftMin.checked;
+			var rightMax = true;
+			if(waveformRightMax != null)
+				rightMax = waveformRightMax.checked;
+			var rightMin = true;
+			if(waveformRightMin != null)
+				rightMin = waveformRightMin.checked;
+
+			// left
+			waveformSprite.pixels.fillRect(new Rectangle(hSize - ((leftActiveLeft ? lmin : 0) + (leftActiveRight ? rmin : 0)), (i * size), (
+				(leftMin ? lmin : 0) +
+				(rightMin ? rmin : 0) +
+				(leftMax ? lmax : 0) +
+				(rightMax ? rmax : 0) +
+			0), size), FlxColor.BLUE);
+
+			// right
+			waveformSprite.pixels.fillRect(new Rectangle(hSize - ((rightActiveLeft ? lmin : 0) + (rightActiveRight ? rmin : 0)), (i * size), (
+				(leftMin ? lmin : 0) +
+				(rightMin ? rmin : 0) +
+				(leftMax ? lmax : 0) +
+				(rightMax ? rmax : 0) +
+			0), size), FlxColor.RED);
 		}
 
 		waveformPrinted = true;
@@ -3354,6 +3453,11 @@ class ChartingState extends MusicBeatState
 		return val != null ? val : 4;
 	}
 
+	/**
+	 * Use this instead of `trace()` when alerting the player
+	 * @param text 
+	 * @param color 
+	 */
 	public static function addTextToDebug(text:String, color:FlxColor = 0xFFFFFFFF) { // thanks Raltyro
 		debugGroup.forEachAlive(function(spr:DebugLuaText) {
 			spr.y += 20;
@@ -3371,6 +3475,11 @@ class ChartingState extends MusicBeatState
 		trace(text);
 		#end
 	}
+	/**
+	 * Use this instead
+	 * @param text 
+	 * @param color 
+	 */
 	public static function addTextToLog(text:String, color:FlxColor = FlxColor.WHITE) {
 		FlxG.log.add(text);
 		//trace(text);

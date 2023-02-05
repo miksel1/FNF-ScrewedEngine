@@ -425,6 +425,30 @@ class CreditsState extends MusicBeatState
 			}
 			creditsStuff.push(['']);
 		}
+
+		for (language in Language.getLanguages())
+		{
+			if(language == 'English') continue; // skip this item
+
+			var creditsFile:String = null;
+			if (folder != null && folder.trim().length > 0)
+				creditsFile = Paths.mods(folder + '/data/credits-' + language.toLowerCase() + '.txt');
+			else
+				creditsFile = Paths.mods('data/credits-' + language.toLowerCase() + '.txt');
+
+			if (FileSystem.exists(creditsFile))
+			{
+				var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
+				for (i in firstarray)
+				{
+					var arr:Array<String> = i.replace('\\n', '\n').split("::");
+					if (arr.length >= 5)
+						arr.push(folder);
+					creditsStuff.push(arr);
+				}
+				creditsStuff.push(['']);
+			}
+		}
 		modsAdded.push(folder);
 	}
 	#end

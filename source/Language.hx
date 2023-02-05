@@ -22,22 +22,42 @@ typedef LanguageDynamic = {
 }
 
 class Language {
+	/**
+	 * Returns all the languages
+	 * English, Español
+	 * @return Array<String>
+	 */
 	public static function getLanguages():Array<String> {
 		return ['English', 'Español'];
 	}
 
 	// strings
+	/**
+	 * Returns the spanish in the selected LanguageString. If the string's spanish is null, returns the english one
+	 * @param s 
+	 * @return String
+	 */
 	public static function getSpanish(s:LanguageString):String {
 		if(s.spanish != null)
 			return s.spanish;
 		return s.s;
 	}
+	/**
+	 * Returns the german in the selected LanguageString. If the string's german is null, returns the english one
+	 * @param s 
+	 * @return String
+	 */
 	public static function getGerman(s:LanguageString):String {
 		if(s.german != null)
 			return s.german;
 		return s.s;
 	}
 
+	/**
+	 * Returns the correct string depending of ClientPrefs.language
+	 * @param s 
+	 * @return String
+	 */
 	public static function getString(s:LanguageString):String {
 		switch(ClientPrefs.language) {
 			case 'Español':
@@ -52,11 +72,21 @@ class Language {
 	}
 
 	// arrays
+	/**
+	 * Returns the spanish in the selected LanguageArray. If the array's spanish is null, returns the english one
+	 * @param a 
+	 * @return Array<String>
+	 */
 	public static function getArraySpanish(a:LanguageArray):Array<String> {
 		if(a.spanish != null)
 			return a.spanish;
 		return a.a;
 	}
+	/**
+	 * Returns the spanish in the selected Array<LanguageString> (array of LanguageString). If the array's spanish is null, returns the english one
+	 * @param a 
+	 * @return Array<LanguageString>
+	 */
 	public static function getStringArraySpanish(a:Array<LanguageString>):Array<String> {
 		var t:Array<String> = [];
 		for(i in a) {
@@ -64,11 +94,21 @@ class Language {
 		}
 		return t;
 	}
+	/**
+	 * Returns the german in the selected LanguageArray. If the array's german is null, returns the english one
+	 * @param a 
+	 * @return Array<String>
+	 */
 	public static function getArrayGerman(a:LanguageArray):Array<String> {
 		if(a.german != null)
 			return a.german;
 		return a.a;
 	}
+	/**
+	 * Returns the german in the selected Array<LanguageString> (array of LanguageString). If the array's german is null, returns the english one
+	 * @param a 
+	 * @return Array<LanguageString>
+	 */
 	public static function getStringArrayGerman(a:Array<LanguageString>):Array<String> {
 		var t:Array<String> = [];
 		for(i in a) {
@@ -77,6 +117,11 @@ class Language {
 		return t;
 	}
 
+	/**
+	 * Returns the correct array depending of ClientPrefs.language
+	 * @param a 
+	 * @return Array<String>
+	 */
 	public static function getArray(a:LanguageArray):Array<String> {
 		switch(ClientPrefs.language) {
 			case 'Español':
@@ -86,6 +131,11 @@ class Language {
 		}
 		return a.a;
 	}
+	/**
+	 * Returns the correct Array depending of ClientPrefs.language
+	 * @param a 
+	 * @return Array<String>
+	 */
 	public static function getStringArray(a:Array<LanguageString>):Array<String> {
 		switch(ClientPrefs.language) {
 			case 'Español':
