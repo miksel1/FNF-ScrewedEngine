@@ -3605,15 +3605,23 @@ class PlayState extends MusicBeatState
 					songPercent = (curTime / songLength);
 
 					var songCalc:Float = (songLength - curTime);
-					if (ClientPrefs.timeBarType == 'Time Elapsed')
+					var timeElapsedd:Float = curTime;
+					if (ClientPrefs.timeBarType == 'Time Elapsed' || ClientPrefs.timeBarType == 'Elapsed / Total') {
 						songCalc = curTime;
+					}
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0)
 						secondsTotal = 0;
 
+					var finale:String = '';
+					if(ClientPrefs.timeBarType == 'Elapsed / Total')
+						finale = FlxStringUtil.formatTime(secondsTotal, false) + ' / ' + FlxStringUtil.formatTime(/*Math.floor(*/songLength/* / 1000)*/, false);
+					else if(ClientPrefs.timeBarType != 'Song Name') // not lag?
+						finale = FlxStringUtil.formatTime(secondsTotal, false);
+
 					if (ClientPrefs.timeBarType != 'Song Name')
-						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+						timeTxt.text = finale;
 				}
 			}
 
