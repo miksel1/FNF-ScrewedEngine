@@ -3994,7 +3994,7 @@ class PlayState extends MusicBeatState
 							who = boyfriend;
 						// 2 only targets dad
 						dadbattleLight.alpha = 0;
-						new FlxTimer().start(0.12, function(tmr:FlxTimer)
+						new FlxTimer().start(0.12 / playbackRate, function(tmr:FlxTimer)
 						{
 							dadbattleLight.alpha = 0.375;
 						});
@@ -4022,9 +4022,9 @@ class PlayState extends MusicBeatState
 						value = 1;
 				}
 
-				var time:Float = Std.parseFloat(value2);
+				var time:Float = Std.parseFloat(value2) / playbackRate;
 				if (Math.isNaN(time) || time <= 0)
-					time = 0.6;
+					time = 0.6 / playbackRate;
 
 				if (value != 0)
 				{
@@ -4071,7 +4071,7 @@ class PlayState extends MusicBeatState
 					if (!ClientPrefs.flashing)
 						color.alphaFloat = 0.5;
 
-					FlxG.camera.flash(color, 0.15, null, true);
+					FlxG.camera.flash(color, 0.15 / playbackRate, null, true);
 				};
 
 				var chars:Array<Character> = [boyfriend, gf, dad];
@@ -4123,7 +4123,7 @@ class PlayState extends MusicBeatState
 						{
 							var colorButLower:FlxColor = color;
 							colorButLower.alphaFloat = 0.25;
-							FlxG.camera.flash(colorButLower, 0.5, null, true);
+							FlxG.camera.flash(colorButLower, 0.5 / playbackRate, null, true);
 						}
 
 						var charColor:FlxColor = color;
@@ -4284,7 +4284,7 @@ class PlayState extends MusicBeatState
 
 					if (duration > 0 && intensity != 0)
 					{
-						targetsArray[i].shake(intensity, duration);
+						targetsArray[i].shake(intensity, duration / playbackRate);
 					}
 				}
 
@@ -4524,7 +4524,7 @@ class PlayState extends MusicBeatState
 
 			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
 			{
-				cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {
+				cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000 / playbackRate), {
 					ease: FlxEase.elasticInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -4539,7 +4539,7 @@ class PlayState extends MusicBeatState
 	{
 		if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1.3)
 		{
-			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {
+			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000 / playbackRate), {
 				ease: FlxEase.elasticInOut,
 				onComplete: function(twn:FlxTween)
 				{
@@ -4569,7 +4569,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			finishTimer = new FlxTimer().start(ClientPrefs.noteOffset / 1000, function(tmr:FlxTimer)
+			finishTimer = new FlxTimer().start(ClientPrefs.noteOffset / 1000 / playbackRate, function(tmr:FlxTimer)
 			{
 				finishCallback();
 			});
@@ -5605,7 +5605,7 @@ class PlayState extends MusicBeatState
 		// trace('Car drive');
 		FlxG.sound.play(Paths.soundRandom('carPass', 0, 1), 0.7);
 
-		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed / playbackRate) * 3;
+		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed * playbackRate) * 3;
 		fastCarCanDrive = false;
 		carTimer = new FlxTimer().start(2 / playbackRate, function(tmr:FlxTimer)
 		{
@@ -5643,7 +5643,7 @@ class PlayState extends MusicBeatState
 
 		if (startedMoving)
 		{
-			phillyTrain.x -= 400;
+			phillyTrain.x -= 400 * playbackRate;
 
 			if (phillyTrain.x < -2000 && !trainFinishing)
 			{
@@ -5769,10 +5769,10 @@ class PlayState extends MusicBeatState
 	{
 		if (!inCutscene)
 		{
-			tankAngle += elapsed * tankSpeed / playbackRate;
-			tankGround.angle = (tankAngle - 90 + 15) / playbackRate;
-			tankGround.x = (tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180))) / playbackRate;
-			tankGround.y = (1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180))) / playbackRate;
+			tankAngle += elapsed * tankSpeed * playbackRate;
+			tankGround.angle = (tankAngle - 90 + 15) * playbackRate; // why do i feel like this should't be here?
+			tankGround.x = (tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180))) * playbackRate;
+			tankGround.y = (1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180))) * playbackRate;
 		}
 	}
 
