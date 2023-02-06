@@ -5,4 +5,5 @@ Add playmodes (only-notes, and more)
 Add a freeplay grid
 Turn notes to red when passed x notes
 Mod credits in other languages
-Auto-chart
+Auto-chart (maybe using the frequency of each rectangle in the waveform)
+Credit the shader's creators
