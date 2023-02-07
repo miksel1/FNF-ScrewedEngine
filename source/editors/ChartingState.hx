@@ -1,5 +1,6 @@
 package editors;
 
+import Language.LanguageString;
 import effects.ColorSwap;
 #if desktop
 import Discord.DiscordClient;
@@ -297,7 +298,7 @@ class ChartingState extends MusicBeatState
 
 	private static var debugGroup:FlxTypedGroup<DebugLuaText>;
 
-	var text:String = "";
+	var text:LanguageString = "";
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 
@@ -456,7 +457,7 @@ class ChartingState extends MusicBeatState
 		UI_box.scrollFactor.set();
 
 		var keyBonds = ClientPrefs.keyBinds;
-		text =
+		text = {s:
 		"W/S or Mouse Wheel - Change Conductor's strum time
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
@@ -471,9 +472,9 @@ class ChartingState extends MusicBeatState
 		\nEsc - Test your chart inside Chart Editor
 		\nEnter - Play your chart
 		\n" + keyBonds["decrease"][0].toString() + "/" + keyBonds["increase"][0].toString() + " - Decrease/Increase Note Sustain Length
-		\nSpace - Stop/Resume song";
+		\nSpace - Stop/Resume song"};
 
-		var tipTextArray:Array<String> = text.split('\n');
+		var tipTextArray:Array<String> = Language.getString(text).split('\n');
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 7, 0, tipTextArray[i], 17);
 			tipText.y += i * 11;
