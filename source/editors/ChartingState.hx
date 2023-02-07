@@ -2361,8 +2361,9 @@ class ChartingState extends MusicBeatState
 			"\n\nBeat Snap: " + quantization + 'th';
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
-		curRenderedNotes.forEachAlive(function(note:Note) {
-			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null)
+		curRenderedNotes.forEachAlive(function(note:Note)
+		{
+			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null && !ClientPrefs.lowQuality)
 				note.shader = colorSwap.shader;
 
 			note.alpha = 1;
@@ -2370,11 +2371,13 @@ class ChartingState extends MusicBeatState
 				var noteDataToCheck:Int = note.noteData;
 				if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
 
-				if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
-				{
-					colorSine += elapsed;
-					var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
-					note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
+				if(!ClientPrefs.lowQuality) {
+					if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
+					{
+						colorSine += elapsed;
+						var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
+						note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
+					}
 				}
 			}
 
@@ -2581,7 +2584,10 @@ class ChartingState extends MusicBeatState
 			index = i;
 
 			function thing(j:Int, k:Int) {
-				return FlxMath.bound(((index < wavData[j][k].length && index >= 0) ? wavData[j][k][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+				return (FlxMath.bound(
+					((index < wavData[j][k].length && index >= 0) ? wavData[j][k][index] : 0) * (gSize / 1.12),
+					-hSize,
+					hSize)) / 2;
 			}
 
 			lmin = thing(0, 0);
@@ -2642,7 +2648,7 @@ class ChartingState extends MusicBeatState
 		#if (lime_cffi && !macro)
 		if (buffer == null || buffer.data == null) return [[[0], [0]], [[0], [0]]];
 
-		var khz:Float = (buffer.sampleRate / 1000);
+		var khz:Float = (buffer.sampleRate / 1000); // MY GOD!!!! IS THIS FOR AUTO CHART!!????
 		var channels:Int = buffer.channels;
 
 		var index:Int = Std.int(time * khz);
