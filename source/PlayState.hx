@@ -1,6 +1,7 @@
 package;
 
 import effects.Shaders.GlitchEffect;
+import effects.ChromaticAberration;
 import lime.app.Application;
 import lime.system.System;
 import flixel.graphics.FlxGraphic;
@@ -116,6 +117,7 @@ class PlayState extends MusicBeatState
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map<String, effects.WiggleEffect>();
 	public var modchartGlitchEffects:Map<String, GlitchEffect> = new Map<String, GlitchEffect>();
 	public var modchartMosaicEffects:Map<String, MosaicEffect> = new Map<String, MosaicEffect>();
+	public var modchartCAEffects:Map<String, ChromaticAberration> = new Map<String, ChromaticAberration>();
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
@@ -132,6 +134,7 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map();
 	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map();
+	public var modchartCAEffects:Map<String, ChromaticAberration> = new Map();
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map();
@@ -257,6 +260,7 @@ class PlayState extends MusicBeatState
 	public static var screenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var anotherScreenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var mosaicEffect:effects.MosaicEffect = new effects.MosaicEffect();
+	public static var globalChromaticAberration:ChromaticAberration;
 
 	public static var activeWavy:Bool = false;
 
@@ -400,7 +404,10 @@ class PlayState extends MusicBeatState
 
 		controlArray = ['NOTE_LEFT', 'NOTE_DOWN', 'NOTE_UP', 'NOTE_RIGHT'];
 
-		// Shaders
+		// Shaders & effects
+		globalChromaticAberration = new ChromaticAberration(0);
+		add(globalChromaticAberration);
+
 		the3DWorldEffect = new WiggleEffect();
 		the3DWorldEffect.effectType = WiggleEffectType.FLAG;
 		the3DWorldEffect.waveAmplitude = 0.1;
@@ -3490,6 +3497,9 @@ class PlayState extends MusicBeatState
 							anotherScreenshader.shader.uampmul.value[0] = 1;
 							anotherScreenshader.Enabled = true;
 						}
+					case 'Chromatic Aberration':
+						// same as rainbow, but ill do it l8r
+
 					case 'Nothing': // dont let it
 					//
 					default:
