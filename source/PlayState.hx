@@ -117,7 +117,7 @@ class PlayState extends MusicBeatState
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map<String, effects.WiggleEffect>();
 	public var modchartGlitchEffects:Map<String, GlitchEffect> = new Map<String, GlitchEffect>();
 	public var modchartMosaicEffects:Map<String, MosaicEffect> = new Map<String, MosaicEffect>();
-	public var modchartCAEffects:Map<String, ChromaticAberration> = new Map<String, ChromaticAberration>();
+	public var modchartCAEffects:Map<String, effects.ChromaticAberration> = new Map<String, effects.ChromaticAberration>();
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
@@ -134,7 +134,7 @@ class PlayState extends MusicBeatState
 	public var modchartSaves:Map<String, FlxSave> = new Map();
 	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map();
 	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map();
-	public var modchartCAEffects:Map<String, ChromaticAberration> = new Map();
+	public var modchartCAEffects:Map<String, effects.ChromaticAberration> = new Map();
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map();
@@ -260,7 +260,7 @@ class PlayState extends MusicBeatState
 	public static var screenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var anotherScreenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var mosaicEffect:effects.MosaicEffect = new effects.MosaicEffect();
-	public static var globalChromaticAberration:ChromaticAberration;
+	public static var globalChromaticAberration:effects.ChromaticAberration;
 
 	public static var activeWavy:Bool = false;
 
