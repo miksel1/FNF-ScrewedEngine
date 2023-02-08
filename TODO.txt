@@ -11,5 +11,8 @@ Credit the shader's creators
 Add stage shader effects by JSON
 Fix icon offsets
 Scroll Speed changer (instead of only constant and multiplicative, this one changes randomly)
+Chromatic Aberration shader
+Heatwave shader
+Fix PlaybackRate
 
 TERMINAL STATE
