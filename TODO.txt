@@ -9,5 +9,6 @@ Auto-chart (maybe using the frequency of each rectangle in the waveform)
 Credit the shader's creators
 Add stage shader effects by JSON
 Fix icon offsets
+Scroll Speed changer (instead of only constant and multiplicative, this one changes randomly)
 
 TERMINAL STATE
