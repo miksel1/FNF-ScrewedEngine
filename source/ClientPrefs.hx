@@ -101,13 +101,15 @@ class ClientPrefs {
 		'save'			=> [P, NONE]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
-
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
 		//trace(defaultKeys);
 	}
 
+	public static var modData:Map<String, Map<String, Dynamic>> = null;
+
 	public static function saveSettings() {
+		//FlxG.save.data.modData = modData;
 		FlxG.save.data.timeBarDivisions = timeBarDivisions;
 		FlxG.save.data.showHealth = showHealth;
 		FlxG.save.data.maxNotes = maxNotes;
@@ -284,7 +286,22 @@ class ClientPrefs {
 				gameplaySettings.set(name, value);
 			}
 		}
-		
+		if(FlxG.save.data.modData != null)
+		{
+			var savedMap:Map<String, Map<String, Dynamic>> = FlxG.save.data.modData; // shorted
+			for (modName => savedModData in savedMap) // savedModData is a Map<String, Dynamic>
+			{
+				if(modData.exists(modName)) {
+					var newModData:Map<String, Dynamic> = modData.get(modName); // just in case for no leaving values in blank
+					for (savedModVar => savedModValue in savedModData) { // savedModVar is String, savedModValue is Dynamic
+						newModData.set(savedModVar, savedModValue);
+					}
+					modData.set(modName, newModData);
+				} else {
+					modData.set(modName, savedModData);
+				}
+			}
+		}
 		// flixel automatically saves your volume!
 		if(FlxG.save.data.volume != null)
 		{
