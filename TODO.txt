@@ -1,3 +1,7 @@
+Doing:
+Terminal State with MOD SUPPORT IN TEXT
+
+Still to do:
 Add more shaders
 Add images to freeplay
 Add more languages
@@ -14,5 +18,3 @@ Scroll Speed changer (instead of only constant and multiplicative, this one chan
 Chromatic Aberration shader
 Heatwave shader
 Fix PlaybackRate
-
-TERMINAL STATE
