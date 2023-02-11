@@ -103,7 +103,6 @@ class PlayState extends MusicBeatState
 	private var canCPULight:Bool = true;
 	private var canPlayerLight:Bool = true;
 
-	#if (haxe >= "4.0.0")
 	public var boyfriendMap:Map<String, Boyfriend> = new Map();
 	public var dadMap:Map<String, Character> = new Map();
 	public var gfMap:Map<String, Character> = new Map();
@@ -121,24 +120,6 @@ class PlayState extends MusicBeatState
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
-	#else
-	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
-	public var dadMap:Map<String, Character> = new Map<String, Character>();
-	public var gfMap:Map<String, Character> = new Map<String, Character>();
-	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
-	public var modchartTweens:Map<String, FlxTween> = new Map();
-	public var modchartSprites:Map<String, ModchartSprite> = new Map();
-	public var modchartTimers:Map<String, FlxTimer> = new Map();
-	public var modchartSounds:Map<String, FlxSound> = new Map();
-	public var modchartTexts:Map<String, ModchartText> = new Map();
-	public var modchartSaves:Map<String, FlxSave> = new Map();
-	public var modchartWiggleEffects:Map<String, effects.WiggleEffect> = new Map();
-	public var modchartMosaicEffects:Map<String, effects.MosaicEffect> = new Map();
-	public var modchartCAEffects:Map<String, effects.ChromaticAberration> = new Map();
-
-	// events one
-	public var sourceSprites:Map<String, FlxSprite> = new Map();
-	#end
 
 	var judgementCounter:FlxText;
 
@@ -3188,49 +3169,30 @@ class PlayState extends MusicBeatState
 		callOnLuas('onUpdate', [elapsed]);
 
 		if (activeWavy)
-		{
 			wavyShader.update(elapsed);
-		}
+
 		the3DWorldEffect.update(elapsed);
 		the3DWorldEffectWavy.update(elapsed);
 
 		for (effect => value in modchartWiggleEffects)
-		{
 			value.update(elapsed);
-		}
 		for (effect => value in modchartGlitchEffects)
-		{
 			value.update(elapsed);
-		}
 
-		if (disableTheTripperAt == curStep)
-		{
+		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
-		}
-		if (isDead)
-		{
-			disableTheTripper = true;
-		}
 
 		var filters:Array<BitmapFilter> = [new ShaderFilter(screenshader.shader)];
 		if (SONG.event7 == 'Rainbow Eyesore')
-		{
 			filters.push(new ShaderFilter(anotherScreenshader.shader));
-		}
+
 		FlxG.camera.setFilters(filters);
 		screenshader.update(elapsed);
 		if (SONG.event7 == 'Rainbow Eyesore')
 			anotherScreenshader.update(elapsed);
 
 		if (disableTheTripper)
-		{
 			screenshader.shader.uampmul.value[0] -= (elapsed / 2);
-		}
-
-		/*if (FlxG.keys.justPressed.NINE)
-			{
-				iconP1.swapOldIcon();
-		}*/
 
 		switch (curStage)
 		{
@@ -3238,9 +3200,7 @@ class PlayState extends MusicBeatState
 				moveTank(elapsed);
 			case 'schoolEvil':
 				if (!ClientPrefs.lowQuality && bgGhouls.animation.curAnim.finished)
-				{
 					bgGhouls.visible = false;
-				}
 			case 'philly':
 				if (trainMoving)
 				{
@@ -3367,9 +3327,7 @@ class PlayState extends MusicBeatState
 					{
 						var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
 						for (i in 0...dancers.length)
-						{
 							dancers[i].x = (370 * i) + bgLimo.x + 280;
-						}
 					}
 				}
 			case 'mall':
@@ -3394,15 +3352,11 @@ class PlayState extends MusicBeatState
 				&& boyfriend.animation.curAnim.name.startsWith('idle'))
 			{
 				boyfriendIdleTime += elapsed;
-				if (boyfriendIdleTime >= 0.15)
-				{ // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
+				if (boyfriendIdleTime >= 0.15) // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
 					boyfriendIdled = true;
-				}
 			}
 			else
-			{
 				boyfriendIdleTime = 0;
-			}
 		}
 
 		if (ClientPrefs.crazyCounter)
