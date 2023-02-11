@@ -162,8 +162,8 @@ class Main extends Sprite
 			}
 
 			errMsg += "\nUncaught Error: "
-				+ e.error
-				+ "\nPlease report this error to Wither362 (Wither#9781)\n\n> Crash Handler written by: sqirra-rng";
+				+ Std.string(e.error).replace('\n', '\\n')
+				+ "\nPlease report this error to Wither362 (Discord: Wither#9781, GitHub: https://github.com/Wither362),\nor by the GitHub page: \"https://github.com/miksel1/FNF-ScrewedEngine\"\n\n> Crash Handler written by: sqirra-rng";
 
 			if (!FileSystem.exists("./crash/"))
 				FileSystem.createDirectory("./crash/");
