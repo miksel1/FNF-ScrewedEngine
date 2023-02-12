@@ -10,7 +10,7 @@ import flixel.system.FlxAssets.FlxShader;
 /**
 Thanks to the Impostorm Team!
 */
-class ChromaticAbberation extends FlxBasic
+class ChromaticAberration extends FlxBasic
 {
     public var shader(default, null):CAGLSL = new CAGLSL();
 

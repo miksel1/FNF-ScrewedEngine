@@ -10,7 +10,18 @@ class ClientPrefs {
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
 	public static var opponentStrums:Bool = true;
-	public static var showFPS:Bool = true;
+	@:isVar
+	public static var showFPS(get, set):Bool = true;
+	static function get_showFPS():Bool {
+		return showFPS;
+	}
+	static function set_showFPS(v:Bool):Bool {
+		showFPS = v;
+		if(Main.fpsVar != null) {
+			Main.fpsVar.visible = showFPS;
+		}
+		return showFPS;
+	}
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
 	public static var noteSplashes:Bool = true;

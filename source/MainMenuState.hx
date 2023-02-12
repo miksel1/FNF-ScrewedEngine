@@ -32,7 +32,13 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
-	
+
+	var terminalKeys:Array<String> = [
+		'TERMINAL'
+	];
+	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var terminalKeysBuffer:String = '';
+
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
@@ -261,6 +267,31 @@ class MainMenuState extends MusicBeatState
 							});
 						}
 					});
+				}
+			}
+			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE)
+			{
+				var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
+				var keyName:String = Std.string(keyPressed);
+				if(allowedKeys.contains(keyName)) {
+					terminalKeysBuffer += keyName;
+					if(terminalKeysBuffer.length >= 32) terminalKeysBuffer = terminalKeysBuffer.substring(1);
+					trace('Test! Allowed Key pressed!!! Buffer: ' + terminalKeysBuffer);
+
+					for (wordRaw in terminalKeys)
+					{
+						var word:String = wordRaw.toUpperCase(); //just for being sure you're doing it right
+						if(terminalKeysBuffer.contains(word)) {
+							/*#if (!debug && MODS_ALLOWED)
+							if(ClientPrefs.modData.exists(Paths.currentModDirectory))
+								if(ClientPrefs.modData.get(Paths.currentModDirectory).exists('allowTerminal'))
+									if(ClientPrefs.modData.get(Paths.currentModDirectory).get('allowTerminal')) {
+							#end*/
+										FlxG.sound.music.pause();
+										MusicBeatState.switchState(new TerminalState());
+									//}
+						}
+					}
 				}
 			}
 			#if desktop

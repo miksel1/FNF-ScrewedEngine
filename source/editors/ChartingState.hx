@@ -298,7 +298,7 @@ class ChartingState extends MusicBeatState
 
 	private static var debugGroup:FlxTypedGroup<DebugLuaText>;
 
-	var text:LanguageString = "";
+	var text:LanguageString = {s: ""};
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 

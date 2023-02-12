@@ -135,6 +135,14 @@ class CoolUtil
 		FlxG.openURL(site);
 		#end
 	}
+	public static function fancyOpenURL(schmancy:String)
+	{
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
+		#else
+		FlxG.openURL(schmancy);
+		#end
+	}
 
 	/** Quick Function to Fix Save Files for Flixel 5
 		if you are making a mod, you are gonna wanna change "ShadowMario" to something else

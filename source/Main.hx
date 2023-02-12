@@ -140,6 +140,8 @@ class Main extends Sprite
 		}
 		else
 		{
+			FlxG.sound.destroy();
+
 			var errMsg:String = "";
 			var path:String;
 			var callStack:Array<StackItem> = CallStack.exceptionStack(true);

@@ -567,7 +567,7 @@ class FreeplayState extends MusicBeatState
 				{
 					trace(poop);
 
-					var songnsn = Song.loadFromJson(poop, songLowercase, freeplaySection);
+					var songnsn = Song.loadFromJson(poop, songLowercase);
 
 					var max = 0;
 					for (section in songnsn.notes)
