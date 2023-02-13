@@ -34,7 +34,8 @@ class TerminalState extends MusicBeatState
 	// if you ingore this message and use it anyway, atleast give credit. // sorry dudes, i give you credit, ok?
 	public var curCommand:String = "";
 	public var previousText:String = Language.getString({
-		s: 'Vs Dave Developer Console[Version 1.0.00001.1235]\nAll Rights Reserved.\n>'});
+		s: 'Vs Dave Developer Console[Version 1.2.00001.1235]\nAll Rights Reserved.\n>',
+		spanish: 'Consola de Desarrollo de Vs Dave[Version 1.2.00001.1234]:linebreak:Todos los derechos reservados.:linebreak:>'});
 	public var displayText:FlxText;
 
 	var expungedActivated:Bool = false;
@@ -69,24 +70,25 @@ class TerminalState extends MusicBeatState
 	}
 
 	var languageStrings:Map<String, LanguageString> = [
-		'term_help_ins' => {s: 'Displays this menu.'},
-		'term_char_ins' => {s: 'Shows the list of characters.'},
-		'term_admin_ins' => {s: 'Shows the admin list, use grant to grant rights.'},
+		'term_help_ins' => {s: 'Displays this menu.', spanish: 'Muestra este menú.'},
+		'term_char_ins' => {s: 'Shows the list of characters.', spanish: 'Muestra la lista de personajes.'},
+		'term_admin_ins' => {s: 'Shows the admin list, use grant to grant rights.', spanish: 'Muestra la lista de administradores, usa grant para dar permisos.'},
 		'term_admlist_ins' =>
-		{s: '\nTo add extra users, add the grant parameter and the name.\n(Example: admin grant expungo.dat)\nNOTE: ADDING CHARACTERS AS ADMINS CAN CAUSE UNEXPECTED CHANGES.'},
+		{s: '\nTo add extra users, add the grant parameter and the name.\n(Example: admin grant girlfriend.dat)\nNOTE: ADDING CHARACTERS AS ADMINS CAN CAUSE UNEXPECTED CHANGES.',
+		spanish: ':linebreak:Para añadir usuarios extra, usa el parámetro grant y el nombre.:linebreak:(Ejemplo: admin grant girlfriend.dat):linebreak:NOTA: AÑADIENDO PERSONAJES COMO ADMINS PUEDE CAUSAR CAMBIOS INESPERADOS.'},
 		'term_vault_ins' => {s: 'Store valuable files here. Takes 3 key parameters seperated by spaces.'},
-		'term_clear_ins' => {s: 'Clears the screen.'},
-		'term_leak_ins' => {s: 'No providing such leaks.'},
-		'term_texts_ins' => {s: 'Searches for a text file with the specified ID, and if it exists, display it.'},
+		'term_clear_ins' => {s: 'Clears the screen.', spanish: 'Limpia la pantalla.'},
+		'term_leak_ins' => {s: 'No providing such leaks.', spanish: 'No daremos dichas filtraciones.'},
+		'term_texts_ins' => {s: 'Searches for a text file with the specified ID, and if it exists, display it.', spanish: 'Busca un archivo de texto con el ID especificado y si existe, lo muestra.'},
 		// Errors and argument outputs //
-		'term_loading' => {s: '\nLoading...'},
-		'term_unknown' => {s: '\nUnknown command \"'},
-		'term_admin_error1' => {s: '\nNo version of the \"admin\" command takes'},
-		'term_admin_error2' => {s: ' parameter(s).'},
+		'term_loading' => {s: '\nLoading...', spanish: '\nCargando...'},
+		'term_unknown' => {s: '\nUnknown command \"', spanish: '\nComando desconocido \"'},
+		'term_admin_error1' => {s: '\nNo version of the \"admin\" command takes', spanish: '\nNinguna versión del comando \"admin\" toma'},
+		'term_admin_error2' => {s: ' parameter(s).', spanish: ' parámetro(s)'},
 		'term_grant_error1' => {s: ' is not a valid user or character.'},
 		'term_miksel_error' => {s: "\nyou know what? im gonna close the game so you can watch my channel..."},
 		'term_moldy_error' => {s: "\nyou know what? im gonna close the game so you can watch my baldi's basics playthrough..."},
-		'term_wither_error' => {s: "Did you just let a hacker into your computer?\nYou'll need some help...\nBUT YOU CAN'T\nHAHAHAHAHAHAHA", spanish: "acabas de dejar que un hacker entre en tu ordenador?\nNecesitarás algo de ayuda...\nPERO NO PODRÁS\nHAHAHAHAHAHAHA"}
+		'term_wither_error' => {s: "Did you just let a hacker into your computer?\nYou'll need some help...\nBUT YOU CAN'T\nHAHAHAHAHAHAHA", spanish: "Acabas de dejar que un hacker entre en tu ordenador?\nNecesitarás algo de ayuda...\nPERO NO PODRÁS\nHAHAHAHAHAHAHA"}
 	];
 
 	// [BAD PERSON] was too lazy to finish this lol.
