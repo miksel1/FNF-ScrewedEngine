@@ -7,6 +7,7 @@ import flixel.graphics.FlxGraphic;
 import Controls;
 
 class ClientPrefs {
+	public static var safeMode:Bool = false;
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
 	public static var opponentStrums:Bool = true;
@@ -120,6 +121,7 @@ class ClientPrefs {
 	public static var modData:Map<String, Map<String, Dynamic>> = null;
 
 	public static function saveSettings() {
+		FlxG.save.data.safeMode = safeMode;
 		//FlxG.save.data.modData = modData;
 		FlxG.save.data.timeBarDivisions = timeBarDivisions;
 		FlxG.save.data.showHealth = showHealth;
@@ -173,6 +175,7 @@ class ClientPrefs {
 	}
 
 	public static function loadPrefs() {
+		if(FlxG.save.data.safeMode != null) safeMode = FlxG.save.data.safeMode;
 		if(FlxG.save.data.language != null) {
 			language = FlxG.save.data.language;
 		}
