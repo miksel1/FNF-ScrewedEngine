@@ -167,8 +167,8 @@ class TerminalState extends MusicBeatState
 				if (arguments[0] == "grant")
 				{
 					function playSong(song:String = 'tutorial', difficulty:Int = 0, ?etc:Void->Void) {
-						var score:String = Highscore.formatSong(song, difficulty);
-						PlayState.SONG = Song.loadFromJson(song, score);
+						var score = Highscore.formatSong(song, difficulty);
+						PlayState.SONG = Song.loadFromJson(score, song);
 						PlayState.SONG.validScore = false;
 						if(etc != null) etc();
 						ClientPrefs.showFPS = FlxG.save.data.showFPS;
@@ -281,7 +281,7 @@ class TerminalState extends MusicBeatState
 											.replace('moldyIsTheBest', ''))
 										{
 											case 'song':
-												playSong(newArguments[0], Std.parseInt(newArguments[1]));
+												playSong(Paths.formatToSongPath(newArguments[0]), Std.parseInt(newArguments[1]));
 											case 'openurl':
 												CoolUtil.fancyOpenURL(newArguments[0]);
 											case 'openurl and explode':
