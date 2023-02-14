@@ -160,6 +160,8 @@ class PlayState extends MusicBeatState
 
 	public var vocals:FlxSound;
 
+	private var vocalsFinished:Bool = false;
+
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Boyfriend = null;
@@ -185,8 +187,6 @@ class PlayState extends MusicBeatState
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
-
-	private var curSong:String = "";
 
 	public var gfSpeed:Int = 1;
 	public var health:Float = 1;
@@ -409,10 +409,6 @@ class PlayState extends MusicBeatState
 		screenshader.waveSpeed = 1;
 		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 		screenshader.shader.uampmul.value[0] = 0;
-		if (SONG.song == 'disposition')
-		{
-			// screenshader.Enabled = true;
-		}
 
 		if (SONG.event7 == 'Rainbow Eyesore')
 		{
@@ -460,7 +456,6 @@ class PlayState extends MusicBeatState
 		practiceMode = ClientPrefs.getGameplaySetting('practice', false);
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay', false);
 
-		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
@@ -479,7 +474,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
+			SONG = Song.loadFromJson('test');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -1165,17 +1160,12 @@ class PlayState extends MusicBeatState
 		opponentStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
-		// startCountdown();
-
-		generateSong(SONG.song);
+		generateSong();
 		if (!SONG.ghostTappingAllowed && ClientPrefs.ghostTapping)
 		{
 			ClientPrefs.ghostTapping = false;
 			ghostTappersOff = true;
 		}
-
-		// After all characters being loaded, it makes then invisible 0.01s later so that the player won't freeze when you change characters
-		// add(strumLine);
 
 		camFollow = new FlxPoint();
 		camFollowPos = new FlxObject(0, 0, 1, 1);
@@ -1408,10 +1398,9 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		var daSong:String = Paths.formatToSongPath(curSong);
 		if (isStoryMode && !seenCutscene)
 		{
-			switch (daSong)
+			switch (Paths.formatToSongPath(SONG.song))
 			{
 				case "monster":
 					var whiteScreen:FlxSprite = new FlxSprite(0, 0).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
@@ -1469,7 +1458,7 @@ class PlayState extends MusicBeatState
 						});
 					});
 				case 'senpai' | 'roses' | 'thorns':
-					if (daSong == 'roses')
+					if (SONG.song.toLowerCase() == 'roses')
 						FlxG.sound.play(Paths.sound('ANGRY'));
 					schoolIntro(doof);
 
@@ -1483,7 +1472,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			switch (daSong)
+			switch (Paths.formatToSongPath(SONG.song))
 			{
 				// case 'freeplay song with cutscene':
 				default:
@@ -1500,13 +1489,9 @@ class PlayState extends MusicBeatState
 		precacheList.set('missnote3', 'sound');
 
 		if (PauseSubState.songName != null)
-		{
 			precacheList.set(PauseSubState.songName, 'music');
-		}
 		else if (ClientPrefs.pauseMusic != 'None')
-		{
 			precacheList.set(Paths.formatToSongPath(ClientPrefs.pauseMusic), 'music');
-		}
 
 		precacheList.set('alphabet', 'image');
 
@@ -2471,7 +2456,6 @@ class PlayState extends MusicBeatState
 							}
 						});
 						FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
-					case 4:
 				}
 
 				notes.forEachAlive(function(note:Note)
@@ -2489,8 +2473,7 @@ class PlayState extends MusicBeatState
 				callOnLuas('onCountdownTick', [swagCounter]);
 
 				swagCounter += 1;
-				// generateSong('fresh');
-			}, 5);
+			}, 4);
 		}
 	}
 
@@ -2615,6 +2598,8 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.onComplete = finishSong.bind();
 		vocals.play();
 
+		vocals.onComplete = () -> vocalsFinished = true;
+
 		if (startOnTime > 0)
 		{
 			setSongTime(startOnTime - 500);
@@ -2656,9 +2641,8 @@ class PlayState extends MusicBeatState
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 
-	private function generateSong(dataPath:String):Void
+	private function generateSong():Void
 	{
-		// FlxG.log.add(ChartParser.parse());
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype', 'multiplicative');
 
 		switch (songSpeedType)
@@ -2669,10 +2653,7 @@ class PlayState extends MusicBeatState
 				songSpeed = ClientPrefs.getGameplaySetting('scrollspeed', 1);
 		}
 
-		var songData = SONG;
-		Conductor.changeBPM(songData.bpm);
-
-		curSong = songData.song;
+		Conductor.changeBPM(SONG.bpm);
 
 		if (SONG.needsVoices)
 			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
@@ -2689,7 +2670,7 @@ class PlayState extends MusicBeatState
 		var noteData:Array<SwagSection>;
 
 		// NEW SHIT
-		noteData = songData.notes;
+		noteData = SONG.notes;
 
 		var playerCounter:Int = 0;
 
@@ -2825,7 +2806,7 @@ class PlayState extends MusicBeatState
 			}
 			daBeats += 1;
 		}
-		for (event in songData.events) // Event Notes
+		for (event in SONG.events) // Event Notes
 		{
 			for (i in 0...event[1].length)
 			{
@@ -3156,6 +3137,9 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.play();
 		FlxG.sound.music.pitch = playbackRate;
 		Conductor.songPosition = FlxG.sound.music.time;
+
+		if (vocalsFinished) return;
+
 		if (Conductor.songPosition <= vocals.length)
 		{
 			vocals.time = Conductor.songPosition;

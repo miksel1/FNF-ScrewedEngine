@@ -167,7 +167,7 @@ class ChartingState extends MusicBeatState
 
 	var highlight:FlxSprite;
 
-	public static var GRID_SIZE:Int = 40;
+	public static inline final GRID_SIZE:Int = 40;
 	var CAM_OFFSET:Int = 360;
 
 	var dummyArrow:FlxSprite;
@@ -191,7 +191,6 @@ class ChartingState extends MusicBeatState
 	**/
 	var curSelectedNote:Array<Dynamic> = null;
 
-	var tempBpm:Float = 0;
 	var playbackSpeed:Float = 1;
 
 	var vocals:FlxSound = null;
@@ -301,7 +300,7 @@ class ChartingState extends MusicBeatState
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 
-	public static var instance:ChartingState;
+	public static var instance:ChartingState = null;
 
 	override function create()
 	{
@@ -345,8 +344,6 @@ class ChartingState extends MusicBeatState
 
 		PlayState.chartingMode = true;
 		instance = this;
-
-		// Paths.clearMemory();
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -395,8 +392,6 @@ class ChartingState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 		//FlxG.save.bind('funkin', CoolUtil.getSavePath());
-
-		tempBpm = _song.bpm;
 
 		addSection();
 
@@ -1728,7 +1723,7 @@ class ChartingState extends MusicBeatState
 			}
 			if (wname == 'song_bpm')
 			{
-				tempBpm = nums.value;
+				_song.bpm = nums.value;
 				Conductor.mapBPMChanges(_song);
 				Conductor.changeBPM(nums.value);
 			}
@@ -2301,8 +2296,6 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		}
-
-		_song.bpm = tempBpm;
 
 		strumLineNotes.visible = quant.visible = vortex;
 
@@ -3488,46 +3481,11 @@ class ChartingState extends MusicBeatState
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
-	#if CRASH_HANDLER
-	public function onCrash(e:UncaughtErrorEvent)
-	{
-		addTextToDebug('Crashed!!!', FlxColor.RED);
-		autosaveSong();
-		var errMsg:String = "";
-		var path:String;
-		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
-		var dateNow:String = Date.now().toString();
-
-		dateNow = dateNow.replace(" ", "_");
-		dateNow = dateNow.replace(":", "'");
-
-		path = "./crash/" + "ScrewedEngine_" + dateNow + ".txt";
-
-		for (stackItem in callStack)
-		{
-			switch (stackItem)
-			{
-				case FilePos(s, file, line, column):
-					errMsg += file + " (line " + line + ")\n";
-				default:
-					Sys.println(stackItem);
-			}
-		}
-
-		errMsg += "\nUncaught Error: " + e.error + "\nReport this error to Wither362\nDon't worry about your changes, they are saved";
-
-		if (!FileSystem.exists("./crash/"))
-			FileSystem.createDirectory("./crash/");
-
-		File.saveContent(path, errMsg + "\n");
-
-		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
-
-		Application.current.window.alert(errMsg, "Error!");
-		FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetState, true);
+	override function destroy(){
+		instance = null;
+		
+		return super.destroy();
 	}
-	#end
 }
 
 class AttachedFlxText extends FlxText
