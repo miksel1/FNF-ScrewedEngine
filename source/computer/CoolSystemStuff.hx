@@ -3,8 +3,6 @@ package computer;
 // crazy system shit!!!!!
 // lordryan wrote this :) (erizur added cross platform env vars)
 // wither made this more stable
-import sys.io.File;
-import sys.io.Process;
 import haxe.io.Bytes;
 
 /** BE CAREFUL!!! THIS COULD FLAG YOUR MOD AS VIRUS IF YOU DONT USE IT WISELY!!!!
