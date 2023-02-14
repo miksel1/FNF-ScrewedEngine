@@ -5785,13 +5785,10 @@ class PlayState extends MusicBeatState
 	public static function rainbowEyesore(shader:effects.Shaders.PulseEffect, time:Int, speed:Float)
 	{
 		if (anotherScreenshader.Enabled)
-		{
 			FlxG.camera.setFilters([new ShaderFilter(shader.shader), new ShaderFilter(anotherScreenshader.shader)]);
-		}
 		else
-		{
 			FlxG.camera.setFilters([new ShaderFilter(shader.shader)]);
-		}
+
 		instance.disableTheTripper = false;
 		instance.disableTheTripperAt = time;
 		shader.waveAmplitude = 1;
@@ -5809,14 +5806,10 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 		if (Math.abs(FlxG.sound.music.time - (Conductor.songPosition - Conductor.offset)) > (20 * playbackRate)
 			|| (SONG.needsVoices && Math.abs(vocals.time - (Conductor.songPosition - Conductor.offset)) > (20 * playbackRate)))
-		{
 			resyncVocals();
-		}
 
 		if (curStep == lastStepHit)
-		{
 			return;
-		}
 
 		lastStepHit = curStep;
 		setOnLuas('curStep', curStep);
@@ -5832,15 +5825,10 @@ class PlayState extends MusicBeatState
 		super.beatHit();
 
 		if (lastBeatHit >= curBeat)
-		{
-			// trace('BEAT HIT: ' + curBeat + ', LAST HIT: ' + lastBeatHit);
 			return;
-		}
 
 		if (generatedMusic)
-		{
 			notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
-		}
 
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);
