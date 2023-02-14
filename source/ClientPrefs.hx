@@ -28,8 +28,6 @@ class ClientPrefs {
 	public static var noteSplashes:Bool = true;
 	public static var lowQuality:Bool = false;
 	public static var framerate:Int = 60;
-	public static var cursing:Bool = true;
-	public static var violence:Bool = true;
 	public static var camZooms:Bool = true;
 	public static var hideHud:Bool = false;
 	public static var noteOffset:Int = 0;
@@ -50,7 +48,7 @@ class ClientPrefs {
 	public static var timeBarDivisions:Int = 800;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
-		'scrolltype' => 'multiplicative', 
+		'scrolltype' => 'multiplicative',
 		// anyone reading this, amod is multiplicative speed mod, cmod is constant speed mod, and xmod is bpm based speed mod.
 		// an amod example would be chartSpeed * multiplier
 		// cmod would just be constantSpeed = chartSpeed
@@ -137,8 +135,6 @@ class ClientPrefs {
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.shaders = shaders;
 		FlxG.save.data.framerate = framerate;
-		//FlxG.save.data.cursing = cursing;
-		//FlxG.save.data.violence = violence;
 		FlxG.save.data.camZooms = camZooms;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.hideHud = hideHud;
@@ -231,12 +227,6 @@ class ClientPrefs {
 				FlxG.updateFramerate = framerate;
 			}
 		}
-		/*if(FlxG.save.data.cursing != null) {
-			cursing = FlxG.save.data.cursing;
-		}
-		if(FlxG.save.data.violence != null) {
-			violence = FlxG.save.data.violence;
-		}*/
 		if(FlxG.save.data.camZooms != null) {
 			camZooms = FlxG.save.data.camZooms;
 		}

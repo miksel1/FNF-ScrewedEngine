@@ -5668,7 +5668,7 @@ class PlayState extends MusicBeatState
 
 	function killHenchmen():Void
 	{
-		if (!ClientPrefs.lowQuality && ClientPrefs.violence && curStage == 'limo')
+		if (!ClientPrefs.lowQuality && curStage == 'limo')
 		{
 			if (limoKillingState < 1)
 			{
