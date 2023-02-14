@@ -261,7 +261,7 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
-			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE)
+			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE #if desktop && !FlxG.keys.anyJustPressed(debugKeys) #end)
 			{
 				var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
 				var keyName:String = Std.string(keyPressed);
