@@ -25,7 +25,6 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 import options.substates.GraphicsSettingsSubState;
-//import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
@@ -77,8 +76,6 @@ class TitleState extends MusicBeatState
 
 	var curWacky:Array<String> = [];
 
-	var wackyImage:FlxSprite;
-
 	var easterEggKeys:Array<String> = [
 		'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU', 'BAMBI'
 	];
@@ -97,8 +94,6 @@ class TitleState extends MusicBeatState
 	var mosaicWords:Array<String> = ['miksel'];
 
 	var mosaicc:MosaicEffect;
-
-	var effectTween:FlxTween;
 
 	public static var goToOptions:Bool = false;
 
@@ -128,7 +123,7 @@ class TitleState extends MusicBeatState
 		swagShader = new ColorSwap();
 		mosaicc = new MosaicEffect();
 
-		effectTween = FlxTween.num(MosaicEffect.DEFAULT_STRENGTH, 15, 1.5, {type: PINGPONG}, function(v)
+		FlxTween.num(MosaicEffect.DEFAULT_STRENGTH, 15, 1.5, {type: PINGPONG}, function(v)
 		{
 			mosaicc.setStrength(v, v);
 		});

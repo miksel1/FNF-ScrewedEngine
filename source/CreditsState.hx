@@ -77,7 +77,9 @@ class CreditsState extends MusicBeatState
 		bg.screenCenter();
 		add(glitchBg = new FlxEffectSprite(bg));
 		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
-		glitchBg.effects = [glitchEffect];
+
+		if (!ClientPrefs.lowQuality)
+			glitchBg.effects = [glitchEffect];
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		grpTitles = new FlxTypedGroup<Alphabet>();
@@ -401,7 +403,7 @@ class CreditsState extends MusicBeatState
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
-		if (glitchEffect != null)
+		if (glitchEffect != null || !ClientPrefs.lowQuality)
 			glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);
 	}
 

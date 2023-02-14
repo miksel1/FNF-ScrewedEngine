@@ -11,6 +11,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
+import flixel.util.FlxColor;
 
 #if desktop
 import Discord.DiscordClient;

@@ -34,6 +34,9 @@ class MosaicEffect
 	public function new():Void
 	{
 		shader = new MosaicShader();
+
+		if (ClientPrefs.lowQuality) return;
+
 		#if (openfl >= "8.0.0")
 		shader.data.uBlocksize.value = [strengthX, strengthY];
 		#else
@@ -43,6 +46,8 @@ class MosaicEffect
 
 	public function setStrength(strengthX:Float, strengthY:Float):Void
 	{
+		if (ClientPrefs.lowQuality) return;
+
 		this.strengthX = strengthX;
 		this.strengthY = strengthY;
 		#if (openfl >= "8.0.0")
