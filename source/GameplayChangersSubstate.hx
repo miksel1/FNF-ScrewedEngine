@@ -42,7 +42,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 	function getOptions()
 	{
-		var goption:GameplayOption = new GameplayOption({s: 'Scroll Type', spanish: 'Tipo de Scroll'}, 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]);
+		var goption:GameplayOption = new GameplayOption({s: 'Scroll Type', spanish: 'Tipo de Scroll'}, 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant", "random"]);
 		goption.id = 'ST';
 		optionsArray.push(goption);
 

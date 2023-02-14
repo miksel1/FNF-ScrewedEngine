@@ -2637,7 +2637,6 @@ class PlayState extends MusicBeatState
 		callOnLuas('onSongStart', []);
 	}
 
-	var debugNum:Int = 0;
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 
@@ -2651,6 +2650,8 @@ class PlayState extends MusicBeatState
 				songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1);
 			case "constant":
 				songSpeed = ClientPrefs.getGameplaySetting('scrollspeed', 1);
+			case "random":
+				songSpeed = FlxG.random.float(1, 5);
 		}
 
 		Conductor.changeBPM(SONG.bpm);
@@ -2671,10 +2672,6 @@ class PlayState extends MusicBeatState
 
 		// NEW SHIT
 		noteData = SONG.notes;
-
-		var playerCounter:Int = 0;
-
-		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 
 		var songName:String = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.json(songName + '/events');
@@ -2804,7 +2801,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-			daBeats += 1;
 		}
 		for (event in SONG.events) // Event Notes
 		{
@@ -2821,9 +2817,6 @@ class PlayState extends MusicBeatState
 				eventPushed(subEvent);
 			}
 		}
-
-		// trace(unspawnNotes.length);
-		// playerCounter += 1;
 
 		unspawnNotes.sort(sortByTime);
 		generatedMusic = true;
