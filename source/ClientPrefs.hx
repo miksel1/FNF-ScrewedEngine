@@ -334,7 +334,7 @@ class ClientPrefs {
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic {
-		return /*PlayState.isStoryMode ? defaultValue : */ (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
+		return (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
 	}
 
 	public static function reloadControls() {
@@ -347,6 +347,7 @@ class ClientPrefs {
 		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 	}
+
 	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey> {
 		var copiedArray:Array<FlxKey> = arrayToCopy.copy();
 		var i:Int = 0;

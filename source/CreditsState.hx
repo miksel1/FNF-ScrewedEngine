@@ -51,7 +51,7 @@ class CreditsState extends MusicBeatState
 		'Delta',
 		'Join our Discord!', '¡Únete al Discord!',
 		'miksel',
-		'Meme Hoovy',
+		'MemeHoovy',
 		'BeastlyGhost',
 		'tposejank']; // yes dude ;D
 
@@ -114,7 +114,7 @@ class CreditsState extends MusicBeatState
 		}
 		#end
 
-		var pisspoop:Array<Array<Dynamic /*Dynamic*/>> = [ //Name - Icon name - Description - Link - BG Color
+		var pisspoop:Array<Array<Dynamic>> = [ //Name - Icon name - Description - Link - BG Color
 			[{s: 'Screwed Engine'}],
 			[{s: 'Wither362'},			    'Wither',			{s: 'Main Programmer of this engine'},								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'FF5F5F'],
 			[{s: 'Delta'},				    'delta',			{s: 'Strident Engine'},												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
@@ -122,7 +122,7 @@ class CreditsState extends MusicBeatState
 			[{s: 'Join our Discord!', spanish: '¡Únete al Discord!'},	'discord',			{s: 'Yeah! Join us for features and more!', spanish: '¡Sí! ¡Únete para información y más!'},						'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
 			[{s: 'Screwed Engine Contributors/Others...', spanish: 'Contribudores/Otros Screwed Engine...'}],
-			['Meme Hoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
+			['MemeHoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
 			['BeastlyGhost',		'beast',			'Icons and other help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
 			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
 			[''],
@@ -401,7 +401,8 @@ class CreditsState extends MusicBeatState
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
-		glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);
+		if (glitchEffect != null)
+			glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);
 	}
 
 	#if MODS_ALLOWED
