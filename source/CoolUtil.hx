@@ -29,6 +29,17 @@ class CoolUtil
 		trace(snap);
 		return (m / snap);
 	}
+
+	public static function checkSongDifficulty(song:String):Null<String>{
+		var file = Paths.formatToSongPath(song);
+
+		if (file.endsWith('-null'))
+			return file.replace('-null', '');
+		else
+			return file;
+
+		return null;
+	}
 	
 	public static function getDifficultyFilePath(num:Null<Int> = null)
 	{

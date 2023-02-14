@@ -91,7 +91,6 @@ class ChartingState extends MusicBeatState
 	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
 	public var ignoreWarnings:Bool = false;
 	var undos = [];
-	var redos = [];
 	var eventStuff:Array<Dynamic> =
 	[
 		['', "Nothing. Yep, that's right."],
@@ -122,6 +121,7 @@ class ChartingState extends MusicBeatState
 		['Activate PLAYER LIGHT', "The opposite of the earlier one"],
 		['(SOURCE ONLY) Add GlitchEffect', 'Adds a Glitch effect to the FlxSprite.\nValue 1: tag (name) of the FlxSprite.\n\n<b><r>YOU SHOULD ALWAYS USE\n<i>"addEventObject(tag, object)"<i>\nAFTER CREATING THE FLXSPRITE<r><b>']
 	];
+
 	var pressing7Events:Array<String> = [
 		'---',
 		'None',
@@ -185,7 +185,6 @@ class ChartingState extends MusicBeatState
 	var daquantspot = 0;
 	var curEventSelected:Int = 0;
 	var curUndoIndex:Int = 0;
-	var curRedoIndex:Int = 0;
 	var _song:SwagSong;
 	/*
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
@@ -1241,9 +1240,7 @@ class ChartingState extends MusicBeatState
 			_song.event7 = pressing7Events[0];
 
 		event7DropDown = new FlxUIDropDownMenuCustom(160, 300, FlxUIDropDownMenuCustom.makeStrIdLabelArray(pressing7Events, true), function(pressed:String) {
-			//trace('event pressed');
-			var whatIsIt:Int = Std.parseInt(pressed);
-			var arraySelectedShit:String = pressing7Events[whatIsIt];
+			var arraySelectedShit:String = pressing7Events[Std.parseInt(pressed)];
 			_song.event7 = arraySelectedShit;
 			if(untilTheEnd != null)
 				untilTheEnd.visible = _song.event7 == 'Rainbow Eyesore';
@@ -1637,10 +1634,7 @@ class ChartingState extends MusicBeatState
 	function loadSong():Void
 	{
 		if (FlxG.sound.music != null)
-		{
 			FlxG.sound.music.stop();
-			// vocals.stop();
-		}
 
 		var file:Dynamic = Paths.voices(currentSongName);
 		vocals = new FlxSound();
@@ -3282,8 +3276,6 @@ class ChartingState extends MusicBeatState
 			{
 				_song.notes[curSec].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteTypeIntMap.get(daType)]);
 			}
-
-			//trace(noteData + ', ' + noteStrum + ', ' + curSec);
 			strumTimeInputText.text = '' + curSelectedNote[0];
 
 			updateGrid();
@@ -3292,19 +3284,11 @@ class ChartingState extends MusicBeatState
 		return noteData;
 	}
 
-	// will figure this out l8r
-	function redo()
-	{
-		//_song = redos[curRedoIndex];
-	}
 	function undo()
 	{
-		//redos.push(_song);
 		undos.pop();
-		//_song.notes = undos[undos.length - 1];
-		//trace(_song.notes);
-		//updateGrid();
 	}
+
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float
 	{
 		var leZoom:Float = zoomList[curZoom];

@@ -37,13 +37,9 @@ class FreeplayState extends MusicBeatState
 	var sections:Array<String> = [];
 	var curFreeplaySection(get, null):String;
 
-	function get_curFreeplaySection():String {
-		if(curSelected < 0)
-			return 'MAIN';
-		return sections[curSelected];
+	inline function get_curFreeplaySection():String {
+		return (curSelected < 0) ? 'MAIN' : sections[curSelected];
 	}
-
-	var selector:FlxText;
 
 	private static var curSelected:Int = 0;
 
@@ -134,17 +130,6 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		WeekData.loadTheFirstEnabledMod();
-
-		/*//KIND OF BROKEN NOW AND ALSO PRETTY USELESS//
-
-			var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
-			for (i in 0...initSonglist.length)
-			{
-				if(initSonglist[i] != null && initSonglist[i].length > 0) {
-					var songArray:Array<String> = initSonglist[i].split(":");
-					addSong(songArray[0], 0, songArray[1], Std.parseInt(songArray[2]));
-				}
-		}*/
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
@@ -240,10 +225,6 @@ class FreeplayState extends MusicBeatState
 					add(nothing);
 				}
 			}
-
-			// songText.x += 40;
-			// DONT PUT X IN THE FIRST PARAMETER OF `new ALPHABET()` !!
-			// songText.screenCenter(X);
 		}
 		WeekData.setDirectoryFromWeek();
 
@@ -273,9 +254,6 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection();
 		changeDiff();
-
-		var swag:Alphabet = new Alphabet(1, 0, "swag");
-
 
 		searcher = new FlxUIInputText(90, 30);
 		searcher.scrollFactor.set();
@@ -362,21 +340,6 @@ class FreeplayState extends MusicBeatState
 			&& (!StoryMenuState.weekCompleted.exists(leWeek.weekBefore) || !StoryMenuState.weekCompleted.get(leWeek.weekBefore)));
 	}
 
-	/*public function addWeek(songs:Array<String>, weekNum:Int, weekColor:Int, ?songCharacters:Array<String>)
-		{
-			if (songCharacters == null)
-				songCharacters = ['bf'];
-
-			var num:Int = 0;
-			for (song in songs)
-			{
-				addSong(song, weekNum, songCharacters[num]);
-				this.songs[this.songs.length-1].color = weekColor;
-
-				if (songCharacters.length != 1)
-					num++;
-			}
-	}*/
 	var canWrite:Bool = true;
 
 	var instPlaying:Int = -1;
@@ -713,13 +676,10 @@ class FreeplayState extends MusicBeatState
 			});
 		}
 
-		// selector.y = (70 * curSelected) + 30;
 		if (Song.isValidSong(songs[curSelected].songName))
 		{
-			#if !switch
 			intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 			intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
-			#end
 		}
 
 		var bullShit:Int = 0;

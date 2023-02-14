@@ -107,8 +107,7 @@ class Song
 
 		var formattedFolder:String = Paths.formatToSongPath(folder);
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
-		if(formattedSong.endsWith('-null'))
-			formattedSong.replace('-null', '');
+		CoolUtil.checkSongDifficulty(jsonInput);
 
 		#if MODS_ALLOWED
 		var moddyFile:String = Paths.modsJson(formattedFolder + '/' + formattedSong);
