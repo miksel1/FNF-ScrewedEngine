@@ -403,7 +403,7 @@ class CreditsState extends MusicBeatState
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
-		if (glitchEffect != null || !ClientPrefs.lowQuality)
+		if (glitchEffect != null && !ClientPrefs.lowQuality)
 			glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);
 	}
 
