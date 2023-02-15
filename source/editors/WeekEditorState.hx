@@ -32,6 +32,7 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 import WeekData;
+import StoryMenuState.MenuItem;
 
 using StringTools;
 
