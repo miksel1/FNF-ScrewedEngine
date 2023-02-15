@@ -328,8 +328,7 @@ class ChartingState extends MusicBeatState
 				credit: '',
 				ghostTappingAllowed: true,
 				event7: '',
-				event7Value: '',
-				validScore: false
+				event7Value: ''
 			};
 			addSection();
 			PlayState.SONG = _song;

@@ -169,7 +169,6 @@ class TerminalState extends MusicBeatState
 					function playSong(song:String = 'tutorial', difficulty:Int = 0, ?etc:Void->Void) {
 						var score = Highscore.formatSong(song, difficulty);
 						PlayState.SONG = Song.loadFromJson(score, song);
-						PlayState.SONG.validScore = false;
 						if(etc != null) etc();
 						ClientPrefs.showFPS = FlxG.save.data.showFPS;
 						LoadingState.loadAndSwitchState(new PlayState());

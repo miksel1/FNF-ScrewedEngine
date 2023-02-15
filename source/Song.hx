@@ -35,7 +35,6 @@ typedef SwagSong =
 	var arrowSkin:String;
 	var playerArrowSkin:String;
 	var splashSkin:String;
-	var validScore:Bool;
 }
 
 class Song
@@ -137,11 +136,9 @@ class Song
 		return songJson;
 	}
 
-	public static function parseJSONshit(rawJson:String):SwagSong
+	inline public static function parseJSONshit(rawJson:String):SwagSong
 	{
-		var swagShit:SwagSong = cast Json.parse(rawJson).song;
-		swagShit.validScore = true;
-		return swagShit;
+		return cast Json.parse(rawJson).song;
 	}
 
 	/**
@@ -150,6 +147,6 @@ class Song
      * @return is a Valid song?
 	 */
 	public inline static function isValidSong(songName:String):Bool {
-		return !(songName.startsWith('--') && songName.endsWith('--'));
+		return !(songName.startsWith('--') && !songName.endsWith('--'));
 	}
 }
