@@ -462,7 +462,6 @@ class ChartingState extends MusicBeatState
 		\n" + keyBonds["zoom+"][0].toString() + "/" + keyBonds["zoom-"][0].toString() + " - Zoom in/out
 		\n" + keyBonds["save"][0].toString() + " - Save Chart (Autosave it)
 		\nHold C - Drawing
-		\nEsc - Test your chart inside Chart Editor
 		\nEnter - Play your chart
 		\n" + keyBonds["decrease"][0].toString() + "/" + keyBonds["increase"][0].toString() + " - Decrease/Increase Note Sustain Length
 		\nSpace - Stop/Resume song"};
@@ -1974,11 +1973,8 @@ class ChartingState extends MusicBeatState
 			if(FlxG.keys.anyJustPressed(ClientPrefs.copyKey(ClientPrefs.keyBinds.get('save')))) {
 				autosaveSong();
 			}
-			if (FlxG.keys.justPressed.ESCAPE)
-			{
-				autosaveSong();
-				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime()));
-			} else if (FlxG.keys.justPressed.ENTER) // it will fuck up if not
+
+			if (FlxG.keys.justPressed.ENTER) // it will fuck up if not
 			{
 				autosaveSong();
 				FlxG.mouse.visible = false;
@@ -1986,20 +1982,15 @@ class ChartingState extends MusicBeatState
 				FlxG.sound.music.stop();
 				if(vocals != null) vocals.stop();
 
-				//if(_song.stage == null) _song.stage = stageDropDown.selectedLabel;
 				StageData.loadDirectory(_song);
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
 
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {
 				if (FlxG.keys.anyJustPressed(ClientPrefs.copyKey(ClientPrefs.keyBinds.get('increase'))))
-				{
 					changeNoteSustain(Conductor.stepCrochet);
-				}
 				if (FlxG.keys.anyJustPressed(ClientPrefs.copyKey(ClientPrefs.keyBinds.get('decrease'))))
-				{
 					changeNoteSustain(-Conductor.stepCrochet);
-				}
 			}
 
 
