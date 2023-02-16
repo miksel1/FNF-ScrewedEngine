@@ -3671,13 +3671,9 @@ class PlayState extends MusicBeatState
 									daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * songSpeed + (46 * (songSpeed - 1));
 									daNote.y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
 									if (PlayState.isPixelStage)
-									{
 										daNote.y += 8 + (6 - daNote.originalHeightForCalcs) * PlayState.daPixelZoom;
-									}
 									else
-									{
 										daNote.y -= 19;
-									}
 								}
 								daNote.y += (Note.swagWidth / 2) - (60.5 * (songSpeed - 1));
 								daNote.y += 27.5 * ((SONG.bpm / 100) - 1) * (songSpeed - 1);
@@ -3685,23 +3681,17 @@ class PlayState extends MusicBeatState
 						}
 
 						if (!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote)
-						{
 							opponentNoteHit(daNote);
-						}
 
 						if (!daNote.blockHit && daNote.mustPress && cpuControlled && daNote.canBeHit)
 						{
 							if (daNote.isSustainNote)
 							{
 								if (daNote.canBeHit)
-								{
 									goodNoteHit(daNote);
-								}
 							}
 							else if (daNote.strumTime <= Conductor.songPosition || daNote.isSustainNote)
-							{
 								goodNoteHit(daNote);
-							}
 						}
 
 						var center:Float = strumY + Note.swagWidth / 2;
@@ -3791,21 +3781,12 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 		paused = true;
 
-		// 1 / 1000 chance for Gitaroo Man easter egg
-		/*if (FlxG.random.bool(0.1))
-			{
-				// gitaroo man easter egg
-				cancelMusicFadeTween();
-				MusicBeatState.switchState(new GitarooPause());
-			}
-			else { */
 		if (FlxG.sound.music != null)
 		{
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-		// }
 
 		#if desktop
 		DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
@@ -3855,8 +3836,6 @@ class PlayState extends MusicBeatState
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0],
 					boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
-				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-
 				#if desktop
 				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
@@ -3894,7 +3873,6 @@ class PlayState extends MusicBeatState
 	public function getControl(key:String)
 	{
 		var pressed:Bool = Reflect.getProperty(controls, key);
-		// trace('Control result: ' + pressed);
 		return pressed;
 	}
 
@@ -4301,7 +4279,7 @@ class PlayState extends MusicBeatState
 					bgGirls.swapDanceType();
 
 			case 'Change Scroll Speed':
-				if (songSpeedType == "constant")
+				if (songSpeedType == "constant" || songSpeedType == "random")
 					return;
 				var val1:Float = Std.parseFloat(value1);
 				var val2:Float = Std.parseFloat(value2);
@@ -4313,9 +4291,7 @@ class PlayState extends MusicBeatState
 				var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1) * val1;
 
 				if (val2 <= 0)
-				{
 					songSpeed = newValue;
-				}
 				else
 				{
 					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2 / playbackRate, {
@@ -4330,13 +4306,9 @@ class PlayState extends MusicBeatState
 			case 'Set Property':
 				var killMe:Array<String> = value1.split('.');
 				if (killMe.length > 1)
-				{
 					FunkinLua.setVarInArray(FunkinLua.getPropertyLoopThingWhatever(killMe, true, true), killMe[killMe.length - 1], value2);
-				}
 				else
-				{
 					FunkinLua.setVarInArray(this, value1, value2);
-				}
 			case 'Rainbow Eyesore':
 				if (ClientPrefs.shaders)
 				{
@@ -4515,22 +4487,16 @@ class PlayState extends MusicBeatState
 			notes.forEach(function(daNote:Note)
 			{
 				if (daNote.strumTime < songLength - Conductor.safeZoneOffset)
-				{
 					health -= 0.05 * healthLoss;
-				}
 			});
 			for (daNote in unspawnNotes)
 			{
 				if (daNote.strumTime < songLength - Conductor.safeZoneOffset)
-				{
 					health -= 0.05 * healthLoss;
-				}
 			}
 
 			if (doDeathCheck())
-			{
 				return;
-			}
 		}
 
 		timeBarBG.visible = false;
@@ -4728,9 +4694,7 @@ class PlayState extends MusicBeatState
 		Paths.image(pixelShitPart1 + "combo" + pixelShitPart2);
 
 		for (i in 0...10)
-		{
 			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2);
-		}
 	}
 
 	private function popUpScore(note:Note = null):Void
@@ -4758,9 +4722,7 @@ class PlayState extends MusicBeatState
 		score = daRating.score;
 
 		if (daRating.noteSplash && !note.noteSplashDisabled)
-		{
 			spawnNoteSplashOnNote(note);
-		}
 
 		if (!practiceMode && !cpuControlled)
 		{
@@ -5109,9 +5071,7 @@ class PlayState extends MusicBeatState
 					&& !daNote.tooLate
 					&& !daNote.wasGoodHit
 					&& !daNote.blockHit)
-				{
 					goodNoteHit(daNote);
-				}
 			});
 
 			#if ACHIEVEMENTS_ALLOWED
@@ -5119,19 +5079,14 @@ class PlayState extends MusicBeatState
 			{
 				var achieve:String = checkForAchievement(['oversinging']);
 				if (achieve != null)
-				{
 					startAchievement(achieve);
-				}
 			}
 			else
 			#end if (boyfriend.animation.curAnim != null
 				&& boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration
-					&& boyfriend.animation.curAnim.name.startsWith('sing')
-					&& !boyfriend.animation.curAnim.name.endsWith('miss'))
-		{
+				&& boyfriend.animation.curAnim.name.startsWith('sing')
+				&& !boyfriend.animation.curAnim.name.endsWith('miss'))
 				boyfriend.dance();
-				// boyfriend.animation.curAnim.finish();
-		}
 		}
 
 		// TO DO: Find a better way to handle controller inputs, this should work for now
@@ -5184,8 +5139,6 @@ class PlayState extends MusicBeatState
 			doDeathCheck(true);
 		}
 
-		// For testing purposes
-		// trace(daNote.missHealth);
 		songMisses++;
 		vocals.volume = 0;
 		if (!practiceMode)
@@ -5229,36 +5182,23 @@ class PlayState extends MusicBeatState
 			}
 
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
-			{
 				gf.playAnim('sad');
-			}
+
 			combo = 0;
 
 			if (!practiceMode)
 				songScore -= 10;
 			if (!endingSong)
-			{
 				songMisses++;
-			}
+
 			totalPlayed++;
 			RecalculateRating(true);
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
-			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
-			// FlxG.log.add('played imss note');
-
-			/*boyfriend.stunned = true;
-
-				// get stunned for 1/60 of a second, makes you able to
-				new FlxTimer().start(1 / 60, function(tmr:FlxTimer)
-				{
-					boyfriend.stunned = false;
-			});*/
 
 			if (boyfriend.hasMissAnimations)
-			{
 				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
-			}
+
 			vocals.volume = 0;
 		}
 		callOnLuas('noteMissPress', [direction]);
@@ -5282,9 +5222,7 @@ class PlayState extends MusicBeatState
 			if (SONG.notes[curSection] != null)
 			{
 				if (SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection)
-				{
 					altAnim = '-alt';
-				}
 			}
 
 			var char:Character = dad;
@@ -6011,7 +5949,6 @@ class PlayState extends MusicBeatState
 			{
 				// Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-				// trace((totalNotesHit / totalPlayed) + ', Total: ' + totalPlayed + ', notes hit: ' + totalNotesHit);
 
 				// Rating Name
 				if (ratingPercent >= 1)
