@@ -53,7 +53,7 @@ class Song
 	public var event7:String;
 	public var event7Value:String;
 	public var player1:String = 'bf';
-	public var player2:String = 'bambi';
+	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
 
 	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
