@@ -1,5 +1,7 @@
 package;
 
+import effects.ColorSwap;
+import Alphabet.AlphaCharacter;
 import Language.LanguageString;
 import flixel.ui.FlxButton.FlxTypedButton;
 import effects.GrainEffect;
@@ -35,6 +37,8 @@ class CreditsState extends MusicBeatState
 	private var iconArray:Array<AttachedSprite> = [];
 	private var creditsStuff:Array<Array<String>> = [];
 
+	var AAHHHG:ColorSwap;
+
 	var bg:FlxSprite;
 	var descText:FlxText;
 	var intendedColor:Int;
@@ -44,7 +48,7 @@ class CreditsState extends MusicBeatState
 
 	var offsetThing:Float = -75;
 
-	var glitchedOnes:Array<String> = ['Wither362', 'Delta', 'miksel'];
+	var glitchedOnes:Array<String> = ['Wither362', 'MemeHoovy',	 'Delta', 'miksel'];
 	var grainedOnes:Array<String> = ['Wither362', 'BeastlyGhost']; // time to credit them ;)
 	var coolTitleOnes:Array<String> = [
 		'Wither362',
@@ -70,6 +74,8 @@ class CreditsState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		AAHHHG = new ColorSwap();
 
 		persistentUpdate = true;
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -117,26 +123,28 @@ class CreditsState extends MusicBeatState
 		#end
 
 		var pisspoop:Array<Array<Dynamic>> = [ //Name - Icon name - Description - Link - BG Color
-			[{s: 'Screwed Engine'}],
-			[{s: 'Wither362'},			    'Wither',			{s: 'Main Programmer of this engine'},								'https://www.youtube.com/channel/UCsVr-qBLxT0uSWH037BmlHw',				'FF5F5F'],
+			[{s: 'Screwed Engine Team'}],
+			[{s: 'Wither362'},			    'Wither',			{s: 'Main Programmer of this engine', spanish: 'Programador Principal\ny traductor al castellano'},								'https://github.com/Wither362',				'FF5F5F'],
+			[{s: 'MemeHoovy'},				'meme',				'Additional Programmer and Deleting-Coder',							'https://twitter.com/meme_hoovy',		'438434'],
 			[{s: 'Delta'},				    'delta',			{s: 'Strident Engine'},												'https://www.youtube.com/c/Delta1248',									'0xFF00C6FF'],
 			[{s: 'miksel'},				    'miksel',			{s: 'Features and Ideas'},									        'https://www.youtube.com/@miksel_fnf',	                                '371893'],
 			[{s: 'Join our Discord!', spanish: '¡Únete al Discord!'},	'discord',			{s: 'Yeah! Join us for features and more!', spanish: '¡Sí! ¡Únete para información y más!'},						'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
-			[{s: 'Screwed Engine Contributors/Others...', spanish: 'Contribudores/Otros Screwed Engine...'}],
-			['MemeHoovy',			'meme',				'Some things we missed...',										'https://twitter.com/meme_hoovy',		'438434'],
+			[{s: 'Screwed Engine Contributors\nOthers...', spanish: 'Contribudores/Otros Screwed Engine...'}],
 			['BeastlyGhost',		'beast',			'Icons and other help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
 			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
+			['Gamer Pablito',		'pablo',			'Gamejolt Support',												'https://twitter.com/GamerPablito1',	'0xFF257FB3'],
+			['Vs Dave and Bambi',	'dab',				'Our Gods.',													'https://www.discord.gg/vsdave',		'0xFF135816'],
 			[''],
 			['Original Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
 			['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',		'B42F71'],
 			['shubs',				'shubs',			'Additional Programmer of Psych Engine',						'https://twitter.com/yoshubs',			'5E99DF'],
 			[''],
-			['Former Engine Members'],
+			['Former Psych Engine Members'],
 			['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',			'3E813A'],
 			[''],
-			['Engine Contributors'],
+			['Psych Engine Contributors'],
 			['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',			'9E29CF'],
 			['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',			'E1843A'],
 			['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',	'FFBD40'],
@@ -168,8 +176,8 @@ class CreditsState extends MusicBeatState
 		{
 			var isSelectable:Bool = !unselectableCheck(i);
 			var image = 'alphabet';
-			/*if(glitchedOnes.contains(creditsStuff[i][0]))
-			image = 'otherAlphabet';*/ // no more use!
+			if(glitchedOnes.contains(creditsStuff[i][0]))
+			image = 'otherAlphabet';
 			var optionText:Alphabet = new Alphabet(
 				FlxG.width / 2,
 				300,
@@ -276,12 +284,12 @@ class CreditsState extends MusicBeatState
 				var upP = controls.UI_UP_P;
 				var downP = controls.UI_DOWN_P;
 
-				if (upP)
+				if (upP || FlxG.mouse.wheel > 0)
 				{
 					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
-				if (downP)
+				if (downP || FlxG.mouse.wheel < 0)
 				{
 					changeSelection(shiftMult);
 					holdTime = 0;
@@ -335,6 +343,9 @@ class CreditsState extends MusicBeatState
 			}
 		}
 
+		if(AAHHHG != null) {
+			AAHHHG.hue += elapsed;
+		}
 		super.update(elapsed);
 	}
 
@@ -398,6 +409,12 @@ class CreditsState extends MusicBeatState
 		descText.text = creditsStuff[curSelected][2];
 		descText.y = FlxG.height - descText.height + offsetThing - 60;
 
+		if(creditsStuff[curSelected][0].toLowerCase() == 'vs dave and bambi') {
+			descText.shader == AAHHHG.shader;
+		} else if(descText.shader == AAHHHG.shader) {
+			descText.shader = null;
+		} 
+
 		if(moveTween != null) moveTween.cancel();
 		moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
 
@@ -458,7 +475,7 @@ class CreditsState extends MusicBeatState
 
 	function getCurrentBGColor() {
 		var bgColor:String = creditsStuff[curSelected][4];
-		if(!bgColor.startsWith('0x')) {
+		if(!bgColor.startsWith('0xFF')) {
 			bgColor = '0xFF' + bgColor;
 		}
 		return Std.parseInt(bgColor);

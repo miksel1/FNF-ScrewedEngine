@@ -78,12 +78,16 @@ class FreeplayState extends MusicBeatState
 		'blammed'
 	];
 
+	var fakeBg:FlxSprite;
+	var selectingGrid:Bool = true;
+	var sectionsGrid:FlxSprite;
+
 	override function create()
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-		FlxG.mouse.visible = true;
+		//FlxG.mouse.visible = true;
 
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
@@ -135,6 +139,9 @@ class FreeplayState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
+		fakeBg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		fakeBg.antialiasing = ClientPrefs.globalAntialiasing;
+		fakeBg.screenCenter();
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
@@ -317,6 +324,14 @@ class FreeplayState extends MusicBeatState
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
+
+
+		//add(fakeBg);
+
+		/*var widthsection:Int = 20;
+		var heightsection:Int = 20;
+		sectionsGrid = FlxGridOverlay.create();
+		sectionsGrid.*/
 		super.create();
 	}
 
@@ -396,208 +411,218 @@ class FreeplayState extends MusicBeatState
 		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
 		positionHighscore();
 
-		if (!blockInput)
+		if (!selectingGrid)
 		{
-			var up = controls.UI_UP;
-			var down = controls.UI_DOWN;
-			var upP = controls.UI_UP_P;
-			var downP = controls.UI_DOWN_P;
-			var accepted = controls.ACCEPT && ahg;
-			var leftP = controls.UI_LEFT_P;
-			var rightP = controls.UI_RIGHT_P;
-			var space = FlxG.keys.justPressed.SPACE;
-			var ctrl = FlxG.keys.justPressed.CONTROL;
-			var back = controls.BACK;
-			var reset = controls.RESET;
-
-			var shiftMult:Int = 1;
-			if (FlxG.keys.pressed.SHIFT)
-				shiftMult = 3;
-
-			if (songs.length > 1)
+			if (!blockInput)
 			{
-				if (upP)
-				{
-					changeSelection(-shiftMult);
-					holdTime = 0;
-				}
-				if (downP)
-				{
-					changeSelection(shiftMult);
-					holdTime = 0;
-				}
+				var up = controls.UI_UP;
+				var down = controls.UI_DOWN;
+				var upP = controls.UI_UP_P;
+				var downP = controls.UI_DOWN_P;
+				var accepted = controls.ACCEPT && ahg;
+				var leftP = controls.UI_LEFT_P;
+				var rightP = controls.UI_RIGHT_P;
+				var space = FlxG.keys.justPressed.SPACE;
+				var ctrl = FlxG.keys.justPressed.CONTROL;
+				var back = controls.BACK;
+				var reset = controls.RESET;
 
-				if (down || up)
-				{
-					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
-					holdTime += elapsed;
-					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+				var shiftMult:Int = 1;
+				if (FlxG.keys.pressed.SHIFT)
+					shiftMult = 3;
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+				if (songs.length > 1)
+				{
+					if (upP)
 					{
-						changeSelection((checkNewHold - checkLastHold) * (up ? -shiftMult : shiftMult));
+						changeSelection(-shiftMult);
+						holdTime = 0;
+					}
+					if (downP)
+					{
+						changeSelection(shiftMult);
+						holdTime = 0;
+					}
+
+					if (down || up)
+					{
+						var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+						holdTime += elapsed;
+						var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+
+						if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+						{
+							changeSelection((checkNewHold - checkLastHold) * (up ? -shiftMult : shiftMult));
+							changeDiff();
+						}
+					}
+
+					if (FlxG.mouse.wheel != 0)
+					{
+						FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+						changeSelection(-shiftMult * FlxG.mouse.wheel, false);
 						changeDiff();
 					}
 				}
 
-				if (FlxG.mouse.wheel != 0)
-				{
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
-					changeSelection(-shiftMult * FlxG.mouse.wheel, false);
+				if (leftP)
+					changeDiff(-1);
+				else if (rightP)
+					changeDiff(1);
+				else if (upP || downP)
 					changeDiff();
-				}
-			}
 
-			if (leftP)
-				changeDiff(-1);
-			else if (rightP)
-				changeDiff(1);
-			else if (upP || downP)
-				changeDiff();
-
-			if (back)
-			{
-				persistentUpdate = false;
-				if (colorTween != null)
+				if (back)
 				{
-					colorTween.cancel();
-				}
-				if(titleTxtTween != null)
-					titleTxtTween.cancel();
-
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new MainMenuState());
-			}
-
-			if (ctrl)
-			{
-				persistentUpdate = false;
-				openSubState(new GameplayChangersSubstate());
-			}
-			else if (space)
-			{
-				if (instPlaying != curSelected /*&& !notSongs.contains(curSelected)*/ && Song.isValidSong(songs[curSelected].songName))
-				{
-					#if PRELOAD_ALL
-					destroyFreeplayVocals();
-					FlxG.sound.music.volume = 0;
-					Paths.currentModDirectory = songs[curSelected].folder;
-					var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-					PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-					if (PlayState.SONG.needsVoices)
-						vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-					else
-						vocals = new FlxSound();
-
-					FlxG.sound.list.add(vocals);
-					FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
-					vocals.play();
-					vocals.persist = true;
-					vocals.looped = true;
-					vocals.volume = 0.7;
-					instPlaying = curSelected;
-					#end
-				}
-			}
-			else if (accepted /*&& !notSongs.contains(curSelected)*/ && Song.isValidSong(songs[curSelected].songName))
-			{
-				var cannn:Bool = true;
-				persistentUpdate = false;
-				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
-				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-				var freeplaySection:String = '';
-
-				function works(song:String, asas:String):Bool {
-					#if MODS_ALLOWED
-					if(!FileSystem.exists(Paths.modsJson(song + '/' + asas)) && !FileSystem.exists(Paths.json(song + '/' + asas)))
-					#else
-					if(!OpenFlAssets.exists(Paths.json(song + '/' + asas)))
-					#end
+					persistentUpdate = false;
+					if (colorTween != null)
 					{
-						return false;
+						colorTween.cancel();
 					}
-					return true;
-				}
-				if(!works(songLowercase, poop) && works(curFreeplaySection.toLowerCase() + '/' + songLowercase, poop))
-				{
-					freeplaySection = curFreeplaySection.toLowerCase();
-					trace('yeiii');
-				} else if(!works(songLowercase, poop)) {
-					trace('nonononononoooooo');
-					cannn = false;
-				}
-				if (cannn)
-				{
-					trace(poop);
+					if (titleTxtTween != null)
+						titleTxtTween.cancel();
 
-					var songnsn = Song.loadFromJson(poop, songLowercase);
+					FlxG.sound.play(Paths.sound('cancelMenu'));
+					MusicBeatState.switchState(new MainMenuState());
+				}
 
-					var max = 0;
-					for (section in songnsn.notes)
+				if (ctrl)
+				{
+					persistentUpdate = false;
+					openSubState(new GameplayChangersSubstate());
+				}
+				else if (space)
+				{
+					if (instPlaying != curSelected /*&& !notSongs.contains(curSelected)*/ && Song.isValidSong(songs[curSelected].songName))
 					{
-						if (section.sectionNotes.length > max)
-							max = section.sectionNotes.length;
+						#if PRELOAD_ALL
+						destroyFreeplayVocals();
+						FlxG.sound.music.volume = 0;
+						Paths.currentModDirectory = songs[curSelected].folder;
+						var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+						PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+						if (PlayState.SONG.needsVoices)
+							vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+						else
+							vocals = new FlxSound();
+
+						FlxG.sound.list.add(vocals);
+						FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+						vocals.play();
+						vocals.persist = true;
+						vocals.looped = true;
+						vocals.volume = 0.7;
+						instPlaying = curSelected;
+						#end
 					}
-					function play()
-					{
-						PlayState.SONG = songnsn;
-						PlayState.isStoryMode = false;
-						PlayState.storyDifficulty = curDifficulty;
+				}
+				else if (accepted /*&& !notSongs.contains(curSelected)*/ && Song.isValidSong(songs[curSelected].songName))
+				{
+					var cannn:Bool = true;
+					persistentUpdate = false;
+					var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+					var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+					var freeplaySection:String = '';
 
-						trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
-						if (colorTween != null)
+					function works(song:String, asas:String):Bool
+					{
+						#if MODS_ALLOWED
+						if (!FileSystem.exists(Paths.modsJson(song + '/' + asas)) && !FileSystem.exists(Paths.json(song + '/' + asas)))
+						#else
+						if (!OpenFlAssets.exists(Paths.json(song + '/' + asas)))
+						#end
 						{
-							colorTween.cancel();
+							return false;
 						}
-						if(titleTxtTween != null)
-							titleTxtTween.cancel();
+						return true;
+					}
+					if (!works(songLowercase, poop) && works(curFreeplaySection.toLowerCase() + '/' + songLowercase, poop))
+					{
+						freeplaySection = curFreeplaySection.toLowerCase();
+						trace('yeiii');
+					}
+					else if (!works(songLowercase, poop))
+					{
+						trace('nonononononoooooo');
+						cannn = false;
+					}
+					if (cannn)
+					{
+						trace(poop);
 
-						if (FlxG.keys.pressed.SHIFT)
+						var songnsn = Song.loadFromJson(poop, songLowercase);
+
+						var max = 0;
+						for (section in songnsn.notes)
 						{
-							LoadingState.loadAndSwitchState(new ChartingState());
+							if (section.sectionNotes.length > max)
+								max = section.sectionNotes.length;
+						}
+						function play()
+						{
+							PlayState.SONG = songnsn;
+							PlayState.isStoryMode = false;
+							PlayState.storyDifficulty = curDifficulty;
+
+							trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
+							if (colorTween != null)
+							{
+								colorTween.cancel();
+							}
+							if (titleTxtTween != null)
+								titleTxtTween.cancel();
+
+							if (FlxG.keys.pressed.SHIFT)
+							{
+								LoadingState.loadAndSwitchState(new ChartingState());
+							}
+							else
+							{
+								LoadingState.loadAndSwitchState(new PlayState());
+							}
+
+							FlxG.sound.music.volume = 0;
+
+							destroyFreeplayVocals();
+						}
+						if (max > ClientPrefs.maxNotes)
+						{
+							openSubState(new Prompt("The actual song has more than " + ClientPrefs.maxNotes + " notes\n\nProceed?", 0, function()
+							{
+								play();
+							}, function()
+							{
+								FlxG.sound.play(Paths.sound('cancelMenu'));
+							}));
 						}
 						else
 						{
-							LoadingState.loadAndSwitchState(new PlayState());
-						}
-
-						FlxG.sound.music.volume = 0;
-
-						destroyFreeplayVocals();
-					}
-					if (max > ClientPrefs.maxNotes)
-					{
-						openSubState(new Prompt("The actual song has more than " + ClientPrefs.maxNotes + " notes\n\nProceed?", 0, function()
-						{
 							play();
-						}, function()
-						{
-							FlxG.sound.play(Paths.sound('cancelMenu'));
-						}));
-					}
-					else
-					{
-						play();
+						}
 					}
 				}
-			}
-			else if (reset && Song.isValidSong(songs[curSelected].songName))
-			{
-				persistentUpdate = false;
-				openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-		}
-		else if (FlxG.keys.justPressed.ENTER)
-		{
-			for (i in 0...blockPressWhileTypingOn.length)
-			{
-				if (blockPressWhileTypingOn[i].hasFocus)
+				else if (reset && Song.isValidSong(songs[curSelected].songName))
 				{
-					blockPressWhileTypingOn[i].hasFocus = false;
+					persistentUpdate = false;
+					openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
+					FlxG.sound.play(Paths.sound('scrollMenu'));
 				}
 			}
-			ahg = true;
+			else if (FlxG.keys.justPressed.ENTER)
+			{
+				for (i in 0...blockPressWhileTypingOn.length)
+				{
+					if (blockPressWhileTypingOn[i].hasFocus)
+					{
+						blockPressWhileTypingOn[i].hasFocus = false;
+					}
+				}
+				ahg = true;
+			}
+		} else {
+			if(controls.ACCEPT) {
+				fakeBg.visible = false;
+			}
 		}
 
 		if(FlxG.mouse.justPressed)

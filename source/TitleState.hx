@@ -77,7 +77,7 @@ class TitleState extends MusicBeatState
 	var curWacky:Array<String> = [];
 
 	var easterEggKeys:Array<String> = [
-		'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU', 'BAMBI'
+		'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU', 'BAMBI', 'EXPUNGED'
 	];
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var easterEggKeysBuffer:String = '';

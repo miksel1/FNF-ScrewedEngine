@@ -1,5 +1,6 @@
 package;
 
+import flixel.text.FlxText;
 import Conductor.BPMChangeEvent;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
@@ -21,6 +22,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	var isTransIn:Bool = false;
 	var transBlack:FlxSprite;
 	var transGradient:FlxSprite;
+	var textito:FlxText;
 
 	public function new(duration:Float, isTransIn:Bool) {
 		super();
@@ -40,6 +42,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		transGradient.x -= (width - FlxG.width) / 2;
 		transBlack.x = transGradient.x;
 
+		textito = new FlxText();
 		if(isTransIn) {
 			transGradient.y = transBlack.y - transBlack.height;
 			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
