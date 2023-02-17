@@ -3454,12 +3454,14 @@ class ChartingState extends MusicBeatState
 			});
 		}
 
-		if(debugGroup.members.length > 34) {
+		if(debugGroup != null && debugGroup.members.length > 34) {
 			var blah = debugGroup.members[34];
 			blah.destroy();
 			debugGroup.remove(blah);
 		}
-		debugGroup.insert(0, new DebugLuaText(text, debugGroup, color));
+		if (debugGroup != null)
+			debugGroup.insert(0, new DebugLuaText(text, debugGroup, color));
+
 		#end
 		#if debug
 		FlxG.log.notice(text);
