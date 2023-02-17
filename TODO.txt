@@ -14,9 +14,9 @@ Auto-chart (maybe using the frequency of each rectangle in the waveform)
 Credit the shader's creators
 Add stage shader effects by JSON
 Fix icon offsets
-Chromatic Aberration shader
 Heatwave shader
 Fix PlaybackRate
 
 Done:
 Scroll Speed changer (instead of only constant and multiplicative, this one changes randomly)
+Chromatic Aberration shader (Kinda)
