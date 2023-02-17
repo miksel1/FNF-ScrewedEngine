@@ -294,7 +294,9 @@ class ChartingState extends MusicBeatState
 		1536
 	];
 
+	#if LUA_ALLOWED
 	private static var debugGroup:FlxTypedGroup<DebugLuaText>;
+	#end
 
 	var text:LanguageString = {s: ""};
 	public static var vortex:Bool = false;
@@ -536,8 +538,10 @@ class ChartingState extends MusicBeatState
 		debugWaveform.scrollFactor.set();
 		add(debugWaveform);
 
+		#if LUA_ALLOWED
 		debugGroup = new FlxTypedGroup<DebugLuaText>();
 		add(debugGroup);
+		#end
 
 		colorSwap = new ColorSwap();
 
@@ -3442,9 +3446,13 @@ class ChartingState extends MusicBeatState
 	 * @param color 
 	 */
 	public static function addTextToDebug(text:String, color:FlxColor = 0xFFFFFFFF) { // thanks Raltyro
-		debugGroup.forEachAlive(function(spr:DebugLuaText) {
-			spr.y += 20;
-		});
+		#if LUA_ALLOWED
+		if (debugGroup != null){
+			debugGroup.forEachAlive(function(spr:DebugLuaText) {
+				if (spr != null)
+					spr.y += 20;
+			});
+		}
 
 		if(debugGroup.members.length > 34) {
 			var blah = debugGroup.members[34];
@@ -3452,6 +3460,7 @@ class ChartingState extends MusicBeatState
 			debugGroup.remove(blah);
 		}
 		debugGroup.insert(0, new DebugLuaText(text, debugGroup, color));
+		#end
 		#if debug
 		FlxG.log.notice(text);
 		#else
@@ -3465,7 +3474,6 @@ class ChartingState extends MusicBeatState
 	 */
 	public static function addTextToLog(text:String, color:FlxColor = FlxColor.WHITE) {
 		FlxG.log.add(text);
-		//trace(text);
 		#if debug
 		addTextToDebug(text, color);
 		#end
