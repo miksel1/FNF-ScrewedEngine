@@ -1,6 +1,6 @@
 package;
 
-import options.states.OptionsState.OptionsStatePage1;
+import options.states.OptionsState;
 import Warnings.LanguageState;
 import Warnings.FlashingState;
 import lime.graphics.OpenGLES2RenderContext;
@@ -128,6 +128,7 @@ class TitleState extends MusicBeatState
 			mosaicc.setStrength(v, v);
 		});
 
+		CustomFadeTransition.showText = false;
 		super.create();
 
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
@@ -231,6 +232,7 @@ class TitleState extends MusicBeatState
 				});
 			}
 		}
+		CustomFadeTransition.showText = true;
 	}
 
 	var logoBl:FlxSprite;
@@ -472,7 +474,7 @@ class TitleState extends MusicBeatState
 						MusicBeatState.switchState(new OutdatedState());
 					} else if(goToOptions) {
 						goToOptions = false;
-						MusicBeatState.switchState(new OptionsStatePage1());
+						MusicBeatState.switchState(new OptionsState());
 					} else {
 						MusicBeatState.switchState(new MainMenuState());
 					}

@@ -1,5 +1,7 @@
 package;
 
+import discord_rpc.DiscordRpc.SecretCallback;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
 import flixel.input.FlxInput;
 import flixel.addons.ui.FlxInputText;
@@ -28,6 +30,10 @@ import sys.FileSystem;
 
 using StringTools;
 
+enum SectionType {
+	FOLDER;
+	OTHER;
+}
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
@@ -35,6 +41,7 @@ class FreeplayState extends MusicBeatState
 	var notSongs:Array<Int> = [];
 
 	var sections:Array<String> = [];
+	var sectionInfo:Array<SectionType> = [];
 	var curFreeplaySection(get, null):String;
 
 	inline function get_curFreeplaySection():String {
@@ -78,9 +85,18 @@ class FreeplayState extends MusicBeatState
 		'blammed'
 	];
 
+	/**
+	 * a fake bg for the user to select a section
+	 */
 	var fakeBg:FlxSprite;
-	var selectingGrid:Bool = true;
-	var sectionsGrid:FlxSprite;
+	var infoText:FlxText;
+	/**
+	 * If its true, it means that the player its still selecting the category
+	 */
+	var selectingSection:Bool = true;
+	var canSmash:Bool = true;
+	var fakeBgTween:FlxTween;
+	var sectionImages:FlxTypedGroup<FlxSprite>;
 
 	override function create()
 	{
@@ -97,6 +113,8 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		sectionImages = new FlxTypedGroup<FlxSprite>();
 
 		for (i in 0...WeekData.weeksList.length)
 		{
@@ -180,6 +198,7 @@ class FreeplayState extends MusicBeatState
 				for (j in i...songs.length)
 				{
 					sections[j] = songs[i].folder.toUpperCase();
+					sectionInfo[j] = SectionType.FOLDER;
 				}
 			}
 			else if (canType == 1)
@@ -187,6 +206,7 @@ class FreeplayState extends MusicBeatState
 				for (j in i...songs.length)
 				{
 					sections[j] = songName.toUpperCase().replace('--', '');
+					sectionInfo[j] = SectionType.OTHER;
 				}
 			}
 
@@ -325,13 +345,14 @@ class FreeplayState extends MusicBeatState
 		text.scrollFactor.set();
 		add(text);
 
+		add(fakeBg);
+		//addSections();
+		infoText = new FlxText(0, 0, 0, 'Press enter\nFreeplay sections are still WIP', size);
+		infoText.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
+		infoText.scrollFactor.set();
+		infoText.screenCenter();
+		add(infoText);
 
-		//add(fakeBg);
-
-		/*var widthsection:Int = 20;
-		var heightsection:Int = 20;
-		sectionsGrid = FlxGridOverlay.create();
-		sectionsGrid.*/
 		super.create();
 	}
 
@@ -411,7 +432,7 @@ class FreeplayState extends MusicBeatState
 		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
 		positionHighscore();
 
-		if (!selectingGrid)
+		if (!selectingSection)
 		{
 			if (!blockInput)
 			{
@@ -619,18 +640,54 @@ class FreeplayState extends MusicBeatState
 				}
 				ahg = true;
 			}
-		} else {
-			if(controls.ACCEPT) {
-				fakeBg.visible = false;
-			}
-		}
+			if(FlxG.mouse.justPressed)
+				ahg = true;
 
-		if(FlxG.mouse.justPressed)
-			ahg = true;
+		} else {
+			if(controls.ACCEPT && canSmash) {
+				fadeOutSections();
+			}
+			/*if(controls.NOTE_LEFT) {
+				fadeInSections();
+			}*/
+		}
 
 		super.update(elapsed);
 	}
 
+	public function fadeOutSections() {
+		fakeBgTween = FlxTween.tween(fakeBg, {y: fakeBg.height}, 1, {ease: FlxEase.bounceOut, onComplete: function(twn:FlxTween) {
+			FlxG.mouse.visible = true;
+			selectingSection = false;
+			fakeBgTween = null;
+			canSmash = true;
+			infoText.visible = false;
+		}});
+		canSmash = false;
+	}
+
+	/**
+	 * DO NOT START WITH THIS
+	 */
+	public function fadeInSections() {
+		fakeBgTween = FlxTween.tween(fakeBg, {y: 0}, 1, {ease: FlxEase.bounceOut, onComplete: function(twn:FlxTween) {
+			FlxG.mouse.visible = false;
+			selectingSection = true;
+			fakeBgTween = null;
+			canSmash = true;
+		}});
+		canSmash = false;
+	}
+	public function addSections() {
+		for (megaSection in sections) {
+			if(Paths.fileExists('images/freeplaysections/' + megaSection.toLowerCase() + '.png')) {
+				trace('it works');
+			}
+		}
+	}
+	public function selectSection() {
+
+	}
 	public static function destroyFreeplayVocals()
 	{
 		if (vocals != null)
@@ -864,6 +921,9 @@ class FreeplayState extends MusicBeatState
 
 	override function destroy()
 	{
+		if(fakeBgTween != null) {
+			fakeBgTween.cancel();
+		}
 		FlxG.mouse.visible = false;
 		super.destroy();
 	}

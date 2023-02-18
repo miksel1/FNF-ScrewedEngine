@@ -16,6 +16,7 @@ import flixel.FlxSprite;
 import flixel.FlxCamera;
 
 class CustomFadeTransition extends MusicBeatSubstate {
+	public static var showText:Bool = true;
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
 	public static var nextCamera:FlxCamera;
@@ -24,25 +25,31 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	var transGradient:FlxSprite;
 	var textito:FlxText;
 
-	public function new(duration:Float, isTransIn:Bool) {
+	public function new(duration:Float, isTransIn:Bool, color:FlxColor = FlxColor.BLACK) {
 		super();
 
 		this.isTransIn = isTransIn;
 		var zoom:Float = CoolUtil.boundTo(FlxG.camera.zoom, 0.05, 1);
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
-		transGradient = FlxGradient.createGradientFlxSprite(width, height, (isTransIn ? [0x0, FlxColor.BLACK] : [FlxColor.BLACK, 0x0]));
+		transGradient = FlxGradient.createGradientFlxSprite(width, height, (isTransIn ? [0x0, color] : [color, 0x0]));
 		transGradient.scrollFactor.set();
 		add(transGradient);
 
-		transBlack = new FlxSprite().makeGraphic(width, height + 400, FlxColor.BLACK);
+		transBlack = new FlxSprite().makeGraphic(width, height + 400, color);
 		transBlack.scrollFactor.set();
 		add(transBlack);
 
 		transGradient.x -= (width - FlxG.width) / 2;
 		transBlack.x = transGradient.x;
 
-		textito = new FlxText();
+		if(showText) {
+			textito = new FlxText(FlxG.width / 2, 0, 0, 'Its loading... be patient');
+			textito.setFormat(Paths.font("vcr.ttf"), 14, color.getInverted(), CENTER);
+			textito.screenCenter(Y);
+			add(textito);
+		}
+
 		if(isTransIn) {
 			transGradient.y = transBlack.y - transBlack.height;
 			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {

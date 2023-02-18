@@ -29,39 +29,52 @@ import Controls;
 
 using StringTools;
 
-class Options {
-	public static var max:Int = 2;
-}
-
-class OptionsStatePage1 extends MusicBeatState
+class OptionsState extends MusicBeatState
 {
-	var defaults:Array<String> = [
-		'Note Colors',
-		'Controls',
-		'Adjust Delay and Combo',
-		'Graphics',
-		'Visuals and UI',
-		'Gameplay',
-		'Language'
+	public static var max:Int = 2;
+
+	var pageOptions:Map<Int, LanguageArray> = [
+		1 => {
+			a: [
+				'Note Colors',
+				'Controls',
+				'Graphics',
+				'Gameplay',
+				'Language',
+				#if GAMEJOLT_ALLOWED
+				'Gamejolt'
+				#end
+			],
+			spanish: [
+				'Colores de Notas',
+				'Controles',
+				'Gráficos',
+				'Gameplay',
+				'Idioma',
+				#if GAMEJOLT_ALLOWED
+				'Gamejolt'
+				#end
+			]
+		},
+		2 => {
+			a: [
+				'Adjust Delay and Combo',
+				'Visuals and UI',
+			],
+			spanish: [
+				'Ajustar Retraso y Combo',
+				'Visualización y UI',
+			]
+		}
 	];
-	var options:LanguageArray = {
-		a: [
-			'Note Colors',
-			'Controls',
-			'Graphics',
-			'Visuals and UI',
-			'Gameplay',
-			'Language'
-		],
-		spanish: [
-			'Colores de Notas',
-			'Controles',
-			'Gráficos',
-			'Visualización y UI',
-			'Gameplay',
-			'Idioma'
-		]
-	};
+	var curPage:Int = 1;
+
+	var options(get, null):LanguageArray;
+
+	inline function get_options():LanguageArray {
+		return pageOptions.get(curPage);
+	}
+
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -83,6 +96,10 @@ class OptionsStatePage1 extends MusicBeatState
 				LoadingState.loadAndSwitchState(new options.states.NoteOffsetState());
 			case 'Language' | 'Idioma':
 				openSubState(new options.substates.LanguageSettingsSubState());
+			#if GAMEJOLT_ALLOWED
+			case 'Gamejolt':
+				LoadingState.loadAndSwitchState(new gamejolt.menus.GJOptionsState());
+			#end
 		}
 	}
 
@@ -108,43 +125,23 @@ class OptionsStatePage1 extends MusicBeatState
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		var offset:Float = 70;
-		var separation:Float = 100; // i dont really know...
-		var first:Null<Float> = null;
-		for (i in 0...Language.getArray(options).length)
-		{
-			var option = Language.getArray(options)[i];
-
-			var optionText:Alphabet = new Alphabet(0, 0, option, true);
-			optionText.screenCenter();
-			optionText.y += (separation * (i - (Language.getArray(options).length / 2))) + 50 + offset;
-			if(first == null)
-				first = optionText.y;
-
-			grpOptions.add(optionText);
-		}
-
 		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
-		pageText = new Alphabet(0, 0, 'page 1/' + Options.max, false);
-		pageText.screenCenter();
-		pageText.y += (separation * (0 - (Language.getArray(options).length / 2))) + 50 - offset;
+		pageText = new Alphabet(0, 10, 'Page 1/' + max, false);
+		pageText.screenCenter(X);
 		add(pageText);
-		leftArrow = new Alphabet(FlxG.width / (FlxG.width / 4), first + offset, '<', true);
-		leftArrow.scaleX = leftArrow.scaleY = 1.25;
-		leftArrow.screenCenter();
-		leftArrow.y = pageText.y;
-		leftArrow.x = pageText.x - 63;
+		leftArrow = new Alphabet(20, 0, '<', true);
+		leftArrow.screenCenter(Y);
 		add(leftArrow);
-		rightArrow = new Alphabet(0, 0, '>', true);
-		rightArrow.y = pageText.y;
-		rightArrow.x = pageText.x + 63;
+		rightArrow = new Alphabet(FlxG.width - 60, 0, '>', true);
+		rightArrow.screenCenter(Y);
 		add(rightArrow);
 
 		changeSelection();
+		changePage();
 		ClientPrefs.saveSettings();
 
 		super.create();
@@ -166,8 +163,12 @@ class OptionsStatePage1 extends MusicBeatState
 		}
 
 		if(controls.UI_RIGHT_P) {
-			MusicBeatState.switchState(new OptionsStatePage2());
+			changePage(1);
 		}
+		if(controls.UI_LEFT_P) {
+			changePage(-1);
+		}
+
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			if(PauseSubState.toPlayState) {
@@ -182,95 +183,16 @@ class OptionsStatePage1 extends MusicBeatState
 		}
 	}
 
-	function changeSelection(change:Int = 0) {
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = Language.getArray(options).length - 1;
-		if (curSelected >= Language.getArray(options).length)
-			curSelected = 0;
+	function changePage(change:Int = 0) {
+		curPage += change;
+		if (curPage <= 0)
+			curPage = max;
+		if (curPage > max)
+			curPage = 1;
 
-		var bullShit:Int = 0;
-
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-			if (item.targetY == 0) {
-				item.alpha = 1;
-				selectorLeft.x = item.x - 63;
-				selectorLeft.y = item.y;
-				selectorRight.x = item.x + item.width + 15;
-				selectorRight.y = item.y;
-			}
+		if(grpOptions.length != 0) {
+			grpOptions.clear();
 		}
-		FlxG.sound.play(Paths.sound('scrollMenu'));
-	}
-}
-class OptionsStatePage2 extends MusicBeatState
-{
-	var defaults:Array<String> = [
-		'Note Colors',
-		'Controls',
-		'Adjust Delay and Combo',
-		'Graphics',
-		'Visuals and UI',
-		'Gameplay',
-		'Language'
-	];
-	var options:LanguageArray = {
-		a: [
-			'Adjust Delay and Combo',
-		],
-		spanish: [
-			'Ajustar Retraso y Combo',
-		]
-	};
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private static var curSelected:Int = 0;
-	public static var menuBG:FlxSprite;
-
-	function openSelectedSubstate(label:String) {
-		switch(label) {
-			case 'Note Colors' | 'Colores de Notas':
-				openSubState(new options.substates.NotesSubState());
-			case 'Controls' | 'Controles':
-				openSubState(new options.substates.ControlsSubState());
-			case 'Graphics' | 'Gráficos':
-				openSubState(new options.substates.GraphicsSettingsSubState());
-			case 'Visuals and UI' | 'Visualización y UI':
-				openSubState(new options.substates.VisualsUISubState());
-			case 'Gameplay':
-				openSubState(new options.substates.GameplaySettingsSubState());
-			case 'Adjust Delay and Combo' | 'Ajustar Retraso y Combo':
-				LoadingState.loadAndSwitchState(new options.states.NoteOffsetState());
-			case 'Language' | 'Idioma':
-				openSubState(new options.substates.LanguageSettingsSubState());
-		}
-	}
-
-	var selectorLeft:Alphabet;
-	var selectorRight:Alphabet;
-	var leftArrow:Alphabet;
-	var rightArrow:Alphabet;
-	var pageText:Alphabet;
-
-	override function create() {
-		#if desktop
-		DiscordClient.changePresence("Options Menu", null);
-		#end
-
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.updateHitbox();
-
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
-		add(bg);
-
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
-
 		var offset:Float = 70;
 		var separation:Float = 100; // i dont really know...
 		var first:Null<Float> = null;
@@ -286,65 +208,9 @@ class OptionsStatePage2 extends MusicBeatState
 
 			grpOptions.add(optionText);
 		}
-
-		selectorLeft = new Alphabet(0, 0, '>', true);
-		add(selectorLeft);
-		selectorRight = new Alphabet(0, 0, '<', true);
-		add(selectorRight);
-
-		pageText = new Alphabet(0, 0, 'page 2/' + Options.max, false);
-		pageText.screenCenter();
-		pageText.y += (separation * (0 - (Language.getArray(options).length / 2))) + 50 - offset;
-		add(pageText);
-		leftArrow = new Alphabet(FlxG.width / (FlxG.width / 4), first + offset, '<', true);
-		leftArrow.scaleX = leftArrow.scaleY = 1.25;
-		leftArrow.screenCenter();
-		leftArrow.y = pageText.y;
-		leftArrow.x = pageText.x - 63;
-		add(leftArrow);
-		rightArrow = new Alphabet(0, 0, '>', true);
-		rightArrow.y = pageText.y;
-		rightArrow.x = pageText.x + 63;
-		add(rightArrow);
-
+		pageText.text = 'Page ' + curPage + '/' + max;
 		changeSelection();
-		ClientPrefs.saveSettings();
-
-		super.create();
 	}
-
-	override function closeSubState() {
-		super.closeSubState();
-		ClientPrefs.saveSettings();
-	}
-
-	override function update(elapsed:Float) {
-		super.update(elapsed);
-
-		if (controls.UI_UP_P) {
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
-			changeSelection(1);
-		}
-
-		if(controls.UI_LEFT_P) {
-			MusicBeatState.switchState(new OptionsStatePage1());
-		}
-		if (controls.BACK) {
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-			if(PauseSubState.toPlayState) {
-				MusicBeatState.switchState(new PlayState());
-				PauseSubState.toPlayState = false;
-			} else
-				MusicBeatState.switchState(new MainMenuState());
-		}
-
-		if (controls.ACCEPT) {
-			openSelectedSubstate(Language.getArray(options)[curSelected]);
-		}
-	}
-
 	function changeSelection(change:Int = 0) {
 		curSelected += change;
 		if (curSelected < 0)
