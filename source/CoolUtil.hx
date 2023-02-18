@@ -7,19 +7,21 @@ import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import flixel.system.FlxSound;
+#if sys
 import sys.io.File;
 import sys.FileSystem;
+#end
 
 using StringTools;
 
 class CoolUtil
 {
-	public static var defaultDifficulties:Array<String> = [
+	public static final defaultDifficulties:Array<String> = [
 		'Easy',
 		'Normal',
 		'Hard'
 	];
-	public static var defaultDifficulty:String = 'Normal'; //The chart that has no suffix and starting difficulty on Freeplay/Story Mode
+	public static final defaultDifficulty:String = 'Normal'; //The chart that has no suffix and starting difficulty on Freeplay/Story Mode
 
 	public static var difficulties:Array<String> = [];
 
@@ -28,6 +30,19 @@ class CoolUtil
 		var m:Float = Math.fround(f * snap);
 		trace(snap);
 		return (m / snap);
+	}
+
+	public static function checkSongDifficulty(song:String):Null<String>{
+		var file = Paths.formatToSongPath(song);
+
+		if (file == null) return null;
+
+		if (file.endsWith('-null'))
+			return file.replace('-null', '');
+		else
+			return file;
+
+		return null;
 	}
 	
 	public static function getDifficultyFilePath(num:Null<Int> = null)
@@ -109,14 +124,9 @@ class CoolUtil
 		return maxKey;
 	}
 
-	public static function numberArray(max:Int, ?min = 0):Array<Int>
+	inline public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
-		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-		{
-			dumbArray.push(i);
-		}
-		return dumbArray;
+		return [for (i in min...max) i];
 	}
 
 	//uhhhh does this even work at all? i'm starting to doubt
@@ -133,6 +143,14 @@ class CoolUtil
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else
 		FlxG.openURL(site);
+		#end
+	}
+	public static function fancyOpenURL(schmancy:String)
+	{
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
+		#else
+		FlxG.openURL(schmancy);
 		#end
 	}
 

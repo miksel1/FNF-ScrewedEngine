@@ -505,7 +505,7 @@ class AlphaCharacter extends FlxSprite
 
 	function set_useSwap(v:Bool):Bool {
 		if(v) {
-			if(shader == null && colorSwap != null) {
+			if(shader == null && colorSwap != null && image == 'otherAlphabet') {
 				shader = colorSwap.shader;
 			}
 		} else {
@@ -517,12 +517,22 @@ class AlphaCharacter extends FlxSprite
 	}
 
 	override function update(elapsed:Float) {
-		if(useSwap && colorSwap != null) {
-			if(colorEffect == null)
-				colorSwap.hue += elapsed;
-			else
-				colorSwap.hue += elapsed * colorEffect;
+		if(useSwap) {
+			if(image == 'otherAlphabet') { // old support
+				if(colorSwap != null) {
+					if(colorEffect == null)
+						colorSwap.hue += elapsed;
+					else
+						colorSwap.hue += elapsed * colorEffect;
+				}
+			} else {
+				if(colorEffect == null)
+					color.hue += elapsed;
+				else
+					color.hue += elapsed * colorEffect;
+			}
 		}
+
 		super.update(elapsed);
 	}
 }

@@ -7,17 +7,27 @@ import flixel.graphics.FlxGraphic;
 import Controls;
 
 class ClientPrefs {
+	public static var safeMode:Bool = false;
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
 	public static var opponentStrums:Bool = true;
-	public static var showFPS:Bool = true;
+	@:isVar
+	public static var showFPS(get, set):Bool = true;
+	static function get_showFPS():Bool {
+		return showFPS;
+	}
+	static function set_showFPS(v:Bool):Bool {
+		showFPS = v;
+		if(Main.fpsVar != null) {
+			Main.fpsVar.visible = showFPS;
+		}
+		return showFPS;
+	}
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
 	public static var noteSplashes:Bool = true;
 	public static var lowQuality:Bool = false;
 	public static var framerate:Int = 60;
-	public static var cursing:Bool = true;
-	public static var violence:Bool = true;
 	public static var camZooms:Bool = true;
 	public static var hideHud:Bool = false;
 	public static var noteOffset:Int = 0;
@@ -38,7 +48,7 @@ class ClientPrefs {
 	public static var timeBarDivisions:Int = 800;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
-		'scrolltype' => 'multiplicative', 
+		'scrolltype' => 'multiplicative',
 		// anyone reading this, amod is multiplicative speed mod, cmod is constant speed mod, and xmod is bpm based speed mod.
 		// an amod example would be chartSpeed * multiplier
 		// cmod would just be constantSpeed = chartSpeed
@@ -101,13 +111,16 @@ class ClientPrefs {
 		'save'			=> [P, NONE]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
-
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
 		//trace(defaultKeys);
 	}
 
+	public static var modData:Map<String, Map<String, Dynamic>> = null;
+
 	public static function saveSettings() {
+		FlxG.save.data.safeMode = safeMode;
+		//FlxG.save.data.modData = modData;
 		FlxG.save.data.timeBarDivisions = timeBarDivisions;
 		FlxG.save.data.showHealth = showHealth;
 		FlxG.save.data.maxNotes = maxNotes;
@@ -122,8 +135,6 @@ class ClientPrefs {
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.shaders = shaders;
 		FlxG.save.data.framerate = framerate;
-		//FlxG.save.data.cursing = cursing;
-		//FlxG.save.data.violence = violence;
 		FlxG.save.data.camZooms = camZooms;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.hideHud = hideHud;
@@ -160,6 +171,7 @@ class ClientPrefs {
 	}
 
 	public static function loadPrefs() {
+		if(FlxG.save.data.safeMode != null) safeMode = FlxG.save.data.safeMode;
 		if(FlxG.save.data.language != null) {
 			language = FlxG.save.data.language;
 		}
@@ -215,12 +227,6 @@ class ClientPrefs {
 				FlxG.updateFramerate = framerate;
 			}
 		}
-		/*if(FlxG.save.data.cursing != null) {
-			cursing = FlxG.save.data.cursing;
-		}
-		if(FlxG.save.data.violence != null) {
-			violence = FlxG.save.data.violence;
-		}*/
 		if(FlxG.save.data.camZooms != null) {
 			camZooms = FlxG.save.data.camZooms;
 		}
@@ -284,7 +290,22 @@ class ClientPrefs {
 				gameplaySettings.set(name, value);
 			}
 		}
-		
+		if(FlxG.save.data.modData != null)
+		{
+			var savedMap:Map<String, Map<String, Dynamic>> = FlxG.save.data.modData; // shorted
+			for (modName => savedModData in savedMap) // savedModData is a Map<String, Dynamic>
+			{
+				if(modData.exists(modName)) {
+					var newModData:Map<String, Dynamic> = modData.get(modName); // just in case for no leaving values in blank
+					for (savedModVar => savedModValue in savedModData) { // savedModVar is String, savedModValue is Dynamic
+						newModData.set(savedModVar, savedModValue);
+					}
+					modData.set(modName, newModData);
+				} else {
+					modData.set(modName, savedModData);
+				}
+			}
+		}
 		// flixel automatically saves your volume!
 		if(FlxG.save.data.volume != null)
 		{
@@ -313,7 +334,7 @@ class ClientPrefs {
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic {
-		return /*PlayState.isStoryMode ? defaultValue : */ (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
+		return (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
 	}
 
 	public static function reloadControls() {
@@ -326,6 +347,7 @@ class ClientPrefs {
 		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 	}
+
 	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey> {
 		var copiedArray:Array<FlxKey> = arrayToCopy.copy();
 		var i:Int = 0;

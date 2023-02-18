@@ -20,6 +20,10 @@ import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
+#if GAMEJOLT_ALLOWED
+import gamejolt.GJClient;
+import gamejolt.formats.User;
+#end
 
 using StringTools;
 
@@ -32,14 +36,19 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
-	
+
+	var terminalKeys:Array<String> = [
+		'TERMINAL'
+	];
+	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var terminalKeysBuffer:String = '';
+
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
 		#if MODS_ALLOWED 'mods', #end
 		#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
-		#if !switch 'donate', #end
 		'options'
 	];
 
@@ -97,16 +106,11 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = ClientPrefs.globalAntialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
-		
-		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
 		var scale:Float = 1;
-		/*if(optionShit.length > 6) {
-			scale = 6 / optionShit.length;
-		}*/
 
 		for (i in 0...optionShit.length)
 		{
@@ -144,8 +148,6 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 
-		// NG.core.calls.event.logEvent('swag').send();
-
 		changeItem();
 
 		#if ACHIEVEMENTS_ALLOWED
@@ -159,6 +161,23 @@ class MainMenuState extends MusicBeatState
 				ClientPrefs.saveSettings();
 			}
 		}
+		#end
+
+		#if GAMEJOLT_ALLOWED
+		GJClient.initialize((user:User) -> {
+			FlxG.sound.play(Paths.sound('confirmMenu'));
+			// idk why I made this a function, I wanted to try it out ig
+			function tempThing(){
+				var tempText:FlxText = new FlxText(0, FlxG.height, 0, 'Logged in as: ${user.developer_name}', 24);
+				tempText.screenCenter(XY);
+				tempText.alpha = 0.0001;
+				add(tempText);
+
+				if (tempText != null)
+					tempText.alpha = 1;
+			}
+			tempThing();
+		});
 		#end
 
 		super.create();
@@ -261,6 +280,31 @@ class MainMenuState extends MusicBeatState
 							});
 						}
 					});
+				}
+			}
+			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE #if desktop && !FlxG.keys.anyJustPressed(debugKeys) #end)
+			{
+				var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
+				var keyName:String = Std.string(keyPressed);
+				if(allowedKeys.contains(keyName)) {
+					terminalKeysBuffer += keyName;
+					if(terminalKeysBuffer.length >= 32) terminalKeysBuffer = terminalKeysBuffer.substring(1);
+					trace('Test! Allowed Key pressed!!! Buffer: ' + terminalKeysBuffer);
+
+					for (wordRaw in terminalKeys)
+					{
+						var word:String = wordRaw.toUpperCase(); //just for being sure you're doing it right
+						if(terminalKeysBuffer.contains(word)) {
+							/*#if (!debug && MODS_ALLOWED)
+							if(ClientPrefs.modData.exists(Paths.currentModDirectory))
+								if(ClientPrefs.modData.get(Paths.currentModDirectory).exists('allowTerminal'))
+									if(ClientPrefs.modData.get(Paths.currentModDirectory).get('allowTerminal')) {
+							#end*/
+										FlxG.sound.music.pause();
+										MusicBeatState.switchState(new TerminalState());
+									//}
+						}
+					}
 				}
 			}
 			#if desktop

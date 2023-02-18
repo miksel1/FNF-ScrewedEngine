@@ -11,6 +11,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
+import flixel.util.FlxColor;
 
 #if desktop
 import Discord.DiscordClient;
@@ -23,7 +24,6 @@ import haxe.CallStack;
 import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
-import sys.io.Process;
 #end
 
 using StringTools;
@@ -53,21 +53,15 @@ class Main extends Sprite
 		super();
 
 		if (stage != null)
-		{
 			init();
-		}
 		else
-		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
-		}
 	}
 
 	private function init(?E:Event):Void
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
-		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-		}
 
 		setupGame();
 	}
@@ -100,7 +94,6 @@ class Main extends Sprite
             game.startFullscreen
         ));
 
-		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
 		Lib.current.stage.align = "tl";
@@ -108,7 +101,6 @@ class Main extends Sprite
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.showFPS;
 		}
-		#end
 
 		#if html5
 		FlxG.autoPause = false;
@@ -116,39 +108,23 @@ class Main extends Sprite
 		#end
 		
 		#if CRASH_HANDLER
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#end
+		// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
+		// very cool person for real they don't get enough credit for their work		
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, function(e){
+			FlxG.sound.destroy();
 
-		#if desktop
-		if (!DiscordClient.isInitialized) {
-			DiscordClient.initialize();
-			Application.current.window.onClose.add(function() {
-				DiscordClient.shutdown();
-			});
-		}
-		#end
-	}
-
-	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
-	// very cool person for real they don't get enough credit for their work
-	#if CRASH_HANDLER
-	function onCrash(e:UncaughtErrorEvent):Void
-	{
-		if (FlxG.state is editors.ChartingState)
-		{
-			editors.ChartingState.instance.onCrash(e);
-		}
-		else
-		{
+			if (FlxG.state is editors.ChartingState){
+				editors.ChartingState.addTextToDebug('Crashed!!!', FlxColor.RED);
+				@:privateAccess
+				editors.ChartingState.instance.autosaveSong();
+			}
 			var errMsg:String = "";
-			var path:String;
 			var callStack:Array<StackItem> = CallStack.exceptionStack(true);
 			var dateNow:String = Date.now().toString();
+			var path:String = "./crash/" + "ScrewedEngine_" + dateNow + ".txt";
 
 			dateNow = dateNow.replace(" ", "_");
 			dateNow = dateNow.replace(":", "'");
-
-			path = "./crash/" + "ScrewedEngine_" + dateNow + ".txt";
 
 			for (stackItem in callStack)
 			{
@@ -162,8 +138,8 @@ class Main extends Sprite
 			}
 
 			errMsg += "\nUncaught Error: "
-				+ e.error
-				+ "\nPlease report this error to Wither362 (Wither#9781)\n\n> Crash Handler written by: sqirra-rng";
+				+ Std.string(e.error).replace('\n', '\\n')
+				+ "\nPlease report this error to Wither362 (Discord: Wither#9781, GitHub: https://github.com/Wither362),\nor by the GitHub page: \"https://github.com/miksel1/FNF-ScrewedEngine\"\n\n> Crash Handler written by: sqirra-rng";
 
 			if (!FileSystem.exists("./crash/"))
 				FileSystem.createDirectory("./crash/");
@@ -176,7 +152,20 @@ class Main extends Sprite
 			Application.current.window.alert(errMsg, "Error!");
 			DiscordClient.shutdown();
 			Sys.exit(1);
+		});
+		#end
+
+		#if desktop
+		if (!DiscordClient.isInitialized) {
+			DiscordClient.initialize();
+			Application.current.window.onClose.add(function() {
+				DiscordClient.shutdown();
+			});
 		}
+		#end
+
+		#if GAMEJOLT_ALLOWED
+		Application.current.window.onClose.add(() -> gamejolt.GJClient.logout());
+		#end
 	}
-	#end
 }

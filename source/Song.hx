@@ -35,7 +35,6 @@ typedef SwagSong =
 	var arrowSkin:String;
 	var playerArrowSkin:String;
 	var splashSkin:String;
-	var validScore:Bool;
 }
 
 class Song
@@ -54,7 +53,7 @@ class Song
 	public var event7:String;
 	public var event7Value:String;
 	public var player1:String = 'bf';
-	public var player2:String = 'bambi';
+	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
 
 	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
@@ -101,16 +100,16 @@ class Song
 		this.bpm = bpm;
 	}
 
-	public static function loadFromJson(jsonInput:String, ?folder:String, ?section:String):SwagSong
+	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-		section = section == null ? '' : section + '/';
-
 		var rawJson = null;
 
 		var formattedFolder:String = Paths.formatToSongPath(folder);
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
+		CoolUtil.checkSongDifficulty(jsonInput);
+
 		#if MODS_ALLOWED
-		var moddyFile:String = Paths.modsJson(section + formattedFolder + '/' + formattedSong);
+		var moddyFile:String = Paths.modsJson(formattedFolder + '/' + formattedSong);
 		if(FileSystem.exists(moddyFile)) {
 			rawJson = File.getContent(moddyFile).trim();
 		}
@@ -118,33 +117,18 @@ class Song
 
 		if(rawJson == null) {
 			#if sys
-			rawJson = File.getContent(Paths.json(section + formattedFolder + '/' + formattedSong)).trim();
+			rawJson = File.getContent(Paths.json(formattedFolder + '/' + formattedSong)).trim();
 			#else
-			rawJson = Assets.getText(Paths.json(section + formattedFolder + '/' + formattedSong)).trim();
+			rawJson = Assets.getText(Paths.json(formattedFolder + '/' + formattedSong)).trim();
 			#end
 		}
 
+		// check if it's null again
+		if (rawJson == null)
+			throw "Failed to load song JSON from " + formattedFolder; // this is probably less vague than before
+
 		while (!rawJson.endsWith("}"))
-		{
 			rawJson = rawJson.substr(0, rawJson.length - 1);
-			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
-		}
-
-		// FIX THE CASTING ON WINDOWS/NATIVE
-		// Windows???
-		// trace(songData);
-
-		// trace('LOADED FROM JSON: ' + songData.notes);
-		/* 
-			for (i in 0...songData.notes.length)
-			{
-				trace('LOADED FROM JSON: ' + songData.notes[i].sectionNotes);
-				// songData.notes[i].sectionNotes = songData.notes[i].sectionNotes
-			}
-
-				daNotes = songData.notes;
-				daSong = songData.song;
-				daBpm = songData.bpm; */
 
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);
@@ -152,11 +136,9 @@ class Song
 		return songJson;
 	}
 
-	public static function parseJSONshit(rawJson:String):SwagSong
+	inline public static function parseJSONshit(rawJson:String):SwagSong
 	{
-		var swagShit:SwagSong = cast Json.parse(rawJson).song;
-		swagShit.validScore = true;
-		return swagShit;
+		return cast Json.parse(rawJson).song;
 	}
 
 	/**
@@ -165,6 +147,6 @@ class Song
      * @return is a Valid song?
 	 */
 	public inline static function isValidSong(songName:String):Bool {
-		return !(songName.startsWith('--') && songName.endsWith('--'));
+		return !(songName.startsWith('--') && !songName.endsWith('--'));
 	}
 }

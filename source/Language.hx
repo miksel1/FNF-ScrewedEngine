@@ -15,6 +15,9 @@ typedef LanguageArray = {
 }
 
 @:structInit
+typedef LanguageStringArray = Array<LanguageString>;
+
+@:structInit
 typedef LanguageDynamic = {
 	var d:Dynamic;
 	@:optional var spanish:Dynamic;
@@ -87,7 +90,7 @@ class Language {
 	 * @param a 
 	 * @return Array<LanguageString>
 	 */
-	public static function getStringArraySpanish(a:Array<LanguageString>):Array<String> {
+	public static function getStringArraySpanish(a:LanguageStringArray):Array<String> {
 		var t:Array<String> = [];
 		for(i in a) {
 			t.push(getSpanish(i));
@@ -109,7 +112,7 @@ class Language {
 	 * @param a 
 	 * @return Array<LanguageString>
 	 */
-	public static function getStringArrayGerman(a:Array<LanguageString>):Array<String> {
+	public static function getStringArrayGerman(a:LanguageStringArray):Array<String> {
 		var t:Array<String> = [];
 		for(i in a) {
 			t.push(getGerman(i));
@@ -136,7 +139,7 @@ class Language {
 	 * @param a 
 	 * @return Array<String>
 	 */
-	public static function getStringArray(a:Array<LanguageString>):Array<String> {
+	public static function getStringArray(a:LanguageStringArray):Array<String> {
 		switch(ClientPrefs.language) {
 			case 'Español':
 				return getStringArraySpanish(a);

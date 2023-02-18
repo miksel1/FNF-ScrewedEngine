@@ -1,5 +1,6 @@
 package editors;
 
+import Language.LanguageString;
 import effects.ColorSwap;
 #if desktop
 import Discord.DiscordClient;
@@ -90,7 +91,6 @@ class ChartingState extends MusicBeatState
 	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
 	public var ignoreWarnings:Bool = false;
 	var undos = [];
-	var redos = [];
 	var eventStuff:Array<Dynamic> =
 	[
 		['', "Nothing. Yep, that's right."],
@@ -121,6 +121,7 @@ class ChartingState extends MusicBeatState
 		['Activate PLAYER LIGHT', "The opposite of the earlier one"],
 		['(SOURCE ONLY) Add GlitchEffect', 'Adds a Glitch effect to the FlxSprite.\nValue 1: tag (name) of the FlxSprite.\n\n<b><r>YOU SHOULD ALWAYS USE\n<i>"addEventObject(tag, object)"<i>\nAFTER CREATING THE FLXSPRITE<r><b>']
 	];
+
 	var pressing7Events:Array<String> = [
 		'---',
 		'None',
@@ -166,7 +167,7 @@ class ChartingState extends MusicBeatState
 
 	var highlight:FlxSprite;
 
-	public static var GRID_SIZE:Int = 40;
+	public static inline final GRID_SIZE:Int = 40;
 	var CAM_OFFSET:Int = 360;
 
 	var dummyArrow:FlxSprite;
@@ -184,14 +185,12 @@ class ChartingState extends MusicBeatState
 	var daquantspot = 0;
 	var curEventSelected:Int = 0;
 	var curUndoIndex:Int = 0;
-	var curRedoIndex:Int = 0;
 	var _song:SwagSong;
 	/*
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
 	**/
 	var curSelectedNote:Array<Dynamic> = null;
 
-	var tempBpm:Float = 0;
 	var playbackSpeed:Float = 1;
 
 	var vocals:FlxSound = null;
@@ -295,13 +294,15 @@ class ChartingState extends MusicBeatState
 		1536
 	];
 
+	#if LUA_ALLOWED
 	private static var debugGroup:FlxTypedGroup<DebugLuaText>;
+	#end
 
-	var text:String = "";
+	var text:LanguageString = {s: ""};
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 
-	public static var instance:ChartingState;
+	public static var instance:ChartingState = null;
 
 	override function create()
 	{
@@ -329,8 +330,7 @@ class ChartingState extends MusicBeatState
 				credit: '',
 				ghostTappingAllowed: true,
 				event7: '',
-				event7Value: '',
-				validScore: false
+				event7Value: ''
 			};
 			addSection();
 			PlayState.SONG = _song;
@@ -345,8 +345,6 @@ class ChartingState extends MusicBeatState
 
 		PlayState.chartingMode = true;
 		instance = this;
-
-		// Paths.clearMemory();
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -395,8 +393,6 @@ class ChartingState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 		//FlxG.save.bind('funkin', CoolUtil.getSavePath());
-
-		tempBpm = _song.bpm;
 
 		addSection();
 
@@ -456,7 +452,7 @@ class ChartingState extends MusicBeatState
 		UI_box.scrollFactor.set();
 
 		var keyBonds = ClientPrefs.keyBinds;
-		text =
+		text = {s:
 		"W/S or Mouse Wheel - Change Conductor's strum time
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
@@ -471,9 +467,9 @@ class ChartingState extends MusicBeatState
 		\nEsc - Test your chart inside Chart Editor
 		\nEnter - Play your chart
 		\n" + keyBonds["decrease"][0].toString() + "/" + keyBonds["increase"][0].toString() + " - Decrease/Increase Note Sustain Length
-		\nSpace - Stop/Resume song";
+		\nSpace - Stop/Resume song"};
 
-		var tipTextArray:Array<String> = text.split('\n');
+		var tipTextArray:Array<String> = Language.getString(text).split('\n');
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 7, 0, tipTextArray[i], 17);
 			tipText.y += i * 11;
@@ -542,8 +538,10 @@ class ChartingState extends MusicBeatState
 		debugWaveform.scrollFactor.set();
 		add(debugWaveform);
 
+		#if LUA_ALLOWED
 		debugGroup = new FlxTypedGroup<DebugLuaText>();
 		add(debugGroup);
+		#end
 
 		colorSwap = new ColorSwap();
 
@@ -1240,9 +1238,7 @@ class ChartingState extends MusicBeatState
 			_song.event7 = pressing7Events[0];
 
 		event7DropDown = new FlxUIDropDownMenuCustom(160, 300, FlxUIDropDownMenuCustom.makeStrIdLabelArray(pressing7Events, true), function(pressed:String) {
-			//trace('event pressed');
-			var whatIsIt:Int = Std.parseInt(pressed);
-			var arraySelectedShit:String = pressing7Events[whatIsIt];
+			var arraySelectedShit:String = pressing7Events[Std.parseInt(pressed)];
 			_song.event7 = arraySelectedShit;
 			if(untilTheEnd != null)
 				untilTheEnd.visible = _song.event7 == 'Rainbow Eyesore';
@@ -1636,10 +1632,7 @@ class ChartingState extends MusicBeatState
 	function loadSong():Void
 	{
 		if (FlxG.sound.music != null)
-		{
 			FlxG.sound.music.stop();
-			// vocals.stop();
-		}
 
 		var file:Dynamic = Paths.voices(currentSongName);
 		vocals = new FlxSound();
@@ -1733,7 +1726,7 @@ class ChartingState extends MusicBeatState
 			}
 			if (wname == 'song_bpm')
 			{
-				tempBpm = nums.value;
+				_song.bpm = nums.value;
 				Conductor.mapBPMChanges(_song);
 				Conductor.changeBPM(nums.value);
 			}
@@ -2307,8 +2300,6 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		_song.bpm = tempBpm;
-
 		strumLineNotes.visible = quant.visible = vortex;
 
 		if(FlxG.sound.music.time < 0) {
@@ -2360,8 +2351,9 @@ class ChartingState extends MusicBeatState
 			"\n\nBeat Snap: " + quantization + 'th';
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
-		curRenderedNotes.forEachAlive(function(note:Note) {
-			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null)
+		curRenderedNotes.forEachAlive(function(note:Note)
+		{
+			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null && !ClientPrefs.lowQuality)
 				note.shader = colorSwap.shader;
 
 			note.alpha = 1;
@@ -2369,11 +2361,13 @@ class ChartingState extends MusicBeatState
 				var noteDataToCheck:Int = note.noteData;
 				if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
 
-				if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
-				{
-					colorSine += elapsed;
-					var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
-					note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
+				if(!ClientPrefs.lowQuality) {
+					if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
+					{
+						colorSine += elapsed;
+						var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
+						note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
+					}
 				}
 			}
 
@@ -2580,7 +2574,10 @@ class ChartingState extends MusicBeatState
 			index = i;
 
 			function thing(j:Int, k:Int) {
-				return FlxMath.bound(((index < wavData[j][k].length && index >= 0) ? wavData[j][k][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+				return (FlxMath.bound(
+					((index < wavData[j][k].length && index >= 0) ? wavData[j][k][index] : 0) * (gSize / 1.12),
+					-hSize,
+					hSize)) / 2;
 			}
 
 			lmin = thing(0, 0);
@@ -2641,7 +2638,7 @@ class ChartingState extends MusicBeatState
 		#if (lime_cffi && !macro)
 		if (buffer == null || buffer.data == null) return [[[0], [0]], [[0], [0]]];
 
-		var khz:Float = (buffer.sampleRate / 1000);
+		var khz:Float = (buffer.sampleRate / 1000); // MY GOD!!!! IS THIS FOR AUTO CHART!!????
 		var channels:Int = buffer.channels;
 
 		var index:Int = Std.int(time * khz);
@@ -3275,8 +3272,6 @@ class ChartingState extends MusicBeatState
 			{
 				_song.notes[curSec].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteTypeIntMap.get(daType)]);
 			}
-
-			//trace(noteData + ', ' + noteStrum + ', ' + curSec);
 			strumTimeInputText.text = '' + curSelectedNote[0];
 
 			updateGrid();
@@ -3285,19 +3280,11 @@ class ChartingState extends MusicBeatState
 		return noteData;
 	}
 
-	// will figure this out l8r
-	function redo()
-	{
-		//_song = redos[curRedoIndex];
-	}
 	function undo()
 	{
-		//redos.push(_song);
 		undos.pop();
-		//_song.notes = undos[undos.length - 1];
-		//trace(_song.notes);
-		//updateGrid();
 	}
+
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float
 	{
 		var leZoom:Float = zoomList[curZoom];
@@ -3459,16 +3446,23 @@ class ChartingState extends MusicBeatState
 	 * @param color 
 	 */
 	public static function addTextToDebug(text:String, color:FlxColor = 0xFFFFFFFF) { // thanks Raltyro
-		debugGroup.forEachAlive(function(spr:DebugLuaText) {
-			spr.y += 20;
-		});
+		#if LUA_ALLOWED
+		if (debugGroup != null){
+			debugGroup.forEachAlive(function(spr:DebugLuaText) {
+				if (spr != null)
+					spr.y += 20;
+			});
+		}
 
-		if(debugGroup.members.length > 34) {
+		if(debugGroup != null && debugGroup.members.length > 34) {
 			var blah = debugGroup.members[34];
 			blah.destroy();
 			debugGroup.remove(blah);
 		}
-		debugGroup.insert(0, new DebugLuaText(text, debugGroup, color));
+		if (debugGroup != null)
+			debugGroup.insert(0, new DebugLuaText(text, debugGroup, color));
+
+		#end
 		#if debug
 		FlxG.log.notice(text);
 		#else
@@ -3482,7 +3476,6 @@ class ChartingState extends MusicBeatState
 	 */
 	public static function addTextToLog(text:String, color:FlxColor = FlxColor.WHITE) {
 		FlxG.log.add(text);
-		//trace(text);
 		#if debug
 		addTextToDebug(text, color);
 		#end
@@ -3497,46 +3490,11 @@ class ChartingState extends MusicBeatState
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
-	#if CRASH_HANDLER
-	public function onCrash(e:UncaughtErrorEvent)
-	{
-		addTextToDebug('Crashed!!!', FlxColor.RED);
-		autosaveSong();
-		var errMsg:String = "";
-		var path:String;
-		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
-		var dateNow:String = Date.now().toString();
-
-		dateNow = dateNow.replace(" ", "_");
-		dateNow = dateNow.replace(":", "'");
-
-		path = "./crash/" + "ScrewedEngine_" + dateNow + ".txt";
-
-		for (stackItem in callStack)
-		{
-			switch (stackItem)
-			{
-				case FilePos(s, file, line, column):
-					errMsg += file + " (line " + line + ")\n";
-				default:
-					Sys.println(stackItem);
-			}
-		}
-
-		errMsg += "\nUncaught Error: " + e.error + "\nReport this error to Wither362\nDon't worry about your changes, they are saved";
-
-		if (!FileSystem.exists("./crash/"))
-			FileSystem.createDirectory("./crash/");
-
-		File.saveContent(path, errMsg + "\n");
-
-		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
-
-		Application.current.window.alert(errMsg, "Error!");
-		FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetState, true);
+	override function destroy(){
+		instance = null;
+		
+		return super.destroy();
 	}
-	#end
 }
 
 class AttachedFlxText extends FlxText
