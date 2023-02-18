@@ -20,6 +20,10 @@ import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
+#if GAMEJOLT_ALLOWED
+import gamejolt.GJClient;
+import gamejolt.formats.User;
+#end
 
 using StringTools;
 
@@ -157,6 +161,23 @@ class MainMenuState extends MusicBeatState
 				ClientPrefs.saveSettings();
 			}
 		}
+		#end
+
+		#if GAMEJOLT_ALLOWED
+		GJClient.initialize((user:User) -> {
+			FlxG.sound.play(Paths.sound('confirmMenu'));
+			// idk why I made this a function, I wanted to try it out ig
+			function tempThing(){
+				var tempText:FlxText = new FlxText(0, FlxG.height, 0, 'Logged in as: ${user.developer_name}', 24);
+				tempText.screenCenter(XY);
+				tempText.alpha = 0.0001;
+				add(tempText);
+
+				if (tempText != null)
+					tempText.alpha = 1;
+			}
+			tempThing();
+		});
 		#end
 
 		super.create();

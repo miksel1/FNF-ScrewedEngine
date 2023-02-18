@@ -14,6 +14,9 @@ import flixel.util.FlxGradient;
 import flixel.FlxState;
 import flixel.FlxCamera;
 import flixel.FlxBasic;
+#if GAMEJOLT_ALLOWED
+import gamejolt.GJClient;
+#end
 
 class MusicBeatState extends FlxUIState
 {
@@ -32,10 +35,18 @@ class MusicBeatState extends FlxUIState
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
+	#if GAMEJOLT_ALLOWED
+	private static var pingTrigger:FlxTimer;
+	#end	
+
 	override function create() {
 		camBeat = FlxG.camera;
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
+
+		#if GAMEJOLT_ALLOWED
+		pingTrigger = new FlxTimer().start(3, (tmr) -> GJClient.pingSession(), 0);
+		#end		
 
 		if(!skip) {
 			openSubState(new CustomFadeTransition(0.7, true));
@@ -45,7 +56,6 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
-		//everyStep();
 		var oldStep:Int = curStep;
 
 		updateCurStep();
@@ -53,7 +63,7 @@ class MusicBeatState extends FlxUIState
 
 		if (oldStep != curStep)
 		{
-			if(curStep > 0)
+			if(curStep >= 0)
 				stepHit();
 
 			if(PlayState.SONG != null)
@@ -119,6 +129,12 @@ class MusicBeatState extends FlxUIState
 	}
 
 	public static function switchState(nextState:FlxState) {
+		#if GAMEJOLT_ALLOWED
+		if (pingTrigger != null){
+			pingTrigger.cancel();
+			pingTrigger.destroy();
+		}
+		#end
 		// Custom made Trans in
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;

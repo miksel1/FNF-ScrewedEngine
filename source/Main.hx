@@ -163,5 +163,9 @@ class Main extends Sprite
 			});
 		}
 		#end
+
+		#if GAMEJOLT_ALLOWED
+		Application.current.window.onClose.add(() -> gamejolt.GJClient.logout());
+		#end
 	}
 }
