@@ -6,6 +6,7 @@ Add more shaders
 Add more languages
 Achievements in other languages
 Add playmodes (only-notes, and more)
+Character Selector State (with lua, text, and JSON support IMPORTANT)
 Add freeplay sections by the method curSelected
 Add freeplay sections by JSON
 Add lua support in terminal state
