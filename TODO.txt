@@ -1,3 +1,7 @@
+Wither is doing it (maybe its finished, but its in wither's computer, so you cant have access to it until I fix the bugs):
+Freeplay Sections (they are working! But they arent working at the same time)
+(DONT TOUCH FREEPLAYSTATE.HX UNTIL I COMMIT THE FREEPLAY SECTIONS)
+
 Doing:
 Terminal State with MOD SUPPORT IN TEXT
 
