@@ -48,7 +48,7 @@ class CreditsState extends MusicBeatState
 
 	var offsetThing:Float = -75;
 
-	var glitchedOnes:Array<String> = ['Wither362', 'MemeHoovy',	 'Delta', 'miksel'];
+	var glitchedOnes:Array<String> = ['Wither362', 'MemeHoovy', 'Delta', 'miksel'];
 	var grainedOnes:Array<String> = ['Wither362', 'BeastlyGhost']; // time to credit them ;)
 	var coolTitleOnes:Array<String> = [
 		'Wither362',
@@ -57,7 +57,8 @@ class CreditsState extends MusicBeatState
 		'miksel',
 		'MemeHoovy',
 		'BeastlyGhost',
-		'tposejank']; // yes dude ;D
+		'tposejank',
+		'Gamer Pablito']; // yes dude ;D
 
 	var glitchEffect:FlxGlitchEffect;
 	var glitchBg:FlxEffectSprite;
@@ -130,7 +131,7 @@ class CreditsState extends MusicBeatState
 			[{s: 'miksel'},				    'miksel',			{s: 'Features and Ideas'},									        'https://www.youtube.com/@miksel_fnf',	                                '371893'],
 			[{s: 'Join our Discord!', spanish: '¡Únete al Discord!'},	'discord',			{s: 'Yeah! Join us for features and more!', spanish: '¡Sí! ¡Únete para información y más!'},						'https://discord.gg/ACY3MQgB2A',										'0xFF75D8FF'],
 			[''],
-			[{s: 'Screwed Engine Contributors\nOthers...', spanish: 'Contribudores/Otros Screwed Engine...'}],
+			[{s: 'Screwed Engine Helpers', spanish: 'Contribudores/Otros Screwed Engine...'}],
 			['BeastlyGhost',		'beast',			'Icons and other help',													'https://twitter.com/Fan_de_RPG',		'b0ceff'],
 			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
 			['Gamer Pablito',		'pablo',			'Gamejolt Support',												'https://twitter.com/GamerPablito1',	'0xFF257FB3'],
