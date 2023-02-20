@@ -24,6 +24,7 @@ Add stage shader effects by JSON
 Fix icon offsets
 Heatwave shader
 Fix PlaybackRate
+add icon bounce(by xd)
 
 Done:
 Scroll Speed changer (instead of only constant and multiplicative, this one changes randomly)
