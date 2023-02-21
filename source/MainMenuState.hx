@@ -20,12 +20,29 @@ import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
-#if GAMEJOLT_ALLOWED
-import gamejolt.GJClient;
-import gamejolt.formats.User;
+
+import haxe.Json;
+#if MODS_ALLOWED
+import sys.FileSystem;
+import sys.io.File;
 #end
 
 using StringTools;
+
+typedef MainMenuData =
+{
+ storymodeP:Array<Int>,
+ freeplayP:Array<Int>,
+ creditsP:Array<Int>,
+ donateP:Array<Int>,
+ optionsP:Array<Int>,
+ storymodeS:Array<Float>,
+ freeplayS:Array<Float>,
+ creditsS:Array<Float>,
+ donateS:Array<Float>,
+ optionsS:Array<Float>,
+ centerX:Bool
+}
 
 class MainMenuState extends MusicBeatState
 {
@@ -46,16 +63,18 @@ class MainMenuState extends MusicBeatState
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
-		#if MODS_ALLOWED 'mods', #end
-		#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
+		#if !switch 'donate', #end
 		'options'
 	];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
+	var char:FlxSprite;
 	var debugKeys:Array<FlxKey>;
+
+	var mainMenuJSON:MainMenuData;
 
 	override function create()
 	{
@@ -68,6 +87,24 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+        #if (desktop && MODS_ALLOWED)
+		var path = "mods/" + Paths.currentModDirectory + "/images/mainmenu/mainMenuLayout.json";
+		//trace(path, FileSystem.exists(path));
+		if (!FileSystem.exists(path)) {
+			path = "mods/images/mainmenu/mainMenuLayout.json";
+		}
+		//trace(path, FileSystem.exists(path));
+		if (!FileSystem.exists(path)) {
+			path = "assets/images/mainmenu/mainMenuLayout.json";
+		}
+		//trace(path, FileSystem.exists(path));
+		mainMenuJSON = Json.parse(File.getContent(path));
+		#else
+		var path = Paths.getPreloadPath("images/mainmenu/mainMenuLayout.json");
+		mainMenuJSON = Json.parse(Assets.getText(path));
+        #end
+
 		debugKeys = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
 
 		camGame = new FlxCamera();
@@ -106,32 +143,126 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = ClientPrefs.globalAntialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
+		
+		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
 		var scale:Float = 1;
+		/*if(optionShit.length > 6) {
+			scale = 6 / optionShit.length;
+		}*/
 
-		for (i in 0...optionShit.length)
-		{
-			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
-			menuItem.animation.play('idle');
-			menuItem.ID = i;
+		//Story Mode
+		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+		var menuItem:FlxSprite = new FlxSprite(mainMenuJSON.storymodeP[0], mainMenuJSON.storymodeP[1] + offset);
+		menuItem.scale.x = mainMenuJSON.storymodeS[0];
+		menuItem.scale.y = mainMenuJSON.storymodeS[1];
+		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[0]);
+		menuItem.animation.addByPrefix('idle', optionShit[0] + " basic", 24);
+		menuItem.animation.addByPrefix('selected', optionShit[0] + " white", 24);
+		menuItem.animation.play('idle');
+		menuItem.ID = 0;
+		if(mainMenuJSON.centerX == true){
 			menuItem.screenCenter(X);
-			menuItems.add(menuItem);
-			var scr:Float = (optionShit.length - 4) * 0.135;
-			if(optionShit.length < 6) scr = 0;
-			menuItem.scrollFactor.set(0, scr);
-			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
-			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
-			menuItem.updateHitbox();
 		}
+		//menuItem.screenCenter(X);
+		menuItems.add(menuItem);
+		var scr:Float = (optionShit.length - 4) * 0.135;
+		if(optionShit.length < 6) scr = 0;
+		menuItem.scrollFactor.set(0, scr);
+		menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+		//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+		menuItem.updateHitbox();
+
+		//Freeplay
+		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+		var menuItem:FlxSprite = new FlxSprite(mainMenuJSON.freeplayP[0], mainMenuJSON.freeplayP[1] + offset);
+		menuItem.scale.x = mainMenuJSON.freeplayS[0];
+		menuItem.scale.y = mainMenuJSON.freeplayS[1];
+		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[1]);
+		menuItem.animation.addByPrefix('idle', optionShit[1] + " basic", 24);
+		menuItem.animation.addByPrefix('selected', optionShit[1] + " white", 24);
+		menuItem.animation.play('idle');
+		menuItem.ID = 1;
+		if(mainMenuJSON.centerX == true){
+			menuItem.screenCenter(X);
+		}
+		//menuItem.screenCenter(X);
+		menuItems.add(menuItem);
+		var scr:Float = (optionShit.length - 4) * 0.135;
+		if(optionShit.length < 6) scr = 0;
+		menuItem.scrollFactor.set(0, scr);
+		menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+		//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+		menuItem.updateHitbox();
+
+		//Credits
+		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+		var menuItem:FlxSprite = new FlxSprite(mainMenuJSON.creditsP[0], mainMenuJSON.creditsP[1] + offset);
+		menuItem.scale.x = mainMenuJSON.creditsS[0];
+		menuItem.scale.y = mainMenuJSON.creditsS[1];
+		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[2]);
+		menuItem.animation.addByPrefix('idle', optionShit[2] + " basic", 24);
+		menuItem.animation.addByPrefix('selected', optionShit[2] + " white", 24);
+		menuItem.animation.play('idle');
+		menuItem.ID = 2;
+		if(mainMenuJSON.centerX == true){
+			menuItem.screenCenter(X);
+		}
+		//menuItem.screenCenter(X);
+		menuItems.add(menuItem);
+		var scr:Float = (optionShit.length - 4) * 0.135;
+		if(optionShit.length < 6) scr = 0;
+		menuItem.scrollFactor.set(0, scr);
+		menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+		//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+		menuItem.updateHitbox();
+
+		//Donate
+		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+		var menuItem:FlxSprite = new FlxSprite(mainMenuJSON.donateP[0], mainMenuJSON.donateP[1] + offset);
+		menuItem.scale.x = mainMenuJSON.donateS[0];
+		menuItem.scale.y = mainMenuJSON.donateS[1];
+		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[3]);
+		menuItem.animation.addByPrefix('idle', optionShit[3] + " basic", 24);
+		menuItem.animation.addByPrefix('selected', optionShit[3] + " white", 24);
+		menuItem.animation.play('idle');
+		menuItem.ID = 3;
+		if(mainMenuJSON.centerX == true){
+			menuItem.screenCenter(X);
+		}
+		//menuItem.screenCenter(X);
+		menuItems.add(menuItem);
+		var scr:Float = (optionShit.length - 4) * 0.135;
+		if(optionShit.length < 6) scr = 0;
+		menuItem.scrollFactor.set(0, scr);
+		menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+		//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+		menuItem.updateHitbox();
+
+		//Options
+		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+		var menuItem:FlxSprite = new FlxSprite(mainMenuJSON.optionsP[0], mainMenuJSON.optionsP[1] + offset);
+		menuItem.scale.x = mainMenuJSON.optionsS[0];
+		menuItem.scale.y = mainMenuJSON.optionsS[1];
+		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[4]);
+		menuItem.animation.addByPrefix('idle', optionShit[4] + " basic", 24);
+		menuItem.animation.addByPrefix('selected', optionShit[4] + " white", 24);
+		menuItem.animation.play('idle');
+		menuItem.ID = 4;
+		if(mainMenuJSON.centerX == true){
+			menuItem.screenCenter(X);
+		}
+		//menuItem.screenCenter(X);
+		menuItems.add(menuItem);
+		var scr:Float = (optionShit.length - 4) * 0.135;
+		if(optionShit.length < 6) scr = 0;
+		menuItem.scrollFactor.set(0, scr);
+		menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+		//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+		menuItem.updateHitbox();
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
@@ -148,6 +279,8 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 
+		// NG.core.calls.event.logEvent('swag').send();
+
 		changeItem();
 
 		#if ACHIEVEMENTS_ALLOWED
@@ -163,24 +296,87 @@ class MainMenuState extends MusicBeatState
 		}
 		#end
 
-		#if GAMEJOLT_ALLOWED
-		GJClient.initialize((user:User) -> {
-			FlxG.sound.play(Paths.sound('confirmMenu'));
-			// idk why I made this a function, I wanted to try it out ig
-			function tempThing(){
-				var tempText:FlxText = new FlxText(0, FlxG.height, 0, 'Logged in as: ${user.developer_name}', 24);
-				tempText.screenCenter(XY);
-				tempText.alpha = 0.0001;
-				add(tempText);
-
-				if (tempText != null)
-					tempText.alpha = 1;
-			}
-			tempThing();
-		});
-		#end
-
 		super.create();
+
+		switch(FlxG.random.int(1, 7))
+		{
+			case 1:
+			char = new FlxSprite(820, 170).loadGraphic(Paths.image('mainmenu/templeBambi'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/templeBambi');//here put the name of the xml
+            char.animation.addByPrefix('idleA', 'idle', 24, true);//on 'idle' change it to your xml one
+            char .animation.play('idleA');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = true; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+
+			case 2:
+			char = new FlxSprite(820, 170).loadGraphic(Paths.image('mainmenu/BOYFRIEND'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/BOYFRIEND');//here put the name of the xml
+            char.animation.addByPrefix('idleB', 'BF idle dance', 24, true);//on 'BF idle dance' change it to your xml one
+            char .animation.play('idleB');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = false; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+
+			case 3:
+			char = new FlxSprite(500, -200).loadGraphic(Paths.image('mainmenu/purple_girl'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/purple_girl');//here put the name of the xml
+            char.animation.addByPrefix('idleC', 'purple girl idle', 12, true);//on 'BF idle dance' change it to your xml one
+            char .animation.play('idleC');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = true; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+
+			case 4:
+			char = new FlxSprite(500, -200).loadGraphic(Paths.image('mainmenu/blue_dude'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/blue_dude');//here put the name of the xml
+            char.animation.addByPrefix('idleE', 'blue dude idle', 12, true);//on 'BF idle dance' change it to your xml one
+            char .animation.play('idleE');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = true; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+
+			case 5:
+			char = new FlxSprite(500, -200).loadGraphic(Paths.image('mainmenu/d.e.b'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/d.e.b');//here put the name of the xml
+            char.animation.addByPrefix('idleF', 'd.e.b idle', 12, true);//on 'BF idle dance' change it to your xml one
+            char .animation.play('idleF');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = true; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+
+			case 6:
+			char = new FlxSprite(820, -170).loadGraphic(Paths.image('mainmenu/dave'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/dave');//here put the name of the xml
+            char.animation.addByPrefix('idleG', 'idle', 24, true);//on 'BF idle dance' change it to your xml one
+            char .animation.play('idleG');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = true; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+
+			case 7:
+			char = new FlxSprite(500, -200).loadGraphic(Paths.image('mainmenu/worried_shitface'));//put your cords and image here
+            char.frames = Paths.getSparrowAtlas('mainmenu/worried_shitface');//here put the name of the xml
+            char.animation.addByPrefix('idleH', 'worried shitface idle', 12, true);//on 'BF idle dance' change it to your xml one
+            char .animation.play('idleH');//you can rename the anim however you want to
+            char.scrollFactor.set();
+            FlxG.sound.play(Paths.sound('appear'), 2);
+            char.flipX = true; //this is for flipping it to look left instead of right you can make it however you want
+            char.antialiasing = ClientPrefs.globalAntialiasing;
+            add(char);
+		}
 	}
 
 	#if ACHIEVEMENTS_ALLOWED
@@ -230,7 +426,7 @@ class MainMenuState extends MusicBeatState
 			{
 				if (optionShit[curSelected] == 'donate')
 				{
-					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
+					CoolUtil.browserLoad('https://www.youtube.com/channel/UCpqxNBH2KzhAqVa4mf7tcBQ');
 				}
 				else
 				{
@@ -266,23 +462,17 @@ class MainMenuState extends MusicBeatState
 											MusicBeatState.switchState(new FreeplaySelectState());
 										else*/
 											MusicBeatState.switchState(new FreeplayState());
-									#if MODS_ALLOWED
-									case 'mods':
-										MusicBeatState.switchState(new ModsMenuState());
-									#end
-									case 'awards':
-										MusicBeatState.switchState(new AchievementsMenuState());
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':
-										LoadingState.loadAndSwitchState(new options.states.OptionsState());
+										LoadingState.loadAndSwitchState(new options.states.OptionsState.OptionsStatePage1());
 								}
 							});
 						}
 					});
 				}
 			}
-			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE #if desktop && !FlxG.keys.anyJustPressed(debugKeys) #end)
+			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE  #if desktop && !FlxG.keys.anyJustPressed(debugKeys) #end)
 			{
 				var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
 				var keyName:String = Std.string(keyPressed);
@@ -320,7 +510,10 @@ class MainMenuState extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
-			spr.screenCenter(X);
+			if(mainMenuJSON.centerX == true){
+				spr.screenCenter(X);
+			}
+			//spr.screenCenter(X);
 		});
 	}
 
@@ -351,3 +544,4 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 }
+
