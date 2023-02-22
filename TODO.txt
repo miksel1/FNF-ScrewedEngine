@@ -6,6 +6,7 @@ Doing:
 Terminal State with MOD SUPPORT IN TEXT
 
 Still to do:
+Add boyfriend voices sepparated from opponent ones
 Add more shaders
 Add more languages
 Achievements in other languages
