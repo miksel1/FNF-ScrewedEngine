@@ -1,5 +1,8 @@
 package;
 
+import flixel.FlxCamera;
+import flixel.math.FlxPoint;
+import flixel.FlxObject;
 import discord_rpc.DiscordRpc.SecretCallback;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
@@ -30,10 +33,6 @@ import sys.FileSystem;
 
 using StringTools;
 
-enum SectionType {
-	FOLDER;
-	OTHER;
-}
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
@@ -41,7 +40,10 @@ class FreeplayState extends MusicBeatState
 	var notSongs:Array<Int> = [];
 
 	var sections:Array<String> = [];
-	var sectionInfo:Array<SectionType> = [];
+	/**
+	 * The same, but with "--"
+	 */
+	var rawSections:Array<String> = [];
 	var curFreeplaySection(get, null):String;
 
 	inline function get_curFreeplaySection():String {
@@ -72,6 +74,11 @@ class FreeplayState extends MusicBeatState
 
 	private var iconArray:Array<FlxSprite> = [];
 
+	private var camFollow:FlxObject;
+	private static var prevCamFollow:FlxObject;
+
+	var normalCamera:FlxCamera;
+
 	var bg:FlxSprite;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
@@ -96,7 +103,10 @@ class FreeplayState extends MusicBeatState
 	var selectingSection:Bool = true;
 	var canSmash:Bool = true;
 	var fakeBgTween:FlxTween;
-	var sectionImages:FlxTypedGroup<FlxSprite>;
+	var sectionImages:Array<FlxSprite> = [];
+	var sectionAlphabets:Array<Alphabet> = [];
+	var curSelectingSection:Int = 0;
+	var cameraSection:FlxCamera;
 
 	override function create()
 	{
@@ -114,7 +124,27 @@ class FreeplayState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-		sectionImages = new FlxTypedGroup<FlxSprite>();
+		normalCamera = new FlxCamera();
+		cameraSection = new FlxCamera();
+		normalCamera.bgColor.alpha = cameraSection.bgColor.alpha = 0;
+
+		FlxG.cameras.add(normalCamera, true);
+		FlxG.cameras.add(cameraSection, false);
+
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollow.screenCenter();
+		camFollow.setPosition(0, 0);
+
+		if (prevCamFollow != null)
+		{
+			camFollow = prevCamFollow;
+			prevCamFollow = null;
+		}
+		camFollow.cameras = [cameraSection];
+		add(camFollow);
+
+		cameraSection.follow(camFollow, LOCKON, 0.04);
+		cameraSection.focusOn(camFollow.getPosition());
 
 		for (i in 0...WeekData.weeksList.length)
 		{
@@ -155,18 +185,24 @@ class FreeplayState extends MusicBeatState
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.scrollFactor.set();
 		add(bg);
+		bg.cameras = [normalCamera];
 		bg.screenCenter();
 		fakeBg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		fakeBg.antialiasing = ClientPrefs.globalAntialiasing;
 		fakeBg.screenCenter();
+		fakeBg.scrollFactor.set();
+		fakeBg.cameras = [cameraSection];
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
+		grpSongs.cameras = [normalCamera];
 		add(grpSongs);
 
 		for (_ in songs)
 		{
 			sections.push('MAIN');
+			rawSections.push('--MAIN--');
 		}
 		if (sections.length != songs.length)
 		{
@@ -187,9 +223,10 @@ class FreeplayState extends MusicBeatState
 			 * 0 is false, 1 is for sections, 2 is for folder
 			 */
 			var canType:Int = 0;
-			if(!sections.contains(songName.toUpperCase().replace('--', '')) && !isValid) canType = 1;
+			if(!sections.contains(songName.toUpperCase().replace('--', '')) && !isValid)
+				canType = 1;
 
-			if(i > 0) {
+			if(i > 0 && canType == 0) {
 				if(songs[i].folder != songs[i - 1].folder) {
 					canType = 2;
 				}
@@ -197,8 +234,7 @@ class FreeplayState extends MusicBeatState
 			if(canType == 2) {
 				for (j in i...songs.length)
 				{
-					sections[j] = songs[i].folder.toUpperCase();
-					sectionInfo[j] = SectionType.FOLDER;
+					sections[j] = rawSections[j] = songs[i].folder.toUpperCase();
 				}
 			}
 			else if (canType == 1)
@@ -206,7 +242,7 @@ class FreeplayState extends MusicBeatState
 				for (j in i...songs.length)
 				{
 					sections[j] = songName.toUpperCase().replace('--', '');
-					sectionInfo[j] = SectionType.OTHER;
+					rawSections[j] = songName.toUpperCase();
 				}
 			}
 
@@ -243,12 +279,14 @@ class FreeplayState extends MusicBeatState
 
 					// using a FlxGroup is too much fuss!
 					iconArray.push(icon);
+					icon.cameras = [normalCamera];
 					add(icon);
 				}
 				else
 				{
 					var nothing:FlxSprite = new FlxSprite();
 					iconArray.push(nothing);
+					nothing.cameras = [normalCamera];
 					add(nothing);
 				}
 			}
@@ -257,13 +295,16 @@ class FreeplayState extends MusicBeatState
 
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreText.cameras = [normalCamera];
 
 		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
+		scoreBG.cameras = [normalCamera];
 		add(scoreBG);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
+		diffText.cameras = [normalCamera];
 		add(diffText);
 
 		add(scoreText);
@@ -287,6 +328,7 @@ class FreeplayState extends MusicBeatState
 		searcher.resize(searcher.width *= 1.3, searcher.height *= 1.3);
 		searcher.screenCenter(X);
 		searcher.x -= 10;
+		searcher.cameras = [normalCamera];
 		searcher.callback = function(text, action)
 		{
 			ahg = false;
@@ -325,12 +367,14 @@ class FreeplayState extends MusicBeatState
 
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
+		textBG.cameras = [normalCamera];
 		add(textBG);
 
 		titleTxt = new Alphabet(FlxG.height - 10, 320, "MAIN");
 		titleTxt.scrollFactor.set();
 		titleTxt.snapToPosition();
 		originalTitlePosition = titleTxt.x;
+		titleTxt.cameras = [normalCamera];
 		add(titleTxt);
 
 		#if PRELOAD_ALL
@@ -343,15 +387,18 @@ class FreeplayState extends MusicBeatState
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
+		text.cameras = [normalCamera];
 		add(text);
 
 		add(fakeBg);
-		//addSections();
+		addSections();
+		changeSection();
+
 		infoText = new FlxText(0, 0, 0, 'Press enter\nFreeplay sections are still WIP', size);
 		infoText.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
 		infoText.scrollFactor.set();
 		infoText.screenCenter();
-		add(infoText);
+		//add(infoText);
 
 		super.create();
 	}
@@ -645,11 +692,13 @@ class FreeplayState extends MusicBeatState
 
 		} else {
 			if(controls.ACCEPT && canSmash) {
-				fadeOutSections();
+				selectSection();
 			}
-			/*if(controls.NOTE_LEFT) {
-				fadeInSections();
-			}*/
+			if(controls.UI_LEFT_P) {
+				changeSection(-1);
+			} else if(controls.UI_RIGHT_P) {
+				changeSection(1);
+			}
 		}
 
 		super.update(elapsed);
@@ -663,6 +712,19 @@ class FreeplayState extends MusicBeatState
 			canSmash = true;
 			infoText.visible = false;
 		}});
+		if(sectionImages.length > 0) {
+			for (i in 0...sectionImages.length) {
+				FlxTween.tween(sectionImages[i], {y: fakeBg.height}, 1 + (i / 10), {ease: FlxEase.bounceOut, onComplete: function(twn:FlxTween) {
+					FlxTween.tween(sectionAlphabets[i], {y: fakeBg.height}, 0.5 + (1 / 10), {ease: FlxEase.bounceOut, onComplete: function(twn:FlxTween) {
+						if(i == sectionImages.length - 1) {
+							//FlxG.cameras.add(normalCamera, true);
+							//FlxG.cameras.remove(cameraSection, false);
+						}
+					}});
+				}});
+			}
+		}
+
 		canSmash = false;
 	}
 
@@ -679,14 +741,68 @@ class FreeplayState extends MusicBeatState
 		canSmash = false;
 	}
 	public function addSections() {
-		for (megaSection in sections) {
-			if(Paths.fileExists('images/freeplaysections/' + megaSection.toLowerCase() + '.png')) {
-				trace('it works');
+		/**
+		 * contains the information of each section but its simplificated
+		 */
+		var trueSections:Map<String, Int> = [];
+		/**
+		 * an array for not going crazy with all the freaking sections
+		 */
+		var sectionsArray:Array<String> = [];
+		for (i in 0...rawSections.length) {
+			if(!trueSections.exists(rawSections[i]) /*&& !Song.isValidSong(rawSections[i])*/) {
+				trueSections.set(rawSections[i], i);
+				sectionsArray.push(rawSections[i]);
 			}
+		}
+		for (sectionInt in 0...sectionsArray.length)
+		{ // done?
+			trace('section: ' + sectionsArray[sectionInt]);
+			var path = 'freeplaysections/' + Paths.formatToSongPath(sectionsArray[sectionInt].toLowerCase().replace('--', ''));
+			if (Paths.fileExists('images/' + path + '.png', IMAGE)) // FUCKING GOD
+			{
+				var file = Paths.image(path);
+				var sectionImage:FlxSprite = new FlxSprite(0, 0).loadGraphic(file);
+				sectionImage.centerOffsets(false);
+				sectionImage.x = (1000 * sectionInt + 1) + (512 - sectionImage.width);
+				sectionImage.y = (FlxG.height / 2) - 256;
+				sectionImage.antialiasing = ClientPrefs.globalAntialiasing;
+				sectionImage.cameras = [cameraSection];
+
+				var sectionAlphabet:Alphabet = new Alphabet(40 /*???*/, 20, sectionsArray[sectionInt].replace('--', ''));
+				sectionAlphabet.cameras = [cameraSection];
+				sectionAlphabet.x = sectionImage.x;
+
+				add(sectionImage);
+				sectionImages.push(sectionImage);
+				add(sectionAlphabet);
+				sectionAlphabets.push(sectionAlphabet);
+			}
+		}
+		if (sectionImages[0] != null)
+			camFollow.setPosition(sectionImages[0].x + 256, sectionImages[0].y + 256);
+	}
+
+	public function changeSection(change:Int = 0) {
+		curSelectingSection += change;
+		if(curSelectingSection < 0)
+			curSelectingSection = sectionImages.length - 1;
+		if(curSelectingSection >= sectionImages.length)
+			curSelectingSection = 0;
+
+		if(camFollow != null) {
+			if(sectionImages[curSelectingSection] != null)
+				camFollow.x = sectionImages[curSelectingSection].x + 256;
 		}
 	}
 	public function selectSection() {
+		if(camFollow != null)
+			camFollow.setPosition(0, 0);
 
+		curSelected = sections.indexOf(curFreeplaySection);
+		changeSelection();
+		changeDiff();
+		fadeOutSections();
 	}
 	public static function destroyFreeplayVocals()
 	{
