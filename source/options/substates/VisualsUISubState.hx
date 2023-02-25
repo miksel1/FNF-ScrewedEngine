@@ -56,7 +56,8 @@ class VisualsUISubState extends BaseOptionsMenu
 			'timeBarType',
 			'string',
 			'Time Left',
-			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
+			['Time Left', 'Time Elapsed', 'Song Name', 'Elapsed / Total', 'Disabled']);
+		timeBarOption.onChange = onChangeTimer;
 		addOption(timeBarOption);
 
 		timeBarDivisionsOption = new Option({s: 'Time Bar Divisions', spanish: 'Divisiones de la Barra de Tiempo'},
@@ -157,6 +158,16 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		super();
+	}
+
+	function onChangeTimer() {
+		@:privateAccess {
+			if(ClientPrefs.timeBarType == 'Disabled') {
+				timeBarDivisionsOption.child.alpha = 0.7;
+			} else if(timeBarDivisionsOption.child.alpha == 0.7) {
+				timeBarDivisionsOption.child.alpha = 1;
+			}
+		}
 	}
 
 	var changedMusic:Bool = false;
