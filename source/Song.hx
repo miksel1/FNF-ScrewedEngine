@@ -147,6 +147,9 @@ class Song
      * @return is a Valid song?
 	 */
 	public inline static function isValidSong(songName:String):Bool {
-		return !(songName.startsWith('--') && !songName.endsWith('--'));
+		return !(
+			songName.startsWith('--')
+			&& songName.endsWith('--')
+		);
 	}
 }
