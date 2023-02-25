@@ -23,7 +23,8 @@ class MenuCharacter extends FlxSprite
 {
 	public var character:String;
 	public var hasConfirmAnimation:Bool = false;
-	private static var DEFAULT_CHARACTER:String = 'bf';
+
+	private static inline final DEFAULT_CHARACTER:String = 'bf';
 
 	public function new(x:Float, character:String = 'bf')
 	{
@@ -71,6 +72,9 @@ class MenuCharacter extends FlxSprite
 				}
 				rawJson = Assets.getText(path);
 				#end
+
+				if (rawJson == null)
+					throw 'Could not find the JSON file for $character at $characterPath';
 				
 				var charFile:MenuCharacterFile = cast Json.parse(rawJson);
 				frames = Paths.getSparrowAtlas('menucharacters/' + charFile.image);
