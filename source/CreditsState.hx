@@ -136,6 +136,7 @@ class CreditsState extends MusicBeatState
 			['tposejank',			'jank',				'Spanish Alphabet Support',										'https://twitter.com/tpose_jank',		'B9AF27'],
 			['Gamer Pablito',		'pablo',			'Gamejolt Support',												'https://twitter.com/GamerPablito1',	'0xFF257FB3'],
 			['Vs Dave and Bambi',	'dab',				'Our Gods.',													'https://www.discord.gg/vsdave',		'0xFF135816'],
+			['Saturn Orr',			'saturn',			'Lua documentation',											'https://github.com/saturn-volv',		'0xFFA203AE'],
 			[''],
 			['Original Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
