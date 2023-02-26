@@ -288,16 +288,16 @@ class Paths
 	{
 		#if MODS_ALLOWED
 		if(FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key))) {
-			trace('mod data exists: ' + key);
+			//trace('mod data exists: ' + key);
 			return true;
 		}
 		#end
 
 		if(OpenFlAssets.exists(getPath(key, type))) {
-			trace('game data exists: ' + key);
+			//trace('game data exists: ' + key);
 			return true;
 		}
-		trace('data doesnt exists: ' + key);
+		//trace('data doesnt exists: ' + key);
 		return false;
 	}
 
