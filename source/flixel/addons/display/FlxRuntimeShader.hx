@@ -240,7 +240,7 @@ class FlxRuntimeShader extends FlxShader
 	{
 		if (input == ''){
 			return '';
-			FlxG.log.add('input is empty');
+			FlxG.log.add('fragment input is empty');
 		}
 
 		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
@@ -255,7 +255,7 @@ class FlxRuntimeShader extends FlxShader
 	{
 		if (input == ''){
 			return '';
-			FlxG.log.add('input is empty');
+			FlxG.log.add('vertex input is empty');
 		}
 
 		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_VERTEX_HEADER);
