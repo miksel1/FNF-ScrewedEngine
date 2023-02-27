@@ -199,6 +199,7 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	public function new(fragmentSource:String = null, vertexSource:String = null, glslVersion:Int = 120):Void
 	{
+		// if (glslVersion > 430 || glslVersion <= 0 || Math.isNaN(glslVersion))
 		_glslVersion = glslVersion;
 
 		if (fragmentSource == null)
