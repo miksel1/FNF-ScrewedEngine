@@ -1256,28 +1256,15 @@ class PlayState extends MusicBeatState
 			add(watermarkTxt);
 		}
 
-		if (SONG.screwYou != null)
-		{
-			screwYouTxt = new FlxText(10, healthBarBG.y, 0, SONG.screwYou, 74);
-			screwYouTxt.scrollFactor.set();
-			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			screwYouTxt.size = 18;
-			screwYouTxt.updateHitbox();
-			screwYouTxt.alpha = 0.8;
-			add(screwYouTxt);
-			screwYouTxt.cameras = [camHUD];
-		}
-		else
-		{
-			screwYouTxt = new FlxText(10, healthBarBG.y, 0, null, 74);
-			screwYouTxt.scrollFactor.set();
-			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			screwYouTxt.size = 18;
-			screwYouTxt.updateHitbox();
-			screwYouTxt.alpha = 0.8;
-			add(screwYouTxt);
-			screwYouTxt.cameras = [camHUD];
-		}
+		screwYouTxt = new FlxText(10, healthBarBG.y, 0, (SONG.screwYou != null) ? SONG.screwYou : null, 74);
+		screwYouTxt.scrollFactor.set();
+		screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		screwYouTxt.size = 18;
+		screwYouTxt.updateHitbox();
+		screwYouTxt.alpha = 0.8;
+		add(screwYouTxt);
+		screwYouTxt.cameras = [camHUD];
+
 		if (ClientPrefs.hideHud)
 		{
 			watermarkTxt.visible = false;
@@ -1301,10 +1288,7 @@ class PlayState extends MusicBeatState
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = cpuControlled;
 		add(botplayTxt);
-		if (ClientPrefs.downScroll)
-		{
-			botplayTxt.y = timeBarBG.y - 78;
-		}
+		if (ClientPrefs.downScroll) botplayTxt.y = timeBarBG.y - 78;
 
 		if (ClientPrefs.showHealth)
 		{
@@ -1757,13 +1741,7 @@ class PlayState extends MusicBeatState
 
 	public function getLuaObject(tag:String, text:Bool = true):FlxSprite
 	{
-		if (modchartSprites.exists(tag))
-			return modchartSprites.get(tag);
-		if (text && modchartTexts.exists(tag))
-			return modchartTexts.get(tag);
-		if (variables.exists(tag))
-			return variables.get(tag);
-		return null;
+		return (modchartSprites.exists(tag)) ? modchartSprites.get(tag) : (text && modchartTexts.exists(tag)) ? modchartTexts.get(tag) : variables.exists(tag) ? variables.get(tag) : null;
 	}
 
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false)
@@ -1796,9 +1774,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if (ClientPrefs.crazyCounter)
-		{
 			judgementCounter.visible = false;
-		}
 
 		var video:MP4Handler = new MP4Handler();
 		video.playVideo(filepath);
@@ -1865,13 +1841,9 @@ class PlayState extends MusicBeatState
 		{
 			FlxG.log.warn('Your dialogue file is badly formatted!');
 			if (endingSong)
-			{
 				endSong();
-			}
 			else
-			{
 				startCountdown();
-			}
 		}
 	}
 
@@ -1950,9 +1922,7 @@ class PlayState extends MusicBeatState
 						});
 					}
 					else
-					{
 						add(dialogueBox);
-					}
 				}
 				else
 					startCountdown();
@@ -2122,9 +2092,7 @@ class PlayState extends MusicBeatState
 				gfCutscene.animation.pause();
 				addBehindGF(gfCutscene);
 				if (!ClientPrefs.lowQuality)
-				{
 					gfCutscene.alpha = 0.00001;
-				}
 
 				picoCutscene.frames = AtlasFrameMaker.construct('cutscenes/stressPico');
 				picoCutscene.animation.addByPrefix('anim', 'Pico Badass', 24, false);

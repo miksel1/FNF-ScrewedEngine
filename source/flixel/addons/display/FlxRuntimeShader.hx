@@ -6,6 +6,7 @@ import openfl.display.BitmapData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
+import flixel.FlxG;
 
 /**
  * An wrapper for Flixel/OpenFL's shaders, which takes fragment and vertex source
@@ -237,6 +238,11 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	function processFragmentSource(input:String):String
 	{
+		if (input == ''){
+			return '';
+			FlxG.log.add('input is empty');
+		}
+
 		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
 		result = StringTools.replace(result, PRAGMA_BODY, BASE_FRAGMENT_BODY);
 		return result;
@@ -247,6 +253,11 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	function processVertexSource(input:String):String
 	{
+		if (input == ''){
+			return '';
+			FlxG.log.add('input is empty');
+		}
+
 		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_VERTEX_HEADER);
 		result = StringTools.replace(result, PRAGMA_BODY, BASE_VERTEX_BODY);
 		return result;
@@ -275,6 +286,8 @@ class FlxRuntimeShader extends FlxShader
 			__glSourceDirty = false;
 			program = null;
 
+			FlxG.log.add('glFragmentSource/glVertexSource has been updated'); // just testing things
+
 			__inputBitmapData = new Array();
 			__paramBool = new Array();
 			__paramFloat = new Array();
@@ -292,6 +305,11 @@ class FlxRuntimeShader extends FlxShader
 
 			var precisionHeaders = buildPrecisionHeaders();
 			var versionHeader = '#version ${_glslVersion}\n';
+
+			if (_glslVersion > 430 || _glslVersion <= 0 || Math.isNaN(_glslVersion)) {
+				FlxG.log.add('glslVersion is not supported/invalid');
+				return;
+			}
 
 			var vertex = StringTools.replace(glVertexSource, PRAGMA_PRECISION, precisionHeaders);
 			vertex = StringTools.replace(vertex, PRAGMA_VERSION, versionHeader);

@@ -284,7 +284,6 @@ class FunkinLua {
 			#end
 			return false;
 		});
-		
 		lua.add_callback("setSpriteShader", function(obj:String, shader:String) {
 			if(!ClientPrefs.shaders) return false;
 
@@ -324,7 +323,6 @@ class FunkinLua {
 			}
 			return false;
 		});
-
 
 		lua.add_callback("getShaderBool", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED)
@@ -404,8 +402,6 @@ class FunkinLua {
 			return null;
 			#end
 		});
-
-
 		lua.add_callback("setShaderBool", function(obj:String, prop:String, value:Bool) {
 			#if (!flash && MODS_ALLOWED)
 			var shader:FlxRuntimeShader = getShader(obj);
