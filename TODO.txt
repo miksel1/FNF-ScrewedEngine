@@ -1,8 +1,8 @@
 Doing:
 Terminal State with MOD SUPPORT IN TEXT
 
-Implementation:
-Freeplay Sections
+Implementation (done, but still with things to do):
+Freeplay Sections (using Map for not having all the songs in the same section)
 
 Still to do:
 Add boyfriend voices sepparated from opponent ones
@@ -20,10 +20,10 @@ Mod credits in other languages (i have to test it)
 Auto-chart (maybe using the frequency of each rectangle in the waveform)
 Credit the shader's creators
 Add stage shader effects by JSON
-
 Fix icon offsets
 Heatwave shader
 Fix PlaybackRate
+
 
 Done:
 Scroll Speed changer (instead of only constant and multiplicative, this one changes randomly)
