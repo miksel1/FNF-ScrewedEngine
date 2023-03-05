@@ -324,6 +324,8 @@ class PulseShader extends FlxShader
 class InvertColorsEffect
 {
     public var shader(default,null):InvertShader = new InvertShader();
+
+	public function new() {}
 }
 class InvertShader extends FlxShader
 {
