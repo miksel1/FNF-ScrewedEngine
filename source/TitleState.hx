@@ -1,5 +1,8 @@
 package;
 
+import openfl.display.Shader;
+import effects.ChromaticAberration;
+import Alphabet.AlphaCharacter;
 import options.states.OptionsState;
 import Warnings.LanguageState;
 import Warnings.FlashingState;
@@ -92,8 +95,10 @@ class TitleState extends MusicBeatState
 
 	var coolWords:Array<String> = ['Wither362', 'delta'];
 	var mosaicWords:Array<String> = ['miksel'];
+	var strangeWords:Array<String> = ['MemeHoovy'];
 
 	var mosaicc:MosaicEffect;
+	var strangeShader:effects.Shaders.InvertColorsEffect;
 
 	public static var goToOptions:Bool = false;
 
@@ -122,6 +127,7 @@ class TitleState extends MusicBeatState
 
 		swagShader = new ColorSwap();
 		mosaicc = new MosaicEffect();
+		strangeShader = new effects.Shaders.InvertColorsEffect();
 
 		FlxTween.num(MosaicEffect.DEFAULT_STRENGTH, 15, 1.5, {type: PINGPONG}, function(v)
 		{
@@ -374,6 +380,7 @@ class TitleState extends MusicBeatState
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
+		ngSpr.shader = new ChromaticAberration(1.0).shader;
 		ngSpr.antialiasing = ClientPrefs.globalAntialiasing;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
@@ -589,7 +596,12 @@ class TitleState extends MusicBeatState
 				money.forEach(function(spr:FlxSprite) {
 					spr.shader = mosaicc.shader;
 				});
-			}/* else {
+			} else if(strangeWords.contains(textArray[i])) {
+				money.forEach(function(spr:AlphaCharacter) {
+					spr.shader = strangeShader.shader;
+				});
+			}
+				/* else {
 				money.forEach(function(spr:FlxSprite) {
 					spr.shader = swagShader.shader;
 				});
@@ -627,6 +639,10 @@ class TitleState extends MusicBeatState
 			if(mosaicWords.contains(text) || yeyess) {
 				coolText.forEach(function(spr:FlxSprite) {
 					spr.shader = mosaicc.shader;
+				});
+			} else if(strangeWords.contains(text)) {
+				coolText.forEach(function(spr:AlphaCharacter) {
+					spr.shader = strangeShader.shader;
 				});
 			}/* else {
 				coolText.forEach(function(spr:FlxSprite) {
@@ -676,6 +692,7 @@ class TitleState extends MusicBeatState
 						FlxG.camera.shake(0.01, 0.1);
 					addMoreText('Wither362', 16);
 					addMoreText('miksel', 16);
+					addMoreText('MemeHoovy', 16);
 					addMoreText('And help of Psych Engine', 18);
 				case 5:
 					if(FlxG.camera != null)
