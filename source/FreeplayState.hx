@@ -52,16 +52,12 @@ class FreeplayState extends MusicBeatState
 		0 => 'MAIN'
 	];
 	@:isVar
-	var currentCathegory(get, set):String = 'MAIN';
-	function get_currentCathegory() {
-		return currentCathegory;
-	}
+	var currentCathegory(default, set):String = 'MAIN';
 	function set_currentCathegory(v:String):String {
 		return currentCathegory = v.replace('--', '').toUpperCase();
 	}
 
 	var songs:CustomArray<SongMetadata> = new CustomArray<SongMetadata>([]);
-
 
 	var icons:Array<String> = [];
 	var notSongs:Array<Int> = [];
@@ -480,13 +476,9 @@ class FreeplayState extends MusicBeatState
 		}
 		if (sections.length != songs.length)
 		{
-			for (_ in sections)
+			for (_ in [sections, rawSections])
 			{
-				sections.pop();
-			}
-			for (_ in rawSections)
-			{
-				rawSections.pop();
+				_.pop();
 			}
 			for (_ in songs)
 			{
@@ -962,7 +954,7 @@ class FreeplayState extends MusicBeatState
 	}
 	public function addSections() {
 		ALLTHEFUCKINGSECTIONS = [];
-		for(key => value in cathegories) {
+		for(key => value in cathegories) { // somehow that works lol
 			ALLTHEFUCKINGSECTIONS.push(key);
 		}
 		/**
@@ -1128,12 +1120,10 @@ class FreeplayState extends MusicBeatState
 			bullShit++;
 
 			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
 			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
 
