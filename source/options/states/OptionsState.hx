@@ -38,7 +38,6 @@ class OptionsState extends MusicBeatState
 			a: [
 				'Note Colors',
 				'Controls',
-				'Graphics',
 				'Gameplay',
 				'Language',
 				#if GAMEJOLT_ALLOWED
@@ -48,7 +47,6 @@ class OptionsState extends MusicBeatState
 			spanish: [
 				'Colores de Notas',
 				'Controles',
-				'Gráficos',
 				'Gameplay',
 				'Idioma',
 				#if GAMEJOLT_ALLOWED
@@ -58,10 +56,12 @@ class OptionsState extends MusicBeatState
 		},
 		2 => {
 			a: [
+				'Graphics',
 				'Adjust Delay and Combo',
 				'Visuals and UI',
 			],
 			spanish: [
+				'Gráficos',
 				'Ajustar Retraso y Combo',
 				'Visualización y UI',
 			]

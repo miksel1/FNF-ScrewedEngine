@@ -523,95 +523,80 @@ class FreeplayState extends MusicBeatState
 		}*/
 		for (i in 0...fakeSongs.length)
 		{
-			var push:Bool = true;
 			var song = fakeSongs[i];
 			var songName = song.songName;
 			var isValid = Song.isValidSong(songName);
-			if (grpSongs.members != null)
+			/*
+				/**
+				* 0 is false, 1 is for sections, 2 is for folder
+				*
+				var canType:Int = 0;
+
+				if (!sections.contains(songName.toUpperCase().replace('--', '')) && !isValid)
+					canType = 1;
+
+				if (i > 0 && canType == 0)
+				{
+					if (song.folder != songs[i - 1].folder)
+					{
+						canType = 2;
+					}
+				}
+				if (canType == 2)
+				{
+					for (j in i...songs.length)
+					{
+						sections[j] = rawSections[j] = song.folder.toUpperCase();
+					}
+				}
+				else if (canType == 1)
+				{
+					for (j in i...songs.length)
+					{
+						sections[j] = songName.toUpperCase().replace('--', '');
+						rawSections[j] = songName.toUpperCase();
+						if(!ALLTHEFUCKINGSECTIONS.contains(songName.toUpperCase())) {
+							ALLTHEFUCKINGSECTIONS.push(songName.toUpperCase());
+						}
+					}
+			}*/
+
+			var image:String = coolSongs.contains(Paths.formatToSongPath(songName)) ? 'otherAlphabet' : 'alphabet';
+
+			var songText:Alphabet = new Alphabet(isValid ? 90 : 160, 320, songName, true, image);
+			if (coolSongs.contains(Paths.formatToSongPath(songName)))
 			{
-				for (alpha in grpSongs.members)
-				{
-					if (alpha.text == songName)
-					{
-						push = false;
-						break;
-					}
-				}
+				songText.useColorSwap = true;
+				songText.colorEffect = 0.5;
 			}
-			if (push)
+			songText.isMenuItem = true;
+			songText.targetY = i - curSelected;
+			grpSongs.add(songText);
+
+			var maxWidth = 980;
+			if (songText.width > maxWidth)
 			{
-				/*
-					/**
-					* 0 is false, 1 is for sections, 2 is for folder
-					*
-					var canType:Int = 0;
-
-					if (!sections.contains(songName.toUpperCase().replace('--', '')) && !isValid)
-						canType = 1;
-
-					if (i > 0 && canType == 0)
-					{
-						if (song.folder != songs[i - 1].folder)
-						{
-							canType = 2;
-						}
-					}
-					if (canType == 2)
-					{
-						for (j in i...songs.length)
-						{
-							sections[j] = rawSections[j] = song.folder.toUpperCase();
-						}
-					}
-					else if (canType == 1)
-					{
-						for (j in i...songs.length)
-						{
-							sections[j] = songName.toUpperCase().replace('--', '');
-							rawSections[j] = songName.toUpperCase();
-							if(!ALLTHEFUCKINGSECTIONS.contains(songName.toUpperCase())) {
-								ALLTHEFUCKINGSECTIONS.push(songName.toUpperCase());
-							}
-						}
-				}*/
-
-				var image:String = coolSongs.contains(Paths.formatToSongPath(songName)) ? 'otherAlphabet' : 'alphabet';
-
-				var songText:Alphabet = new Alphabet(isValid ? 90 : 160, 320, songName, true, image);
-				if (coolSongs.contains(Paths.formatToSongPath(songName)))
-				{
-					songText.useColorSwap = true;
-					songText.colorEffect = 0.5;
-				}
-				songText.isMenuItem = true;
-				songText.targetY = i - curSelected;
-				grpSongs.add(songText);
-
-				var maxWidth = 980;
-				if (songText.width > maxWidth)
-				{
-					songText.scaleX = maxWidth / songText.width;
-				}
-				songText.snapToPosition();
-
-				Paths.currentModDirectory = song.folder;
-				/*if (!notSongs.contains(i))
-					{
-						if (icons[i] != 'you this is strange')
-						{ */
-				var icon:HealthIcon = new HealthIcon(song.songCharacter);
-				icon.sprTracker = songText;
-				icon.cameras = [normalCamera];
-				iconArray.add(icon);
-				/*}
-					else
-					{
-						var nothing:FlxSprite = new FlxSprite();
-						nothing.cameras = [normalCamera];
-						iconArray.add(nothing);
-					}
-				}*/
+				songText.scaleX = maxWidth / songText.width;
 			}
+			songText.snapToPosition();
+
+			Paths.currentModDirectory = song.folder;
+			/*if (!notSongs.contains(i))
+				{
+					if (icons[i] != 'you this is strange')
+					{ */
+			var icon:HealthIcon = new HealthIcon(song.songCharacter);
+			icon.sprTracker = songText;
+			icon.cameras = [normalCamera];
+			iconArray.add(icon);
+			/*}
+				else
+				{
+					var nothing:FlxSprite = new FlxSprite();
+					nothing.cameras = [normalCamera];
+					iconArray.add(nothing);
+				}
+			}*/
 		}
 	}
 
@@ -620,7 +605,6 @@ class FreeplayState extends MusicBeatState
 		grpSongs.clear();
 		iconArray.clear();
 		curSelected = 0;
-		curSection = 0;
 	}
 
 	/**
@@ -1189,6 +1173,12 @@ class FreeplayState extends MusicBeatState
 		if (camFollow != null)
 			camFollow.setPosition(0, 0);
 
+		resetTheSongs();
+
+		var pushedOnce:Bool = false;
+
+		fakeSongs = [];
+
 		if (sectionImages.length > 0)
 		{
 			if (sectionJSONs.length > curSelectingSection)
@@ -1226,6 +1216,7 @@ class FreeplayState extends MusicBeatState
 			}
 			else
 			{
+				trace('upps! something got REALLY wrong!');
 				for (realSong in songs)
 				{
 					fakeSongs.push(realSong);
