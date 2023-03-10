@@ -157,6 +157,10 @@ class FreeplayState extends MusicBeatState
 	var sortedSectionJSOns:Array<FreeplaySectionData> = [];
 	var sectionJSONs:Array<FreeplaySectionData> = [];
 
+	var informationAboutThings:FlxText;
+	var informationAboutSections:FlxText;
+	var informationAboutSectionsBg:FlxSprite;
+
 	override function create()
 	{
 		Paths.clearStoredMemory();
@@ -380,6 +384,10 @@ class FreeplayState extends MusicBeatState
 		textBG.alpha = 0.6;
 		textBG.cameras = [normalCamera];
 		add(textBG);
+		informationAboutSectionsBg = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		informationAboutSectionsBg.alpha = 0.6;
+		informationAboutSectionsBg.scrollFactor.set();
+		informationAboutSectionsBg.cameras = [cameraSection];
 
 		#if PRELOAD_ALL
 		var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
@@ -388,11 +396,16 @@ class FreeplayState extends MusicBeatState
 		var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
 		var size:Int = 18;
 		#end
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
-		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
-		text.scrollFactor.set();
-		text.cameras = [normalCamera];
-		add(text);
+		informationAboutThings = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
+		informationAboutThings.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
+		informationAboutThings.scrollFactor.set();
+		informationAboutThings.cameras = [normalCamera];
+		add(informationAboutThings);
+
+		informationAboutSections = new FlxText(textBG.x, textBG.y + 4, FlxG.width, '', size);
+		informationAboutSections.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
+		informationAboutSections.scrollFactor.set();
+		informationAboutSections.cameras = [cameraSection];
 
 		add(fakeBg);
 		addSections();
@@ -966,6 +979,8 @@ class FreeplayState extends MusicBeatState
 				fakeBgTween = null;
 				canSmash = true;
 				infoText.visible = false;
+				informationAboutSections.visible = false;
+				informationAboutSectionsBg.visible = false;
 			}
 		});
 		if (sectionImages.length > 0)
@@ -1145,13 +1160,12 @@ class FreeplayState extends MusicBeatState
 
 		if (sectionImages[0] != null)
 			camFollow.setPosition(sectionImages[0].x + 256, sectionImages[0].y + 256);
-		else
+
+		if (informationAboutSections != null)
 		{
-			if (infoText != null)
-			{
-				infoText.text = "There isn't any sections\nPress ENTER to accept.";
-				add(infoText);
-			}
+			informationAboutSections.text = 'Press SHIFT to have all the images at once.';
+			add(informationAboutSectionsBg);
+			add(informationAboutSections);
 		}
 	}
 
