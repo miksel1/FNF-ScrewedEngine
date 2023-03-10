@@ -1163,7 +1163,7 @@ class FreeplayState extends MusicBeatState
 
 		if (informationAboutSections != null)
 		{
-			informationAboutSections.text = 'Press SHIFT to have all the images at once.';
+			informationAboutSections.text = 'Press SHIFT to have all the songs at the same time.';
 			add(informationAboutSectionsBg);
 			add(informationAboutSections);
 		}
