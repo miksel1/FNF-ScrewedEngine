@@ -58,7 +58,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.antialiasing = ClientPrefs.data.globalAntialiasing;
 		add(bg);
 
 		// avoids lagspikes while scrolling through menus!
@@ -307,19 +307,29 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		var bullShit:Int = 0;
 
-		for (item in grpOptions.members) {
+		for (item in grpOptions) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
-			if (item.targetY == 0) {
+			if(optionsArray[item.ID] != null) {
+				if (item.targetY == 0 && optionsArray[item.ID].active) {
+					item.alpha = 1;
+				}
+			} else if (item.targetY == 0) {
 				item.alpha = 1;
 			}
 		}
 		for (text in grpTexts) {
 			text.alpha = 0.6;
-			if(text.ID == curSelected) {
-				text.alpha = 1;
+			if(optionsArray[text.ID] != null)
+				if(text.ID == curSelected && optionsArray[text.ID].active) {
+					text.alpha = 1;
+				}
+			else {
+				if(text.ID == curSelected) {
+					text.alpha = 1;
+				}
 			}
 		}
 
@@ -357,6 +367,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		for (checkbox in checkboxGroup) {
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
 		}
+		changeSelection();
 	}
 	function reload() {
 		for(option in optionsArray) {

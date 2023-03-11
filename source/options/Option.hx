@@ -96,6 +96,12 @@ class Option
 	public var notShowIf:Null<{clientName:String, value:Dynamic}> = null;
 
 	public var id:String = '';
+
+	/**
+	 * Determinates if the option's alpha should be down.
+	 * (false is low alpha, true is not low alpha)
+	 */
+	public var active:Bool = true;
 	public function new(name:LanguageString, description:LanguageString, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String>)
 	{
 		this.name = name;
@@ -155,11 +161,11 @@ class Option
 
 	public function getValue():Dynamic
 	{
-		return Reflect.getProperty(ClientPrefs, variable);
+		return Reflect.getProperty(ClientPrefs.data, variable);
 	}
 	public function setValue(value:Dynamic)
 	{
-		Reflect.setProperty(ClientPrefs, variable, value);
+		Reflect.setProperty(ClientPrefs.data, variable, value);
 	}
 
 	public function setChild(child:Alphabet)

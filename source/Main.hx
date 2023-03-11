@@ -90,7 +90,7 @@ class Main extends Sprite
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		if (fpsVar != null)
 		{
-			fpsVar.visible = ClientPrefs.showFPS;
+			fpsVar.visible = true; // bla bla...
 		}
 
 		#if html5

@@ -35,7 +35,8 @@ class MosaicEffect
 	{
 		shader = new MosaicShader();
 
-		if (ClientPrefs.lowQuality) return; // it makes the game lag like hell sometimes
+		if(ClientPrefs.data != null)
+			if (ClientPrefs.data.lowQuality) return; // it makes the game lag like hell sometimes
 
 		#if (openfl >= "8.0.0")
 		shader.data.uBlocksize.value = [strengthX, strengthY];
@@ -46,7 +47,8 @@ class MosaicEffect
 
 	public function setStrength(strengthX:Float, strengthY:Float):Void
 	{
-		if (ClientPrefs.lowQuality) return;
+		if(ClientPrefs.data != null)
+			if (ClientPrefs.data.lowQuality) return;
 
 		this.strengthX = strengthX;
 		this.strengthY = strengthY;

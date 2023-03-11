@@ -11,7 +11,7 @@ class CoolSystemStuff
 {
 	public static function getUsername():String
 	{
-		if(!ClientPrefs.safeMode) {
+		if(!ClientPrefs.data.safeMode) {
 			// uhh this one is self explanatory
 			#if windows
 			return Sys.getEnv("USERNAME");
@@ -24,7 +24,7 @@ class CoolSystemStuff
 
 	public static function getUserPath():String
 	{
-		if(!ClientPrefs.safeMode) {
+		if(!ClientPrefs.data.safeMode) {
 			// this one is also self explantory
 			#if windows
 			return Sys.getEnv("USERPROFILE");
@@ -37,7 +37,7 @@ class CoolSystemStuff
 
 	public static function getTempPath():String
 	{
-		if(!ClientPrefs.safeMode) {
+		if(!ClientPrefs.data.safeMode) {
 			// gets appdata temp folder lol
 			#if windows
 			return Sys.getEnv("TEMP");

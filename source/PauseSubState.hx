@@ -67,7 +67,7 @@ class PauseSubState extends MusicBeatSubstate
 		if(songName != null) {
 			pauseMusic.loadEmbedded(Paths.music(songName), true, true);
 		} else if (songName != 'None') {
-			pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.pauseMusic)), true, true);
+			pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)), true, true);
 		}
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
@@ -192,7 +192,7 @@ class PauseSubState extends MusicBeatSubstate
 				}
 		}
 
-		if (accepted && (cantUnpause <= 0 || !ClientPrefs.controllerMode))
+		if (accepted && (cantUnpause <= 0 || !ClientPrefs.data.controllerMode))
 		{
 			if (menuItems == difficultyChoices)
 			{

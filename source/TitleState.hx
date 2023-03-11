@@ -147,7 +147,7 @@ class TitleState extends MusicBeatState
 			FlxG.save.data.introDone = false;
 
 		//#if CHECK_FOR_UPDATES
-		if(ClientPrefs.checkForUpdates && !closedState) {
+		if(ClientPrefs.data.checkForUpdates && !closedState) {
 			trace('checking for update');
 			var http = new haxe.Http("https://raw.githubusercontent.com/miksel1/FNF-ScrewedEngine/main/gitVersion.txt");
 
@@ -345,7 +345,7 @@ class TitleState extends MusicBeatState
 			newTitle = true;
 
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
-			titleText.animation.addByPrefix('press', ClientPrefs.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
 		}
 		else {
 			newTitle = false;
@@ -469,7 +469,7 @@ class TitleState extends MusicBeatState
 
 				if(titleText != null) titleText.animation.play('press');
 
-				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
+				FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 				transitioning = true;
@@ -767,7 +767,7 @@ class TitleState extends MusicBeatState
 					default: //Go back to normal ugly ass boring GF
 						remove(ngSpr);
 						remove(credGroup);
-						if(ClientPrefs.flashing)
+						if(ClientPrefs.data.flashing)
 							FlxG.camera.flash(FlxColor.WHITE, 2);
 						skippedIntro = true;
 						playJingle = false;
@@ -784,7 +784,7 @@ class TitleState extends MusicBeatState
 					{
 						remove(ngSpr);
 						remove(credGroup);
-						if(ClientPrefs.flashing)
+						if(ClientPrefs.data.flashing)
 							FlxG.camera.flash(FlxColor.WHITE, 0.6);
 						transitioning = false;
 					});
@@ -793,7 +793,7 @@ class TitleState extends MusicBeatState
 				{
 					remove(ngSpr);
 					remove(credGroup);
-					if(ClientPrefs.flashing)
+					if(ClientPrefs.data.flashing)
 						FlxG.camera.flash(FlxColor.WHITE, 3);
 					sound.onComplete = function() {
 						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
@@ -807,7 +807,7 @@ class TitleState extends MusicBeatState
 			{
 				remove(ngSpr);
 				remove(credGroup);
-				if(ClientPrefs.flashing)
+				if(ClientPrefs.data.flashing)
 					FlxG.camera.flash(FlxColor.WHITE, 4);
 
 				var easteregg:String = FlxG.save.data.psychDevsEasterEgg;

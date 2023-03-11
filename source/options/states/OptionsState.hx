@@ -38,7 +38,7 @@ class OptionsState extends MusicBeatState
 			a: [
 				'Note Colors',
 				'Controls',
-				'Gameplay',
+				'CPU and Performance',
 				'Language',
 				#if GAMEJOLT_ALLOWED
 				'Gamejolt'
@@ -47,7 +47,7 @@ class OptionsState extends MusicBeatState
 			spanish: [
 				'Colores de Notas',
 				'Controles',
-				'Gameplay',
+				'CPU y Rendimiento',
 				'Idioma',
 				#if GAMEJOLT_ALLOWED
 				'Gamejolt'
@@ -56,11 +56,13 @@ class OptionsState extends MusicBeatState
 		},
 		2 => {
 			a: [
+				'Gameplay',
 				'Graphics',
 				'Adjust Delay and Combo',
 				'Visuals and UI',
 			],
 			spanish: [
+				'Gameplay',
 				'Gráficos',
 				'Ajustar Retraso y Combo',
 				'Visualización y UI',
@@ -80,7 +82,6 @@ class OptionsState extends MusicBeatState
 	public static var menuBG:FlxSprite;
 
 	function openSelectedSubstate(label:String) {
-		//Options.page = this;
 		switch(label) {
 			case 'Note Colors' | 'Colores de Notas':
 				openSubState(new options.substates.NotesSubState());
@@ -100,6 +101,8 @@ class OptionsState extends MusicBeatState
 			case 'Gamejolt':
 				LoadingState.loadAndSwitchState(new gamejolt.menus.GJOptionsState());
 			#end
+			case 'CPU and Performance' | 'CPU y Rendimiento':
+				openSubState(new options.substates.CPUSettingsSubState());
 		}
 	}
 
@@ -119,7 +122,7 @@ class OptionsState extends MusicBeatState
 		bg.updateHitbox();
 
 		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.antialiasing = ClientPrefs.data.globalAntialiasing;
 		add(bg);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();

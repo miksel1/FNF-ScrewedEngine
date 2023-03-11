@@ -110,7 +110,7 @@ class TerminalState extends MusicBeatState
 
 	override public function create():Void
 	{
-		ClientPrefs.showFPS = false;
+		ClientPrefs.data.showFPS = false;
 		PlayState.isStoryMode = false;
 		displayText = new FlxText(0, 0, FlxG.width, previousText, 32);
 		displayText.setFormat(Paths.font("fixedsys.ttf"), 16);
@@ -170,7 +170,7 @@ class TerminalState extends MusicBeatState
 						var score = Highscore.formatSong(song, difficulty);
 						PlayState.SONG = Song.loadFromJson(score, song);
 						if(etc != null) etc();
-						ClientPrefs.showFPS = FlxG.save.data.showFPS;
+						ClientPrefs.data.showFPS = FlxG.save.data.showFPS;
 						LoadingState.loadAndSwitchState(new PlayState());
 					}
 
@@ -444,7 +444,7 @@ class TerminalState extends MusicBeatState
 		}
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
-			ClientPrefs.showFPS = FlxG.save.data.showFPS;
+			ClientPrefs.data.showFPS = FlxG.save.data.showFPS;
 			FlxG.switchState(new MainMenuState());
 		}
 	}

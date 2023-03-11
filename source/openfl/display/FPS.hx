@@ -12,7 +12,6 @@ import openfl.display._internal.stats.DrawCallContext;
 #if flash
 import openfl.Lib;
 #end
-
 #if openfl
 import openfl.system.System;
 #end
@@ -68,6 +67,10 @@ class FPS extends TextField
 	@:noCompletion
 	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
 	{
+		var maxFPS = 60;
+		if(ClientPrefs.data != null)
+			maxFPS = ClientPrefs.data.framerate;
+
 		currentTime += deltaTime;
 		times.push(currentTime);
 
@@ -78,20 +81,21 @@ class FPS extends TextField
 
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
-		if (currentFPS > ClientPrefs.framerate) currentFPS = ClientPrefs.framerate;
+		if (currentFPS > maxFPS)
+			currentFPS = maxFPS;
 
 		if (currentCount != cacheCount /*&& visible*/)
 		{
 			text = "FPS: " + currentFPS;
 			var memoryMegas:Float = 0;
-			
+
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 			text += "\nMemory: " + memoryMegas + " MB";
 			#end
 
 			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.framerate / 2)
+			if (memoryMegas > 3000 || currentFPS <= maxFPS / 2)
 			{
 				textColor = 0xFFFF0000;
 			}

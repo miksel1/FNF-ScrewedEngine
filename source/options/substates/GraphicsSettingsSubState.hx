@@ -37,7 +37,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		rpcTitle = 'Graphics Settings Menu'; //for Discord Rich Presence
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
-		var option:Option = new Option({s: 'Low Quality', spanish: 'Mala Calidad'}, //Name
+		var option:Option = new Option({s: 'Low Quality', spanish: 'Baja Calidad'}, //Name
 			{s: 'If checked, disables some background details,\ndecreases loading times and improves performance.', spanish: 'Si está activado, desactiva algunos efectos\nincrementa el rendimiento del juego, haciéndolo más estable.'}, //Description
 			'lowQuality', //Save data variable name
 			'bool', //Variable type
@@ -83,22 +83,22 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			var sprite:Dynamic = sprite; //Make it check for FlxSprite instead of FlxBasic
 			var sprite:FlxSprite = sprite; //Don't judge me ok
 			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText)) {
-				sprite.antialiasing = ClientPrefs.globalAntialiasing;
+				sprite.antialiasing = ClientPrefs.data.globalAntialiasing;
 			}
 		}
 	}
 
 	function onChangeFramerate()
 	{
-		if(ClientPrefs.framerate > FlxG.drawFramerate)
+		if(ClientPrefs.data.framerate > FlxG.drawFramerate)
 		{
-			FlxG.updateFramerate = ClientPrefs.framerate;
-			FlxG.drawFramerate = ClientPrefs.framerate;
+			FlxG.updateFramerate = ClientPrefs.data.framerate;
+			FlxG.drawFramerate = ClientPrefs.data.framerate;
 		}
 		else
 		{
-			FlxG.drawFramerate = ClientPrefs.framerate;
-			FlxG.updateFramerate = ClientPrefs.framerate;
+			FlxG.drawFramerate = ClientPrefs.data.framerate;
+			FlxG.updateFramerate = ClientPrefs.data.framerate;
 		}
 	}
 }

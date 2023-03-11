@@ -217,20 +217,20 @@ class FunkinLua {
 		set('gfName', PlayState.SONG.gfVersion);
 
 		// Some settings, no jokes
-		set('downscroll', ClientPrefs.downScroll);
-		set('middlescroll', ClientPrefs.middleScroll);
-		set('framerate', ClientPrefs.framerate);
-		set('ghostTapping', ClientPrefs.ghostTapping);
-		set('hideHud', ClientPrefs.hideHud);
-		set('timeBarType', ClientPrefs.timeBarType);
-		set('scoreZoom', ClientPrefs.scoreZoom);
-		set('cameraZoomOnBeat', ClientPrefs.camZooms);
-		set('flashingLights', ClientPrefs.flashing);
-		set('noteOffset', ClientPrefs.noteOffset);
-		set('healthBarAlpha', ClientPrefs.healthBarAlpha);
-		set('noResetButton', ClientPrefs.noReset);
-		set('lowQuality', ClientPrefs.lowQuality);
-		set('shadersEnabled', ClientPrefs.shaders);
+		set('downscroll', ClientPrefs.data.downScroll);
+		set('middlescroll', ClientPrefs.data.middleScroll);
+		set('framerate', ClientPrefs.data.framerate);
+		set('ghostTapping', ClientPrefs.data.ghostTapping);
+		set('hideHud', ClientPrefs.data.hideHud);
+		set('timeBarType', ClientPrefs.data.timeBarType);
+		set('scoreZoom', ClientPrefs.data.scoreZoom);
+		set('cameraZoomOnBeat', ClientPrefs.data.camZooms);
+		set('flashingLights', ClientPrefs.data.flashing);
+		set('noteOffset', ClientPrefs.data.noteOffset);
+		set('healthBarAlpha', ClientPrefs.data.healthBarAlpha);
+		set('noResetButton', ClientPrefs.data.noReset);
+		set('lowQuality', ClientPrefs.data.lowQuality);
+		set('shadersEnabled', ClientPrefs.data.shaders);
 		set('scriptName', scriptName);
 		set('currentModDirectory', Paths.currentModDirectory);
 
@@ -275,7 +275,7 @@ class FunkinLua {
 
 		// shader shit
 		lua.add_callback("initLuaShader", function(name:String, glslVersion:Int = 120) {
-			if(!ClientPrefs.shaders) return false;
+			if(!ClientPrefs.data.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
 			return initLuaShader(name, glslVersion);
@@ -285,7 +285,7 @@ class FunkinLua {
 			return false;
 		});
 		lua.add_callback("setSpriteShader", function(obj:String, shader:String) {
-			if(!ClientPrefs.shaders) return false;
+			if(!ClientPrefs.data.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
 			if(!PlayState.instance.runtimeShaders.exists(shader) && !initLuaShader(shader))
@@ -1036,6 +1036,9 @@ class FunkinLua {
 		});
 
 		lua.add_callback("getPropertyFromClass", function(classVar:String, variable:String) {
+			if(classVar == 'ClientPrefs') {
+				variable = 'data.' + variable;
+			}
 			@:privateAccess
 			var killMe:Array<String> = variable.split('.');
 			if(killMe.length > 1) {
@@ -1048,6 +1051,9 @@ class FunkinLua {
 			return getVarInArray(Type.resolveClass(classVar), variable);
 		});
 		lua.add_callback("setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic) {
+			if(classVar == 'ClientPrefs') {
+				variable = 'data.' + variable;
+			}
 			@:privateAccess
 			var killMe:Array<String> = variable.split('.');
 			if(killMe.length > 1) {
@@ -3074,7 +3080,7 @@ class FunkinLua {
 	
 	function initLuaShader(name:String, ?glslVersion:Int = 120)
 	{
-		if(!ClientPrefs.shaders) return false;
+		if(!ClientPrefs.data.shaders) return false;
 
 		#if (!flash && sys)
 		if(PlayState.instance.runtimeShaders.exists(name))

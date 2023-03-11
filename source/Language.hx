@@ -57,12 +57,12 @@ class Language {
 	}
 
 	/**
-	 * Returns the correct string depending of ClientPrefs.language
+	 * Returns the correct string depending of ClientPrefs.data.language
 	 * @param s 
 	 * @return String
 	 */
 	public static function getString(s:LanguageString):String {
-		switch(ClientPrefs.language) {
+		switch(ClientPrefs.data.language) {
 			case 'Español':
 				return getSpanish(s);
 			case 'Deutsch':
@@ -121,12 +121,12 @@ class Language {
 	}
 
 	/**
-	 * Returns the correct array depending of ClientPrefs.language
+	 * Returns the correct array depending of ClientPrefs.data.language
 	 * @param a 
 	 * @return Array<String>
 	 */
 	public static function getArray(a:LanguageArray):Array<String> {
-		switch(ClientPrefs.language) {
+		switch(ClientPrefs.data.language) {
 			case 'Español':
 				return getArraySpanish(a);
 			case 'Deutsch':
@@ -135,12 +135,12 @@ class Language {
 		return a.a;
 	}
 	/**
-	 * Returns the correct Array depending of ClientPrefs.language
+	 * Returns the correct Array depending of ClientPrefs.data.language
 	 * @param a 
 	 * @return Array<String>
 	 */
 	public static function getStringArray(a:LanguageStringArray):Array<String> {
-		switch(ClientPrefs.language) {
+		switch(ClientPrefs.data.language) {
 			case 'Español':
 				return getStringArraySpanish(a);
 			case 'Deutsch':
@@ -165,7 +165,7 @@ class Language {
 		return d.d;
 	}
 	public static function getDynamic(d:LanguageDynamic):Dynamic {
-		switch(ClientPrefs.language) {
+		switch(ClientPrefs.data.language) {
 			case 'Español':
 				return getDynamicSpanish(d);
 			case 'Deutsch':

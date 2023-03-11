@@ -2353,7 +2353,7 @@ class ChartingState extends MusicBeatState
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
 		curRenderedNotes.forEachAlive(function(note:Note)
 		{
-			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null && !ClientPrefs.lowQuality)
+			if(note.noteType == 'Rainbow Note' && note.shader == null && colorSwap != null && !ClientPrefs.data.lowQuality)
 				note.shader = colorSwap.shader;
 
 			note.alpha = 1;
@@ -2361,7 +2361,7 @@ class ChartingState extends MusicBeatState
 				var noteDataToCheck:Int = note.noteData;
 				if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
 
-				if(!ClientPrefs.lowQuality) {
+				if(!ClientPrefs.data.lowQuality) {
 					if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
 					{
 						colorSine += elapsed;

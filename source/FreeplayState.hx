@@ -884,9 +884,9 @@ class FreeplayState extends MusicBeatState
 
 							destroyFreeplayVocals();
 						}
-						if (max > ClientPrefs.maxNotes)
+						if (max > ClientPrefs.data.maxNotes)
 						{
-							openSubState(new Prompt("The actual song has more than " + ClientPrefs.maxNotes + " notes\n\nProceed?", 0, function()
+							openSubState(new Prompt("The actual song has more than " + ClientPrefs.data.maxNotes + " notes\n\nProceed?", 0, function()
 							{
 								play();
 							}, function()

@@ -51,6 +51,20 @@ class VisualsUISubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
+		var option:Option = new Option({s: 'Disable "COMBO" sprite.', spanish: 'Desactivar la imagen de "COMBO".'},
+			{s: 'If checked, disables the "COMBO" popping.\nIt can cause lag if unchecked', spanish: 'Si está activado, desactiva el "COMBO" en sprite\nPuede causar bastante lag si está desactivado.'},
+			'allowComboSprite',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option({s: 'Disable "NUM COMBO" sprite.', spanish: 'Desactivar imagen del Combo.'},
+			{s: 'If checked, disables the number of combo popping.\nIt can cause lag if unchecked', spanish: 'Si está activado, desactiva el número de combo en sprite\nPuede causar bastante lag si está desactivado.'},
+			'allowNumcomboSprite',
+			'bool',
+			false);
+		addOption(option);
+
 		timeBarOption = new Option({s: 'Time Bar:', spanish: 'Barra de Tiempo:'},
 			{s: "What should the Time Bar display?", spanish: '¿Qué debería mostrar la Barra de Tiempo?'},
 			'timeBarType',
@@ -162,10 +176,10 @@ class VisualsUISubState extends BaseOptionsMenu
 
 	function onChangeTimer() {
 		@:privateAccess {
-			if(ClientPrefs.timeBarType == 'Disabled') {
-				timeBarDivisionsOption.child.alpha = 0.7;
-			} else if(timeBarDivisionsOption.child.alpha == 0.7) {
-				timeBarDivisionsOption.child.alpha = 1;
+			if(ClientPrefs.data.timeBarType == 'Disabled') {
+				timeBarDivisionsOption.active = false;
+			} else if(!timeBarDivisionsOption.active) {
+				timeBarDivisionsOption.active = true;
 			}
 		}
 	}
@@ -173,10 +187,10 @@ class VisualsUISubState extends BaseOptionsMenu
 	var changedMusic:Bool = false;
 	function onChangePauseMusic()
 	{
-		if(ClientPrefs.pauseMusic == 'None')
+		if(ClientPrefs.data.pauseMusic == 'None')
 			FlxG.sound.music.volume = 0;
 		else
-			FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.pauseMusic)));
+			FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
 
 		changedMusic = true;
 	}
@@ -191,7 +205,7 @@ class VisualsUISubState extends BaseOptionsMenu
 	function onChangeFPSCounter()
 	{
 		if(Main.fpsVar != null)
-			Main.fpsVar.visible = ClientPrefs.showFPS;
+			Main.fpsVar.visible = ClientPrefs.data.showFPS;
 	}
 	#end
 }
