@@ -154,7 +154,7 @@ class Main extends Sprite
 		errMsg += "\nUncaught Error: "
 			+ Std.string(e.error).replace('\n', '\\n')
 			+
-			"\nPlease report this error to Wither362 (Discord: Wither#9781, GitHub: https://github.com/Wither362),\nor by the GitHub page: \"https://github.com/miksel1/FNF-ScrewedEngine\"\n\n> Crash Handler written by: sqirra-rng";
+			"\nPlease report this error to Wither362 (Discord: Wither#9781, GitHub: https://github.com/Wither362),\nor MemeHoovy (Discord: MemeHoovy#0001, GitHub: https://github.com/MemeHovy)\nor by the GitHub page: \"https://github.com/miksel1/FNF-ScrewedEngine\"\n\n> Crash Handler written by: sqirra-rng";
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");

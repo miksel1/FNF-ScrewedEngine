@@ -1256,7 +1256,7 @@ class PlayState extends MusicBeatState
 			add(watermarkTxt);
 		}
 
-		screwYouTxt = new FlxText(10, healthBarBG.y, 0, (SONG.screwYou != null) ? SONG.screwYou : null, 74);
+		screwYouTxt = new FlxText(10, healthBarBG.y, 0, SONG.screwYou, 74);
 		screwYouTxt.scrollFactor.set();
 		screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		screwYouTxt.size = 18;
