@@ -323,20 +323,30 @@ class FreeplayState extends MusicBeatState
 			{
 				for (i in 0...songs.length)
 				{
-					if (songs.get(i).songName.toLowerCase().trim().contains(text.toLowerCase().trim()))
-					{
-						curSelected = i;
-						holdTime = 0;
-						changeSelection(0, FlxG.random.bool(30.4));
-						changeDiff();
-						return; // fucking fuck it
-					} else if (songs.get(i).folder.toLowerCase().trim().contains(text.toLowerCase().trim()))
-					{
-						curSelected = i;
-						holdTime = 0;
-						changeSelection(0, FlxG.random.bool(30.4));
-						changeDiff();
-						return; // fucking fuck it
+					var i:Null<Int> = songs.length;
+					try { // this is prone to crashes so we use try and catch
+						if (i != null && songs.get(i).songName.toLowerCase().trim().contains(text.toLowerCase().trim()))
+						{
+							curSelected = i;
+							holdTime = 0;
+							changeSelection(0, FlxG.random.bool(30.4));
+							changeDiff();
+							return; // fucking fuck it
+						}
+						else if (i != null && songs.get(i).folder.toLowerCase().trim().contains(text.toLowerCase().trim()))
+						{
+							curSelected = i;
+							holdTime = 0;
+							changeSelection(0, FlxG.random.bool(30.4));
+							changeDiff();
+							return; // fucking fuck it
+						}
+					}
+					catch (e){
+						if (i == null)
+							throw "Invalid Section or songs are missing/null, full error: " + e.message;
+						else
+							throw "Error: " + e.message;
 					}
 				}
 			}
