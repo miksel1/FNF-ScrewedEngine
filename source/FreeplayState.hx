@@ -61,15 +61,8 @@ class FreeplayState extends MusicBeatState
 
 	var cathegoriesInt:Map<Int, String> = [0 => 'MAIN'];
 	@:isVar
-	var currentCathegory(get, set):String = 'MAIN';
-
-	function get_currentCathegory()
-	{
-		return currentCathegory;
-	}
-
-	function set_currentCathegory(v:String):String
-	{
+	var currentCathegory(default, set):String = 'MAIN';
+	function set_currentCathegory(v:String):String {
 		return currentCathegory = v.replace('--', '').toUpperCase();
 	}
 
@@ -350,21 +343,30 @@ class FreeplayState extends MusicBeatState
 			{
 				for (i in 0...fakeSongs.length)
 				{
-					if (fakeSongs[i].songName.toLowerCase().trim().contains(text.toLowerCase().trim()))
-					{
-						curSelected = i;
-						holdTime = 0;
-						changeSelection(0, FlxG.random.bool(30.4));
-						changeDiff();
-						return; // fucking fuck it
+					var i:Null<Int> = fakeSongs.length;
+					try { // this is prone to crashes so we use try and catch
+						if (i != null && fakeSongs[i].songName.toLowerCase().trim().contains(text.toLowerCase().trim()))
+						{
+							curSelected = i;
+							holdTime = 0;
+							changeSelection(0, FlxG.random.bool(30.4));
+							changeDiff();
+							return; // fucking fuck it
+						}
+						else if (i != null && fakeSongs[i].folder.toLowerCase().trim().contains(text.toLowerCase().trim()))
+						{
+							curSelected = i;
+							holdTime = 0;
+							changeSelection(0, FlxG.random.bool(30.4));
+							changeDiff();
+							return; // fucking fuck it
+						}
 					}
-					else if (fakeSongs[i].folder.toLowerCase().trim().contains(text.toLowerCase().trim()))
-					{
-						curSelected = i;
-						holdTime = 0;
-						changeSelection(0, FlxG.random.bool(30.4));
-						changeDiff();
-						return; // fucking fuck it
+					catch (e){
+						if (i == null)
+							throw "Invalid Section or songs are missing/null, full error: " + e.message;
+						else
+							throw "Error: " + e.message;
 					}
 				}
 			}
