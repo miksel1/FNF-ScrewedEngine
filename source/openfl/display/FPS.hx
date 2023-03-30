@@ -25,6 +25,12 @@ import openfl.system.System;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
+
+// for debugging purposes
+enum GLInfo {
+	RENDER;
+	VERSION;
+}
 class FPS extends TextField
 {
 	/**
@@ -88,6 +94,11 @@ class FPS extends TextField
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 			text += "\nMemory: " + memoryMegas + " MB";
+			#if debug
+			text += "\nOperating System: " + '${lime.system.System.platformLabel} ${lime.system.System.platformVersion}';
+			text += "\nGL Renderer: " + '${getGLInfo(RENDER)}';
+			text += "\nGL Version: " + '${getGLInfo(VERSION)}';
+			#end
 			#end
 
 			textColor = 0xFFFFFFFF;
@@ -106,5 +117,19 @@ class FPS extends TextField
 		}
 
 		cacheCount = currentCount;
+	}
+
+	inline private static function getGLInfo(info:GLInfo):String{
+		@:privateAccess
+		var gl:Dynamic = openfl.Lib.current.stage.context3D.gl;
+
+		return switch (info){
+			case RENDER:
+				Std.string(gl.getParameter(gl.RENDERER));
+			case VERSION:
+				Std.string(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+			default:
+				'';	
+		}
 	}
 }

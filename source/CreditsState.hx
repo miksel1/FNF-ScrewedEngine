@@ -60,7 +60,7 @@ class CreditsState extends MusicBeatState
 		'tposejank',
 		'Gamer Pablito']; // yes dude ;D
 
-	var glitchEffect:FlxGlitchEffect;
+	// var glitchEffect:FlxGlitchEffect;
 	var glitchBg:FlxEffectSprite;
 
 	var grainEffect:GrainEffect;
@@ -82,11 +82,17 @@ class CreditsState extends MusicBeatState
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		add(bg);
 		bg.screenCenter();
+		add(glitchBg = new FlxEffectSprite(bg/*, (!ClientPrefs.lowQuality) ? [new FlxGlitchEffect(10, 2, 0.1)] : [null]*/));
+		/*
 		add(glitchBg = new FlxEffectSprite(bg));
 		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
 
-		if (!ClientPrefs.lowQuality)
+		if (!ClientPrefs.lowQuality){
 			glitchBg.effects = [glitchEffect];
+			if (glitchBg.effects != null)
+				cast(glitchBg.effects[1], FlxGlitchEffect).active = false;
+			glitchEffect.active = false;
+		}*/
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		grpTitles = new FlxTypedGroup<Alphabet>();
@@ -422,8 +428,8 @@ class CreditsState extends MusicBeatState
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
-		if (glitchEffect != null && !ClientPrefs.lowQuality)
-			glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);
+		/*if (glitchEffect != null && !ClientPrefs.lowQuality)
+			glitchEffect.active = glitchedOnes.contains(creditsStuff[curSelected][0]);*/
 	}
 
 	#if MODS_ALLOWED
