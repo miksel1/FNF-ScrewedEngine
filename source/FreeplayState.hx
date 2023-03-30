@@ -367,6 +367,7 @@ class FreeplayState extends MusicBeatState
 							throw "Invalid Section or songs are missing/null, full error: " + e.message;
 						else
 							throw "Error: " + e.message;
+					}
 				}
 			}
 			else if (action == FlxInputText.ENTER_ACTION)
