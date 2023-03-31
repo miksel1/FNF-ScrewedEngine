@@ -322,10 +322,17 @@ class FreeplayState extends MusicBeatState
 		intendedColor = bg.color;
 
 		if (lastDifficultyName == '')
-		{
 			lastDifficultyName = CoolUtil.defaultDifficulty;
+
+		try {
+			curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(lastDifficultyName)));
 		}
-		curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(lastDifficultyName)));
+		catch (e) {
+			if (Math.isNaN(curDifficulty))
+				throw "Invalid difficulty name: " + lastDifficultyName + " With error: " + e.message;
+			else
+				throw "Error occured while trying to get difficulty: " + e.message;
+		}	
 
 		changeSelection();
 		changeDiff();
