@@ -143,6 +143,8 @@ class CreditsState extends MusicBeatState
 			['Gamer Pablito',		'pablo',			'Gamejolt Support',												'https://twitter.com/GamerPablito1',	'0xFF257FB3'],
 			['Vs Dave and Bambi',	'dab',				'Our Gods.',													'https://www.discord.gg/vsdave',		'0xFF135816'],
 			['Saturn Orr',			'saturn',			'Lua documentation',											'https://github.com/saturn-volv',		'0xFFA203AE'],
+			['Codename Engine',		'name',				'Songs with EXTRA length',										'https://github.com/YoshiCrafter29/CodenameEngine',	'0xFF25748D'],
+			['Impostorm Team',		'amogus',			'Shaders and Ideas',											'https://vsimpostor.com/',				'0x590000'],
 			[''],
 			['Original Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
