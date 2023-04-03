@@ -318,8 +318,10 @@ class FreeplayState extends MusicBeatState
 		add(scoreText);
 
 		curSelected = 0;
-		bg.color = songs[curSelected].color;
-		intendedColor = bg.color;
+		if(songs.length > curSelected) {
+			bg.color = songs[curSelected].color;
+			intendedColor = bg.color;
+		}
 
 		if (lastDifficultyName == '')
 			lastDifficultyName = CoolUtil.defaultDifficulty;
