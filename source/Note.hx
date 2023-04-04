@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 import flash.display.BitmapData;
 import editors.ChartingState;
 import effects.ColorSwap;
+import flixel.math.FlxRect;
 
 using StringTools;
 
@@ -198,9 +199,13 @@ class Note extends FlxSprite
 			}
 			noteType = value;
 		}
-		noteSplashHue = colorSwap.hue;
-		noteSplashSat = colorSwap.saturation;
-		noteSplashBrt = colorSwap.brightness;
+		if (colorSwap != null){
+			noteSplashHue = colorSwap.hue;
+			noteSplashSat = colorSwap.saturation;
+			noteSplashBrt = colorSwap.brightness;
+		}
+		else
+			noteSplashHue = noteSplashSat = noteSplashBrt = 0;
 		return value;
 	}
 
@@ -421,4 +426,15 @@ class Note extends FlxSprite
 				alpha = 0.3;
 		}
 	}
+
+	@:noCompletion
+	override function set_clipRect(rect:FlxRect):FlxRect // original fix by NeeEoo
+	{
+		clipRect = rect;
+
+		if (frames != null)
+			frame = frames.frames[animation.frameIndex];
+
+		return rect;
+	}	
 }
