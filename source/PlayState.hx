@@ -4047,6 +4047,24 @@ class PlayState extends MusicBeatState
 					FlxG.camera.zoom += camZoom;
 					camHUD.zoom += hudZoom;
 				}
+			case 'Zoom In/Out':
+				if(cameraTwn != null) {
+					cameraTwn.cancel();
+				}
+				var values = value1.replace(' ', '').toLowerCase().split(',');
+				var value:Float = Std.parseFloat(values[0]);
+				var duration:Float = Std.parseFloat(values[1]) / 100;
+				var ease = FunkinLua.getSTATICFlxEaseByString(value2);
+				if(value2.trim().toLowerCase() == '' || value2 == null) {
+					ease = FlxEase.quadOut;
+				}
+				cameraTwn = FlxTween.tween(FlxG.camera, {zoom: value}, (Conductor.stepCrochet * duration / playbackRate), {
+					ease: ease,
+					onComplete: function(twn:FlxTween)
+					{
+						cameraTwn = null;
+					}
+				});
 
 			case 'Trigger BG Ghouls':
 				if (curStage == 'schoolEvil' && !ClientPrefs.lowQuality)
