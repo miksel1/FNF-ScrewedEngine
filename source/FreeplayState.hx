@@ -1200,6 +1200,10 @@ class FreeplayState extends MusicBeatState
 					if (sect.name.toLowerCase() == sectionAlphabets[curSelectingSection].text.toLowerCase())
 					{
 						THEsection = sect;
+						#if debug
+						// trace('Section info: ${sect.name}\n${sect.image}\n${sect.songs}\n${sect.position}');
+						FlxG.log.add('Section info: ${sect.name}\n${sect.image}\n${sect.songs}\n${sect.position}');
+						#end
 						break;
 					}
 				}
@@ -1241,6 +1245,11 @@ class FreeplayState extends MusicBeatState
 				fakeSongs.push(realSong);
 			}
 		}
+
+		#if debug // just to not slow down release builds
+		FlxG.log.notice('fakeSongs List: ${fakeSongs}');
+		#end
+
 		addTheSongs();
 		changeSelection();
 		changeDiff();
