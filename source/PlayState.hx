@@ -3310,7 +3310,8 @@ class PlayState extends MusicBeatState
 			scoreTxt.text += ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;
 
 		if (ClientPrefs.showHealth)
-			healthTxt.text = "HEALTH: " + Highscore.floorDecimal(healthBar.percent, 2) + '%';
+			if (healthTxt != null)
+				healthTxt.text = "HEALTH: " + Highscore.floorDecimal(healthBar.percent, 2) + '%';
 
 		if (botplayTxt.visible)
 		{
