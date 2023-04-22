@@ -1,5 +1,7 @@
 package;
 
+import lime.math.Vector4;
+import effects.ColorOverlay;
 import effects.Shaders.GlitchEffect;
 import effects.MosaicEffect;
 import openfl.display.BitmapData;
@@ -1190,6 +1192,52 @@ class FunkinLua {
 			Lib.application.window.warpMouse(x, y);
 		});
 
+		//color is "red, green, blue, alpha"
+		lua.add_callback("addNewColorReplaceEffect", function(tag:String, color:String = '0.0, 0.0, 0.0, 1') {
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				var shader:ColorOverlay = new ColorOverlay();
+				var str = color.replace(' ', '').split(',');
+				shader.color = new Vector4(Std.parseFloat(str[0]), Std.parseFloat(str[1]), Std.parseFloat(str[2]), Std.parseFloat(str[3]));
+
+				stuff.shader = shader.shader;
+				PlayState.instance.modchartColorOverlayEffects.set(tag, shader);
+				return true;
+			} else {
+				luaTrace('addNewColorReplaceEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		//color is "red, green, blue, alpha"
+		lua.add_callback("addColorReplaceEffect", function(tag:String, ?newColor:String) {
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				if (newColor != null) {
+					var str = newColor.replace(' ', '').split(',');
+					PlayState.colorReplacer.color = new Vector4(Std.parseFloat(str[0]), Std.parseFloat(str[1]), Std.parseFloat(str[2]), Std.parseFloat(str[3]));
+				}
+
+				stuff.shader = PlayState.colorReplacer.shader;
+				return true;
+			} else {
+				luaTrace('addNewColorReplaceEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		lua.add_callback("removeColorReplaceEffect", function(tag:String, deleteShader:Bool = true) {
+			if(PlayState.instance.modchartSprites.exists(tag)) {
+				var stuff:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				stuff.shader = null;
+				if (deleteShader) {
+					PlayState.instance.modchartColorOverlayEffects.remove(tag);
+				}
+
+				return true;
+			} else {
+				luaTrace('removeColorReplaceEffect: Couldnt find object: ' + tag, false, false, FlxColor.RED);
+			}
+			return false;
+		});
 		//lua.add_callback("addWiggleEffect");
 		lua.add_callback("addNewGlitchEffect", function(tag:String, ?type:String = 'FLAG', ?waveAmplitude:Float = 0.1, ?waveFrequency:Float = 5, ?waveSpeed:Float = 2.25) {
 			if(PlayState.instance.modchartSprites.exists(tag)) {
@@ -1276,7 +1324,6 @@ class FunkinLua {
 			return false;
 		});
 
-		// gay ass tweens
 		lua.add_callback("windowTweenX", function(tag:String, value:Dynamic, duration:Float, ease:String) {
 			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(Lib.application.window, {x: value}, duration, {ease: getFlxEaseByString(ease),
 				onComplete: function(twn:FlxTween) {

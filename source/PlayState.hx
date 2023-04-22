@@ -124,6 +124,7 @@ class PlayState extends MusicBeatState
 	public var modchartGlitchEffects:Map<String, GlitchEffect> = new Map<String, GlitchEffect>();
 	public var modchartMosaicEffects:Map<String, MosaicEffect> = new Map<String, MosaicEffect>();
 	public var modchartCAEffects:Map<String, effects.ChromaticAberration> = new Map<String, effects.ChromaticAberration>();
+	public var modchartColorOverlayEffects:Map<String, effects.ColorOverlay.ColorOverlay> = new Map<String, effects.ColorOverlay.ColorOverlay>();
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
@@ -249,6 +250,7 @@ class PlayState extends MusicBeatState
 	public static var anotherScreenshader:effects.Shaders.PulseEffect = new effects.Shaders.PulseEffect();
 	public static var mosaicEffect:effects.MosaicEffect = new effects.MosaicEffect();
 	public static var globalChromaticAberration:effects.ChromaticAberration;
+	public static var colorReplacer:effects.ColorOverlay.ColorOverlay = new effects.ColorOverlay.ColorOverlay();
 
 	public static var activeWavy:Bool = false;
 

@@ -5,6 +5,8 @@
     To add to your current working script, use `---@module "header"` into the top of the script, and have this file in the bin/ directory (where the assets or mods folder is found). This will add syntax highlighting, code completion, and much more
 
     Written and Maintained by saturn-volv (https://github.com/saturn-volv)
+
+	Modified by Wither362
 ]]--
 
 --- Common colors that may be used. Just a helper object.
@@ -674,18 +676,18 @@ function cameraSetTarget(target) end
 ---Shakes the camera.
 ---@param camera cameras The `FlxCamera` to shake
 ---@param intensity number The intensity of the shake. Anything over 0.05 may be excessive
----@param duration number The duration of the shake
+---@param duration duration The duration of the shake
 function cameraShake(camera, intensity, duration) end
 ---FLashes the camera with `color`
 ---@param camera cameras The `FlxCamera` to flash
 ---@param color string | common_colors The color to flash the camera with
----@param duration number The duration in seconds
+---@param duration duration The duration in seconds
 ---@param forced boolean Restarts the flash if the camera is already flashed
 function cameraFlash(camera, color, duration, forced) end
 ---Fades the camera to `color`
 ---@param camera cameras The `FlxCamera` to fade
 ---@param color string | common_colors The color to fade the camera to
----@param duration number The duration in seconds
+---@param duration duration The duration in seconds
 ---@param forced boolean Restarts the fade if the camera is already fading
 function cameraFade(camera, color, duration, forced) end
 ---Gets a global variable from another Lua file
@@ -971,13 +973,13 @@ function resumeSound(tag) end
 function stopSound(tag) end
 ---Fades a sound in
 ---@param tag string Sound tag name
----@param duration number Duration for the sound to fully fade in
+---@param duration duration Duration for the sound to fully fade in
 ---@param from? number Initial volume to fade from
 ---@param to? number Final volume to fade to
 function soundFadeIn(tag, duration, from, to) end
 ---Fades a sound out
 ---@param tag string Sound tag name
----@param duration number Duration for the sound to fully fade out
+---@param duration duration Duration for the sound to fully fade out
 ---@param to? number Final volume to fade to
 function soundFadeOut(tag, duration, to) end
 ---Cancels a current sound fade
@@ -1077,7 +1079,7 @@ function setObjectCamera(tag, camera) end
 ---@alias blend_modes "ADD" | "ALPHA" | "DARKEN" | "DIFFERENCE" | "ERASE" | "HARDLIGHT" | "INVERT" | "LAYER" | "LIGHTEN" | "MULTIPLY" | "NORMAL" | "OVERLAY" | "SCREEN" | "SHADER" | "SUBTRACT"
 ---Sets a Sprite's blend mode
 ---@param tag string Sprite tag name
----@param blend blend_modes The blend mode
+---@param blend blend_modes | string The blend mode
 function setBlendMode(tag, blend) end
 ---Sets the scrolling factor for Sprite `tag` as the camera moves
 ---@param tag string Sprite tag name
@@ -1086,11 +1088,11 @@ function setBlendMode(tag, blend) end
 function setScrollFactor(tag, x, y) end
 ---Sets the object `tag`'s scale
 ---@param tag string Sprite tag name
----@param x number
----@param y number
----@param updateHitbox? boolean Automatically updates hitbox, elmininating the need to call `updateHitbox(tag)`. Defaults to `true`
+---@param x number New x value for the object
+---@param y number New y value for the object
+---@param updateHitbox? boolean Automatically updates hitbox, without needing to call `updateHitbox(tag)`. (Defaults to `true`)
 function scaleObject(tag, x, y, updateHitbox) end
----Updates an objects hitbox
+---Updates an objects hitbox, useful for frame's intersections and etc
 ---@param tag string Sprite tag name
 function updateHitbox(tag) end
 ---Updates a sprite's hitbox from `group` at index `index`
@@ -1129,16 +1131,16 @@ function removeFromGroup(obj, index, dontDestroy) end
 ---@param spriteType? spriteType Object's animation renderer. Default is `"sprarrow"`
 function loadFrames(tag, image, spriteType) end
 ---Returns if `obj1` is overlapping `obj2`. Used for things in collision detection
----@param obj1 any
----@param obj2 any
+---@param obj1 string | any
+---@param obj2 string | any
 ---@return boolean
 function objectsOverlap(obj1, obj2) end
 ---Centers an object to the axis `pos`
 ---@param tag string Sprite tag name
----@param pos? "X" | "Y" | "XY" Axis alignment for the sprite. Default value is `"XY"`
+---@param pos? "X" | "Y" | "XY" | 'x' | 'y' | 'xy' | string Axis alignment for the sprite. Default value is `"XY"`
 function screenCenter(tag, pos) end
 ---Returns if the `ModchartSprite` `tag` exists
----@param tag string Sprite tage name
+---@param tag string Sprite tag name
 ---@return boolean
 function luaSpriteExists(tag) end
 ---Creates a Substate with the tag `name`
@@ -1168,14 +1170,14 @@ function closeSubstate() end
 ---@param y number
 function makeLuaText(tag, text, width, x, y) end
 ---Adds the `ModchartText` to this `PlayState` instance
----@param tag string Text object name
+---@param tag string Text object tag name
 function addLuaText(tag) end
 ---Removes the `ModchartText` from `PlayState`
----@param tag string Text object name
+---@param tag string Text object tag name
 ---@param destroy? boolean If false, will not need to remade to be added again. Defaults to `true`
 function removeLuaText(tag, destroy) end
 ---Returns the `text` field of the ModchartText `tag`
----@param tag string Text object name
+---@param tag string Text object tag name
 ---@return string text
 function getTextString(tag) end
 ---Returns the `size` of the ModchartText `tag`
@@ -1224,81 +1226,82 @@ function setTextAlignment(tag, alignment) end
 ---@return boolean
 function luaTextExists(tag) end -- Just the tweens to go :D
 ---@alias ease 'backin' | 'backinout' | 'backout' | 'bouncein' | 'bounceinout' | 'bounceot' | 'circin' | 'circinout' | 'circout' | 'cubein' | 'cubeinout' | 'cubeout' | 'elasticin' | 'elasticinout' | 'elasticout' | 'expoin' | 'expoinout' | 'expoout' | 'quadin' | 'quadinout' | 'quadout' | 'quartin' | 'quartinout' | 'quartout' | 'quintin' | 'quintinout' | 'quintout' | 'sinein' | 'sineinout' | 'sineout' | 'smoothstepin' | 'smoothstepinout' | 'smoothstepout' | 'smootherstepin' | 'smootherstepinout' | 'smootherstepout' | 'linear'
+---@alias duration number The time it takes to do the tween. (Take in count the playbackRate!!! If you wanna do it, add a `/ playbackRate` in the duration)
 ---Runs a `FlxTween` on the `grpStrumlineNotes.members[note]` X position. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param note number index of `grpStrumlineNotes.members`
----@param value number The new X value
----@param duration number The time it takes for the Tween to take place. In seconds
----@param ease? ease The tweening method used. Default is `'linear'`
+---@param value number The new `X` value
+---@param duration duration The time it takes for the Tween to take place. In seconds
+---@param ease? ease | string The tweening method used. Default is `'linear'`
 function noteTweenX(tag, note, value, duration, ease) end
 ---Runs a `FlxTween` on the `grpStrumlineNotes.members[note]` Y position. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param note number index of `grpStrumlineNotes.members`
 ---@param value number The new Y value
----@param duration number The time it takes for the Tween to take place. In seconds
----@param ease? ease The tweening method used. Default is `'linear'`
+---@param duration duration The time it takes for the Tween to take place. In seconds
+---@param ease? ease | string The tweening method used. Default is `'linear'`
 function noteTweenY(tag, note, value, duration, ease) end
 ---Runs a `FlxTween` on the `grpStrumlineNotes.members[note]` Angle. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param note number index of `grpStrumlineNotes.members`
 ---@param value number The new Angle value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function noteTweenAngle(tag, note, value, duration, ease) end
 ---Runs a `FlxTween` on the `grpStrumlineNotes.members[note]` Alpha. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param note number index of `grpStrumlineNotes.members`
 ---@param value number The new Alpha value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function noteTweenAlpha(tag, note, value, duration, ease) end
 ---Runs a `FlxTween` on the `grpStrumlineNotes.members[note]` Direction. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param note number index of `grpStrumlineNotes.members`
 ---@param value number The new Direction value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function noteTweenDirection(tag, note, value, duration, ease) end
 ---Runs a `FlxTween` on the `object`'s' X position. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param obj number The object to tween
 ---@param value number The new X value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function doTweenX(tag, obj, value, duration, ease) end
 ---Runs a `FlxTween` on the `object`'s' Y position. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param obj number The object to tween
 ---@param value number The new Y value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function doTweenY(tag, obj, value, duration, ease) end
 ---Runs a `FlxTween` on the `object`'s' Angle. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param obj number The object to tween
 ---@param value number The new Angle value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function doTweenAngle(tag, obj, value, duration, ease) end
 ---Runs a `FlxTween` on the `object`'s' Alpha. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param obj number The object to tween
 ---@param value number The new Alpha value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function doTweenAlpha(tag, obj, value, duration, ease) end
 ---Runs a `FlxTween` on the `camera`'s' Zoom. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param camera number The camera to tween
 ---@param value number The new Zoom value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function doTweenZoom(tag, camera, value, duration, ease) end
 ---Runs a `FlxTween` on the `object`'s' Color. Once finished, a `onTweenCompleted` callback will be pushed
 ---@param tag string Tween tag name, for `onTweenCompleted` callback
 ---@param obj number The object to tween
 ---@param value number The new Color value
----@param duration number The time it takes for the Tween to take place. In seconds
+---@param duration duration The time it takes for the Tween to take place. In seconds
 ---@param ease? ease The tweening method used. Default is `'linear'`
 function doTweenColor(tag, obj, value, duration, ease) end
 ---Cancels the `FlxTween` with the tag `tag`
@@ -1427,7 +1430,7 @@ function setPropertyLuaSprite(tag, property, value) end
 ---@deprecated
 ---Fades in `FlxG.sound.music`\
 ---*Deprecated: Use `soundFadeIn`*
----@param duration number Time in seconds
+---@param duration duration Time in seconds
 ---@param from number Initial volume
 ---@param to number Final volume
 function musicFadeIn(duration, from, to) end
@@ -1435,6 +1438,6 @@ function musicFadeIn(duration, from, to) end
 ---@deprecated
 ---Fades out `FlxG.sound.music`\
 ---*Deprecated: Use `soundFadeOut`*
----@param duration number Time in seconds
+---@param duration duration Time in seconds
 ---@param to number Final volume
 function musicFadeOut(duration, to) end

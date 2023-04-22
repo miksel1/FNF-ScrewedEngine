@@ -1,42 +1,41 @@
 package effects;
 
-import openfl.display.BitmapData;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.util.FlxColor;
 import flixel.FlxBasic;
 import flixel.system.FlxAssets.FlxShader;
 
 /**
-Thanks to the Impostorm Team!
-*/
+	Thanks to the Impostorm Team!
+ */
 class ChromaticAberration extends FlxBasic
 {
-    public var shader(default, null):CAGLSL = new CAGLSL();
+	public var shader(default, null):CAGLSL = new CAGLSL();
 
-    public var amount(default, set):Float = 0;
+	public var amount(default, set):Float = 0;
 
-    public function new(_amount:Float):Void {
-        super();
-       // shader.iResolution.value = [FlxG.stage.stageWidth, FlxG.stage.stageHeight];
-        amount = _amount;
-    }
+	public function new(_amount:Float):Void
+	{
+		super();
+		// shader.iResolution.value = [FlxG.stage.stageWidth, FlxG.stage.stageHeight];
+		amount = _amount;
+	}
 
-    override public function update(elapsed:Float):Void{
-        super.update(elapsed);
-    }
-    
-  function set_amount(v:Float):Float{
-      amount = v;
+	override public function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+	}
+
+	function set_amount(v:Float):Float
+	{
+		amount = v;
 		shader.amount.value = [amount];
-       // shader.iResolution.value = [FlxG.stage.stageWidth, FlxG.stage.stageHeight];
+		// shader.iResolution.value = [FlxG.stage.stageWidth, FlxG.stage.stageHeight];
 		return v;
 	}
 }
 
 class CAGLSL extends FlxShader
 {
-    @:glFragmentSource('
+	@:glFragmentSource('
         #pragma header
 
         uniform float amount;
@@ -65,9 +64,8 @@ class CAGLSL extends FlxShader
     
         gl_FragColor = vec4(col, 1.0);
     }')
-
-    public function new()
-    {
-        super();
-    }
+	public function new()
+	{
+		super();
+	}
 }
