@@ -3264,14 +3264,15 @@ class FunkinLua {
 
 	function tweenShit(tag:String, ?vars:String):Dynamic {
 		cancelTween(tag);
-		//if(vars.length > 0) {
+		var sexyProp:Dynamic = null;
+		if (tag != null){
 			var variables:Array<String> = vars.split('.');
-			var sexyProp:Dynamic = getObjectDirectly(variables[0]);
+			sexyProp = getObjectDirectly(variables[0]);
 			if(variables.length > 1) {
 				sexyProp = getVarInArray(getPropertyLoopThingWhatever(variables), variables[variables.length-1]);
 			}
-		//}
-		return sexyProp;
+		}
+		return sexyProp != null ? sexyProp : null;
 	}
 
 	function cancelTimer(tag:String) {
