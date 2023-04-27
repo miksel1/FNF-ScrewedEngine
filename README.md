@@ -39,7 +39,7 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 ## Screwed Engine Credits:
 * [@Wither362](https://github.com/Wither362) - Basically making everything on the engine (ALL).
 * [@Hoovy](https://github.com/MemeHovy) - Additional Programmer and Deleting-Coder.
-* miksel1 - The one who broke most of the code at the beginning
+* [@miksel](https://github.com/miksel1) - The one who broke most of the code at the beginning
 * Dante - Strident Engine coder
 * not capcha - Helping with _Legacy_ Freeplay Sections
 * BeastlyGhost - Help with winning icons
