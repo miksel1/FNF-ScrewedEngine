@@ -131,8 +131,10 @@ class Song
 		if (rawJson == null)
 			throw "Failed to load song JSON from " + formattedFolder; // this is probably less vague than before
 
-		while (!rawJson.endsWith("}"))
-			rawJson = rawJson.substr(0, rawJson.length - 1);
+		if (rawJson != null){
+			while (!rawJson.endsWith("}"))
+				rawJson = rawJson.substr(0, rawJson.length - 1);
+		}
 
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') StageData.loadDirectory(songJson);

@@ -67,7 +67,7 @@ class FreeplayState extends MusicBeatState
 	}
 
 	var songs:Array<SongMetadata> = [];
-	var fakeSongs:Array<SongMetadata> = [];
+	var fakeSongs:Array<SongMetadata> = []; // I might have a go at it, since Wither is on break
 
 	var icons:Array<String> = [];
 	var notSongs:Array<Int> = [];
@@ -110,8 +110,6 @@ class FreeplayState extends MusicBeatState
 	private var iconArray:FlxSpriteGroup = new FlxSpriteGroup();
 
 	private var camFollow:FlxObject;
-
-	private static var prevCamFollow:FlxObject;
 
 	var normalCamera:FlxCamera;
 
@@ -219,11 +217,6 @@ class FreeplayState extends MusicBeatState
 		camFollow.screenCenter();
 		camFollow.setPosition(0, 0);
 
-		if (prevCamFollow != null)
-		{
-			camFollow = prevCamFollow;
-			prevCamFollow = null;
-		}
 		camFollow.cameras = [cameraSection];
 		add(camFollow);
 

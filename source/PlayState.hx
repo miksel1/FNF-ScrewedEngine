@@ -178,7 +178,6 @@ class PlayState extends MusicBeatState
 	public var camFollowPos:FlxObject;
 
 	private static var prevCamFollow:FlxPoint;
-	private static var prevCamFollowPos:FlxObject;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -1176,11 +1175,6 @@ class PlayState extends MusicBeatState
 		{
 			camFollow = prevCamFollow;
 			prevCamFollow = null;
-		}
-		if (prevCamFollowPos != null)
-		{
-			camFollowPos = prevCamFollowPos;
-			prevCamFollowPos = null;
 		}
 		add(camFollowPos);
 
@@ -4573,7 +4567,6 @@ class PlayState extends MusicBeatState
 					FlxTransitionableState.skipNextTransOut = true;
 
 					prevCamFollow = camFollow;
-					prevCamFollowPos = camFollowPos;
 
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0] + difficulty, PlayState.storyPlaylist[0]);
 					FlxG.sound.music.stop();
