@@ -863,9 +863,7 @@ class FunkinLua {
 					{
 						if(luaInstance.scriptName == cervix)
 						{
-							//luaTrace('The script "' + cervix + '" is already running!');
-
-								PlayState.instance.luaArray.remove(luaInstance);
+							PlayState.instance.luaArray.remove(luaInstance);
 							return;
 						}
 					}
@@ -1433,7 +1431,7 @@ class FunkinLua {
 			if(testicle != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {x: value}, duration, {ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);	
 						PlayState.instance.modchartTweens.remove(tag);
 					}
 				}));
