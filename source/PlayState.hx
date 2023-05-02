@@ -250,6 +250,9 @@ class PlayState extends MusicBeatState
 	public static var mosaicEffect:effects.MosaicEffect = new effects.MosaicEffect();
 	public static var globalChromaticAberration:effects.ChromaticAberration;
 	public static var colorReplacer:effects.ColorOverlay.ColorOverlay = new effects.ColorOverlay.ColorOverlay();
+	
+	// for enabling and disabling shaders
+	public static var shadersArray:Array<BitmapFilter> = new Array<BitmapFilter>();
 
 	public static var activeWavy:Bool = false;
 
@@ -394,6 +397,8 @@ class PlayState extends MusicBeatState
 		controlArray = ['NOTE_LEFT', 'NOTE_DOWN', 'NOTE_UP', 'NOTE_RIGHT'];
 		for(asa in controlArray)
 			keysArray.push(ClientPrefs.copyKey(ClientPrefs.keyBinds.get(asa.toLowerCase())));
+
+		shadersArray = [];
 
 		// Shaders & effects
 		globalChromaticAberration = new ChromaticAberration(0);
@@ -3119,13 +3124,24 @@ class PlayState extends MusicBeatState
 		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
-		var filters:Array<BitmapFilter> = [new ShaderFilter(screenshader.shader)];
-		if (SONG.event7 == 'Rainbow Eyesore')
-			filters.push(new ShaderFilter(anotherScreenshader.shader));
-		else if (SONG.event7 == 'Chromatic Aberration')
-			filters.push(new ShaderFilter(globalChromaticAberration.shader));
+		shadersArray.push(new ShaderFilter(screenshader.shader));
 
-		FlxG.camera.setFilters(filters);
+		if (SONG.event7 == 'Rainbow Eyesore')
+			shadersArray.push(new ShaderFilter(anotherScreenshader.shader));
+		else if (SONG.event7 == 'Chromatic Aberration')
+			shadersArray.push(new ShaderFilter(globalChromaticAberration.shader));
+		else{
+			var e = cast(anotherScreenshader, BitmapFilter);
+			var f = cast(globalChromaticAberration, BitmapFilter);
+			if (shadersArray.length > 0)
+				shadersArray.resize(0);
+			else if (shadersArray.contains(e))
+				shadersArray.remove(e);
+			else if (shadersArray.contains(f))
+				shadersArray.remove(f);
+		}
+
+		FlxG.camera.setFilters(shadersArray);
 		screenshader.update(elapsed);
 		if (SONG.event7 == 'Rainbow Eyesore')
 			anotherScreenshader.update(elapsed);
@@ -3387,7 +3403,9 @@ class PlayState extends MusicBeatState
 					case 'Rainbow Eyesore':
 						if (ClientPrefs.shaders)
 						{
-							FlxG.camera.setFilters([new ShaderFilter(anotherScreenshader.shader)]);
+							// FlxG.camera.setFilters([new ShaderFilter(anotherScreenshader.shader)]);
+							if (!shadersArray.contains(cast(anotherScreenshader, BitmapFilter)))
+								shadersArray.push(new ShaderFilter(anotherScreenshader.shader));
 							anotherScreenshader.waveAmplitude = 1;
 							anotherScreenshader.waveFrequency = 2;
 							if (SONG.event7Value.trim() == '')
@@ -3400,7 +3418,9 @@ class PlayState extends MusicBeatState
 						}
 					case 'Chromatic Aberration':
 						if (ClientPrefs.shaders){
-							FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
+							// FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
+							if (!shadersArray.contains(cast(globalChromaticAberration, BitmapFilter)))
+								shadersArray.push(new ShaderFilter(globalChromaticAberration.shader));
 							if (SONG.event7Value.trim() == '' || Math.isNaN(Std.parseFloat(SONG.event7Value.trim())) && Std.parseFloat(SONG.event7Value.trim()) <= 0)
 								globalChromaticAberration.amount = 0;
 							else
@@ -4310,7 +4330,9 @@ class PlayState extends MusicBeatState
 					var speedRainbow:Float = Std.parseFloat(value2);
 					disableTheTripper = false;
 					disableTheTripperAt = timeRainbow;
-					FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
+					// FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
+					if (!shadersArray.contains(cast(screenshader, BitmapFilter)))
+						shadersArray.push(new ShaderFilter(screenshader.shader));
 					screenshader.waveAmplitude = 1;
 					screenshader.waveFrequency = 2;
 					screenshader.waveSpeed = speedRainbow;
@@ -5647,9 +5669,15 @@ class PlayState extends MusicBeatState
 	public static function rainbowEyesore(shader:effects.Shaders.PulseEffect, time:Int, speed:Float)
 	{
 		if (anotherScreenshader.Enabled)
-			FlxG.camera.setFilters([new ShaderFilter(shader.shader), new ShaderFilter(anotherScreenshader.shader)]);
+			// FlxG.camera.setFilters([new ShaderFilter(shader.shader), new ShaderFilter(anotherScreenshader.shader)]);
+			if (!shadersArray.contains(cast(shader, BitmapFilter)) && !shadersArray.contains(cast(anotherScreenshader, BitmapFilter))){
+				shadersArray.push(new ShaderFilter(shader.shader));
+				shadersArray.push(new ShaderFilter(anotherScreenshader.shader));
+			}
 		else
-			FlxG.camera.setFilters([new ShaderFilter(shader.shader)]);
+			// FlxG.camera.setFilters([new ShaderFilter(shader.shader)]);
+			if (!shadersArray.contains(cast(shader, BitmapFilter)))
+				shadersArray.push(new ShaderFilter(shader.shader));
 
 		instance.disableTheTripper = false;
 		instance.disableTheTripperAt = time;
