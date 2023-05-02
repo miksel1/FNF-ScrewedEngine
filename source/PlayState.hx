@@ -3122,6 +3122,8 @@ class PlayState extends MusicBeatState
 		var filters:Array<BitmapFilter> = [new ShaderFilter(screenshader.shader)];
 		if (SONG.event7 == 'Rainbow Eyesore')
 			filters.push(new ShaderFilter(anotherScreenshader.shader));
+		else if (SONG.event7 == 'Chromatic Aberration')
+			filters.push(new ShaderFilter(globalChromaticAberration.shader));
 
 		FlxG.camera.setFilters(filters);
 		screenshader.update(elapsed);
@@ -3399,9 +3401,8 @@ class PlayState extends MusicBeatState
 					case 'Chromatic Aberration':
 						if (ClientPrefs.shaders){
 							FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
-							globalChromaticAberration.amount = 1;
-							if (SONG.event7Value.trim() == '')
-								globalChromaticAberration.amount = new flixel.math.FlxRandom().float(-100, 100); // don't wanna do it too much
+							if (SONG.event7Value.trim() == '' || Math.isNaN(Std.parseFloat(SONG.event7Value.trim())) && Std.parseFloat(SONG.event7Value.trim()) <= 0)
+								globalChromaticAberration.amount = 0;
 							else
 								globalChromaticAberration.amount = Std.parseFloat(SONG.event7Value.trim());
 						}

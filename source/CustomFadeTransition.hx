@@ -44,9 +44,10 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		transBlack.x = transGradient.x;
 
 		if(showText) {
-			textito = new FlxText(FlxG.width / 2, 0, 0, 'Its loading... be patient');
+			textito = new FlxText(0, 0, 0, 'Its loading... be patient');
 			textito.setFormat(Paths.font("vcr.ttf"), 14, color.getInverted(), CENTER);
-			textito.screenCenter(Y);
+			textito.screenCenter();
+			textito.scrollFactor.set(0, 0);
 			add(textito);
 		}
 

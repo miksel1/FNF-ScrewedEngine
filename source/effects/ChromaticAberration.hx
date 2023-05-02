@@ -15,7 +15,6 @@ class ChromaticAberration extends FlxBasic
 	public function new(_amount:Float):Void
 	{
 		super();
-		// shader.iResolution.value = [FlxG.stage.stageWidth, FlxG.stage.stageHeight];
 		amount = _amount;
 	}
 
@@ -28,7 +27,6 @@ class ChromaticAberration extends FlxBasic
 	{
 		amount = v;
 		shader.amount.value = [amount];
-		// shader.iResolution.value = [FlxG.stage.stageWidth, FlxG.stage.stageHeight];
 		return v;
 	}
 }
@@ -36,9 +34,9 @@ class ChromaticAberration extends FlxBasic
 class CAGLSL extends FlxShader
 {
 	@:glFragmentSource('
-        #pragma header
+	#pragma header
 
-        uniform float amount;
+	uniform float amount;
 
     vec2 PincushionDistortion(in vec2 uv, float strength) 
     {
