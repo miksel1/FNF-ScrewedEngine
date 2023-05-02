@@ -131,6 +131,7 @@ class ChartingState extends MusicBeatState
 		'Close Game',
 		'Play Video',
 		'Rainbow Eyesore',
+		'Chromatic Aberration',
 		'Nothing' // why?
 	];
 

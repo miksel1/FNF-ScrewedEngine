@@ -372,6 +372,11 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
+	// nps
+	var nps:Int = 0;
+	var npsArray:Array<Date> = [];
+	var maxNPS:Int = 0;
+
 	override public function create()
 	{
 		// trace('Playback Rate: ' + playbackRate);
@@ -1786,7 +1791,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	function startAndEnd()
+	inline function startAndEnd()
 	{
 		if (endingSong)
 			endSong();
@@ -3299,9 +3304,24 @@ class PlayState extends MusicBeatState
 		setOnLuas('curDecStep', curDecStep);
 		setOnLuas('curDecBeat', curDecBeat);
 
-		scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + combo + ' | Rating: ' + ratingName;
+		scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + combo + ' | NPS: ' + '$nps/$maxNPS'  + ' | Rating: ' + ratingName;
 		if (ratingName != '?')
 			scoreTxt.text += ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;
+
+		// for nps
+		var pooper = npsArray.length - 1;
+		while (pooper >= 0){
+			var fondler:Date = npsArray[pooper];
+			if (fondler != null && fondler.getTime() + 1000 < Date.now().getTime()){
+				npsArray.remove(fondler);
+			}
+			else
+				pooper = 0;
+			pooper--;
+		}
+		nps = npsArray.length;
+		if (nps > maxNPS)
+			maxNPS = nps;
 
 		if (ClientPrefs.showHealth)
 			if (healthTxt != null)
@@ -3350,11 +3370,12 @@ class PlayState extends MusicBeatState
 								anotherScreenshader.Enabled = false;
 
 							updateTime = false;
+							// is it supposed to reset the song on purpose??
 							FlxG.sound.music.volume = 0;
 							vocals.volume = 0;
 							vocals.stop();
 							FlxG.sound.music.stop();
-							KillNotes();
+							killNotes();
 
 							var bg = new FlxSprite(-FlxG.width, -FlxG.height).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
 							add(bg);
@@ -3376,12 +3397,14 @@ class PlayState extends MusicBeatState
 							anotherScreenshader.Enabled = true;
 						}
 					case 'Chromatic Aberration':
-						FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
-						globalChromaticAberration.amount = 1;
-						if (SONG.event7Value.trim() == '')
-							globalChromaticAberration.amount = new flixel.math.FlxRandom().float(-100, 100); // don't wanna do it too much
-						else
-							globalChromaticAberration.amount = Std.parseFloat(SONG.event7Value.trim());
+						if (ClientPrefs.shaders){
+							FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
+							globalChromaticAberration.amount = 1;
+							if (SONG.event7Value.trim() == '')
+								globalChromaticAberration.amount = new flixel.math.FlxRandom().float(-100, 100); // don't wanna do it too much
+							else
+								globalChromaticAberration.amount = Std.parseFloat(SONG.event7Value.trim());
+						}
 
 					case 'Nothing': // dont let it
 					//
@@ -3710,7 +3733,7 @@ class PlayState extends MusicBeatState
 		{
 			if (FlxG.keys.justPressed.ONE)
 			{
-				KillNotes();
+				killNotes();
 				FlxG.sound.music.onComplete();
 			}
 			if (FlxG.keys.justPressed.TWO)
@@ -4624,7 +4647,7 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	public function KillNotes()
+	public function killNotes()
 	{
 		while (notes.length > 0)
 		{
@@ -5238,6 +5261,9 @@ class PlayState extends MusicBeatState
 		{
 			if (cpuControlled && (note.ignoreNote || note.hitCausesMiss))
 				return;
+
+			if (!note.isSustainNote)
+				npsArray.unshift(Date.now());
 
 			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled && canPlayerLight)
 				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.hitsoundVolume);
@@ -6049,6 +6075,4 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
-	var nps:Int = 0;
-	var maxNPS:Int = 0;
 }

@@ -1431,7 +1431,7 @@ class FunkinLua {
 			if(testicle != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {x: value}, duration, {ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);	
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
 					}
 				}));
@@ -1487,8 +1487,6 @@ class FunkinLua {
 				case 'right':
 					boobs = FlxG.mouse.justPressedRight;
 			}
-
-
 			return boobs;
 		});
 		lua.add_callback("mousePressed", function(button:String) {
@@ -1779,7 +1777,7 @@ class FunkinLua {
 			return true;
 		});
 		lua.add_callback("endSong", function() {
-			PlayState.instance.KillNotes();
+			PlayState.instance.killNotes();
 			PlayState.instance.endSong();
 			return true;
 		});
