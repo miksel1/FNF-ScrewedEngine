@@ -1700,10 +1700,11 @@ class PlayState extends MusicBeatState
 	// based on Andromeda engine code
 	inline public function addShaderToArray(name:String, shader:Dynamic){
 		// var conv = new ShaderFilter(shader);
-		var shaderDef:ShaderDefs; // I totally had fun writing this
-		shaderDef.name = name;
-		shaderDef.shader = shader;
-
+		// I totally had fun writing this
+		var shaderDef:ShaderDefs = {
+			name: name,
+			shader: shader
+		};
 		shadersMap.set(shaderDef.name, shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
 		newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
@@ -1712,10 +1713,10 @@ class PlayState extends MusicBeatState
 
 	inline public function removeShaderFromArray(name:String, shader:Dynamic){
 		// var conv = new ShaderFilter(shader);
-		var shaderDef:ShaderDefs;
-		shaderDef.name = name;
-		shaderDef.shader = shader;
-
+		var shaderDef:ShaderDefs = {
+			name: name,
+			shader: shader
+		};
 		shadersMap.remove(shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
 		newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
@@ -1727,10 +1728,10 @@ class PlayState extends MusicBeatState
 	}
 
 	public function getShadersFromArray(name:String, shader:Dynamic) {
-		var shaderDef:ShaderDefs;
-		shaderDef.name = name;
-		shaderDef.shader = shader;
-
+		var shaderDef:ShaderDefs = {
+			name: name,
+			shader: shader
+		};
 		for (i in 0...shadersArray.length){
 			if (shaderDef.shader is String){
 				if (Reflect.hasField(shadersArray[i], shaderDef.shader)){
