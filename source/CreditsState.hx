@@ -62,7 +62,7 @@ class CreditsState extends MusicBeatState
 		'tposejank',
 		'Gamer Pablito']; // yes dude ;D
 
-	var glitchEffect:FlxGlitchEffect;
+	// var glitchEffect:FlxGlitchEffect;
 	// var glitchBg:FlxEffectSprite;
 
 	var grainEffect:GrainEffect;
@@ -97,12 +97,13 @@ class CreditsState extends MusicBeatState
 			glitchEffect.active = false;
 		}*/
 
+		/*
 		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
 
 		var glitchFilter = FlxFilterFrames.fromFrames(bg.frames, 0, 0);
 		glitchFilter.addFilter(glitchEffect.apply(glitchFilter.filters[0]));
 		// glitchFilter.addFilter(cast(glitchEffect, BitmapFilter));
-		glitchFilter.applyToSprite(bg, false, false);
+		glitchFilter.applyToSprite(bg, false, false);*/
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		grpTitles = new FlxTypedGroup<Alphabet>();
