@@ -400,6 +400,9 @@ class PlayState extends MusicBeatState
 			keysArray.push(ClientPrefs.copyKey(ClientPrefs.keyBinds.get(asa.toLowerCase())));
 
 		shadersArray = [];
+		// shadersMap.set('screenshader', screenshader);
+		// shadersMap.set('anotherScreenshader', anotherScreenshader);
+		// shadersMap.set('globalChromaticAberration', globalChromaticAberration);
 
 		// Shaders & effects
 		globalChromaticAberration = new ChromaticAberration(0);
@@ -1695,19 +1698,27 @@ class PlayState extends MusicBeatState
 	}
 
 	// based on Andromeda engine code
-	inline public function addShaderToArray(shader:ShaderDefs){
+	inline public function addShaderToArray(name:String, shader:Dynamic){
 		// var conv = new ShaderFilter(shader);
-		shadersMap.set(shader.name, shader.shader);
-		var newEffect:Array<BitmapFilter> = [];
-		newEffect.push(new ShaderFilter(shadersMap['${shader.name}'].shader));
+		var shaderDef:ShaderDefs; // I totally had fun writing this
+		shaderDef.name = name;
+		shaderDef.shader = shader;
+
+		shadersMap.set(shaderDef.name, shaderDef.shader);
+		var newEffect = new Array<BitmapFilter>();
+		newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
 		FlxG.camera.setFilters(newEffect);
 	}
 
-	inline public function removeShaderFromArray(shader:ShaderDefs){
+	inline public function removeShaderFromArray(name:String, shader:Dynamic){
 		// var conv = new ShaderFilter(shader);
-		shadersMap.remove(shader.shader);
-		var newEffect:Array<BitmapFilter> = [];
-		newEffect.push(new ShaderFilter(shadersMap['${shader.name}'].shader));
+		var shaderDef:ShaderDefs;
+		shaderDef.name = name;
+		shaderDef.shader = shader;
+
+		shadersMap.remove(shaderDef.shader);
+		var newEffect = new Array<BitmapFilter>();
+		newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
 		FlxG.camera.setFilters(newEffect);
 	}
 
@@ -1715,15 +1726,19 @@ class PlayState extends MusicBeatState
 		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
 	}
 
-	public function getShadersFromArray(shader:ShaderDefs) {
+	public function getShadersFromArray(name:String, shader:Dynamic) {
+		var shaderDef:ShaderDefs;
+		shaderDef.name = name;
+		shaderDef.shader = shader;
+
 		for (i in 0...shadersArray.length){
-			if (shader.shader is String){
-				if (Reflect.hasField(shadersArray[i], shader.shader)){
-					return Reflect.getProperty(shadersArray[i], shader.shader);
+			if (shaderDef.shader is String){
+				if (Reflect.hasField(shadersArray[i], shaderDef.shader)){
+					return Reflect.getProperty(shadersArray[i], shaderDef.shader);
 				}
 			}
-			else if (shadersArray.contains(shader.shader)){
-				return shadersMap['${shader.name}'].shader;
+			else if (shadersArray.contains(shaderDef.shader)){
+				return shadersMap['${shaderDef.name}'].shader;
 			}
 		}
 		return null;
