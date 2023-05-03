@@ -1707,8 +1707,13 @@ class PlayState extends MusicBeatState
 		};
 		shadersMap.set(shaderDef.name, shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
-		newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-		FlxG.camera.setFilters(newEffect);
+		try {
+			newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
+			FlxG.camera.setFilters(newEffect);
+		}
+		catch (e){
+			trace("Failed to apply shader : " + e.message);
+		}
 	}
 
 	inline public function removeShaderFromArray(name:String, shader:Dynamic){
@@ -1719,8 +1724,13 @@ class PlayState extends MusicBeatState
 		};
 		shadersMap.remove(shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
-		newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-		FlxG.camera.setFilters(newEffect);
+		try {
+			newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
+			FlxG.camera.setFilters(newEffect);
+		}
+		catch (e){
+			trace("Failed to apply shader : " + e.message);
+		}
 	}
 
 	inline public function clearShadersFromArray(?amo:Int){
