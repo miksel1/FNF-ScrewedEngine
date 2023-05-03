@@ -1744,6 +1744,10 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
+	inline public function hasShader(name:Dynamic){
+		return shadersArray.contains(name);
+	}
+
 	function startCharacterLua(name:String)
 	{
 		#if LUA_ALLOWED
@@ -3175,7 +3179,7 @@ class PlayState extends MusicBeatState
 		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
-		addShaderToArray('screenShader', screenShader);
+		addShaderToArray('screenShader', screenshader);
 
 		if (SONG.event7 == 'Rainbow Eyesore')
 			addShaderToArray('anotherScreenshader', anotherScreenshader);
@@ -3186,9 +3190,9 @@ class PlayState extends MusicBeatState
 			// var f = new ShaderFilter(globalChromaticAberration.shader);
 			if (shadersArray.length > 0)
 				shadersArray.resize(0);
-			else if (getShadersFromArray('anotherScreenshader', anotherScreenshader).contains('anotherScreenshader', anotherScreenshader))
+			else if (hasShader('anotherScreenshader'))
 				removeShaderFromArray('anotherScreenshader', anotherScreenshader);
-			else if (getShadersFromArray('globalChromaticAberration', globalChromaticAberration).contains('globalChromaticAberration', globalChromaticAberration))
+			else if (hasShader('globalChromaticAberration'))
 				removeShaderFromArray('globalChromaticAberration', globalChromaticAberration);
 		}
 
