@@ -253,7 +253,7 @@ class PlayState extends MusicBeatState
 	
 	// for enabling and disabling shaders
 	public static var shadersArray:Array<BitmapFilter> = new Array<BitmapFilter>();
-	public static var shadersMap:Map<String, BitmapFilter> = new Map<String, BitmapFilter>();
+	public static var shadersMap:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 
 	public static var activeWavy:Bool = false;
 
