@@ -253,6 +253,7 @@ class PlayState extends MusicBeatState
 	
 	// for enabling and disabling shaders
 	public static var shadersArray:Array<BitmapFilter> = new Array<BitmapFilter>();
+	public static var shadersMap:Map<String, BitmapFilter> = new Map<String, BitmapFilter>();
 
 	public static var activeWavy:Bool = false;
 
@@ -1694,23 +1695,19 @@ class PlayState extends MusicBeatState
 	}
 
 	// based on Andromeda engine code
-	inline public function addShaderToArray(shader:Dynamic){
-		var conv = new ShaderFilter(shader);
-		shadersArray.push(conv);
+	inline public function addShaderToArray(shader:ShaderDefs){
+		// var conv = new ShaderFilter(shader);
+		shadersMap.set(shader.name, shader.shader);
 		var newEffect:Array<BitmapFilter> = [];
-		for (i in shadersArray){
-			newEffect.push(i.shader);
-		}
+		newEffect.push(new ShaderFilter(shadersMap['${shader.name}'].shader));
 		FlxG.camera.setFilters(newEffect);
 	}
 
-	inline public function removeShaderFromArray(shader:Dynamic){
-		var conv = new ShaderFilter(shader);
-		shadersArray.remove(conv);
+	inline public function removeShaderFromArray(shader:ShaderDefs){
+		// var conv = new ShaderFilter(shader);
+		shadersMap.remove(shader.shader);
 		var newEffect:Array<BitmapFilter> = [];
-		for (i in shadersArray){
-			newEffect.push(i.shader);
-		}
+		newEffect.push(new ShaderFilter(shadersMap['${shader.name}'].shader));
 		FlxG.camera.setFilters(newEffect);
 	}
 
@@ -1718,19 +1715,18 @@ class PlayState extends MusicBeatState
 		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
 	}
 
-	public function getShadersFromArray(shader:Dynamic) {
+	public function getShadersFromArray(shader:ShaderDefs) {
 		for (i in 0...shadersArray.length){
-			if (shader is String){
-				if (Reflect.hasField(shadersArray[i], shader)){
-					return Reflect.getProperty(shadersArray[i], shader);
+			if (shader.shader is String){
+				if (Reflect.hasField(shadersArray[i], shader.shader)){
+					return Reflect.getProperty(shadersArray[i], shader.shader);
 				}
 			}
-			else if (shadersArray.contains(shader)){
-				for (e in shaderArray)
-					return shadersArray[e];
+			else if (shadersArray.contains(shader.shader)){
+				return shadersMap['${shader.name}'].shader;
 			}
-			return null;
 		}
+		return null;
 	}
 
 	function startCharacterLua(name:String)
@@ -3164,21 +3160,21 @@ class PlayState extends MusicBeatState
 		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
-		addShaderToArray(screenShader);
+		addShaderToArray('screenShader', screenShader);
 
 		if (SONG.event7 == 'Rainbow Eyesore')
-			addShaderToArray(anotherScreenshader);
+			addShaderToArray('anotherScreenshader', anotherScreenshader);
 		else if (SONG.event7 == 'Chromatic Aberration')
-			addShaderToArray(globalChromaticAberration);
+			addShaderToArray('globalChromaticAberration', globalChromaticAberration);
 		else{
 			// var e = new ShaderFilter(anotherScreenshader.shader);
 			// var f = new ShaderFilter(globalChromaticAberration.shader);
 			if (shadersArray.length > 0)
 				shadersArray.resize(0);
-			else if (getShadersFromArray(anotherScreenshader).contains(anotherScreenshader))
-				removeShaderFromArray(anotherScreenshader);
-			else if (getShadersFromArray(globalChromaticAberration).contains(globalChromaticAberration))
-				removeShaderFromArray(globalChromaticAberration);
+			else if (getShadersFromArray('anotherScreenshader', anotherScreenshader).contains('anotherScreenshader', anotherScreenshader))
+				removeShaderFromArray('anotherScreenshader', anotherScreenshader);
+			else if (getShadersFromArray('globalChromaticAberration', globalChromaticAberration).contains('globalChromaticAberration', globalChromaticAberration))
+				removeShaderFromArray('globalChromaticAberration', globalChromaticAberration);
 		}
 
 		FlxG.camera.setFilters(shadersArray);
