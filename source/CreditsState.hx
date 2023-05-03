@@ -100,8 +100,8 @@ class CreditsState extends MusicBeatState
 		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
 
 		var glitchFilter = FlxFilterFrames.fromFrames(bg.frames, 0, 0);
-		// glitchFilter.addFilter(glitchEffect.apply(glitchFilter.filters[0]));
-		glitchFilter.addFilter(cast(glitchEffect, BitmapFilter));
+		glitchFilter.addFilter(glitchEffect.apply(glitchFilter.filters[0]));
+		// glitchFilter.addFilter(cast(glitchEffect, BitmapFilter));
 		glitchFilter.applyToSprite(bg, false, false);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();

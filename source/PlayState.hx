@@ -1693,6 +1693,46 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	// based on Andromeda engine code
+	inline public function addShaderToArray(shader:Dynamic){
+		var conv = new ShaderFilter(shader);
+		shadersArray.push(conv);
+		var newEffect:Array<BitmapFilter> = [];
+		for (i in shadersArray){
+			newEffect.push(i.shader);
+		}
+		FlxG.camera.setFilters(newEffect);
+	}
+
+	inline public function removeShaderFromArray(shader:Dynamic){
+		var conv = new ShaderFilter(shader);
+		shadersArray.remove(conv);
+		var newEffect:Array<BitmapFilter> = [];
+		for (i in shadersArray){
+			newEffect.push(i.shader);
+		}
+		FlxG.camera.setFilters(newEffect);
+	}
+
+	inline public function clearShadersFromArray(?amo:Int){
+		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
+	}
+
+	public function getShadersFromArray(shader:Dynamic) {
+		for (i in 0...shadersArray.length){
+			if (shader is String){
+				if (Reflect.hasField(shadersArray[i], shader)){
+					return Reflect.getProperty(shadersArray[i], shader);
+				}
+			}
+			else if (shadersArray.contains(shader)){
+				for (e in shaderArray)
+					return shadersArray[e];
+			}
+			return null;
+		}
+	}
+
 	function startCharacterLua(name:String)
 	{
 		#if LUA_ALLOWED
@@ -3124,21 +3164,21 @@ class PlayState extends MusicBeatState
 		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
-		shadersArray.push(new ShaderFilter(screenshader.shader));
+		addShaderToArray(screenShader);
 
 		if (SONG.event7 == 'Rainbow Eyesore')
-			shadersArray.push(new ShaderFilter(anotherScreenshader.shader));
+			addShaderToArray(anotherScreenshader);
 		else if (SONG.event7 == 'Chromatic Aberration')
-			shadersArray.push(new ShaderFilter(globalChromaticAberration.shader));
+			addShaderToArray(globalChromaticAberration);
 		else{
-			var e = cast(anotherScreenshader, BitmapFilter);
-			var f = cast(globalChromaticAberration, BitmapFilter);
+			// var e = new ShaderFilter(anotherScreenshader.shader);
+			// var f = new ShaderFilter(globalChromaticAberration.shader);
 			if (shadersArray.length > 0)
 				shadersArray.resize(0);
-			else if (shadersArray.contains(e))
-				shadersArray.remove(e);
-			else if (shadersArray.contains(f))
-				shadersArray.remove(f);
+			else if (getShadersFromArray(anotherScreenshader).contains(anotherScreenshader))
+				removeShaderFromArray(anotherScreenshader);
+			else if (getShadersFromArray(globalChromaticAberration).contains(globalChromaticAberration))
+				removeShaderFromArray(globalChromaticAberration);
 		}
 
 		FlxG.camera.setFilters(shadersArray);
