@@ -486,8 +486,7 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
-		persistentUpdate = true;
-		persistentDraw = true;
+		persistentUpdate = persistentDraw = true;
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('test');
@@ -1708,11 +1707,14 @@ class PlayState extends MusicBeatState
 		shadersMap.set(shaderDef.name, shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
 		try {
-			newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-			FlxG.camera.setFilters(newEffect);
+			if (shadersMap.get(shaderDef.shader) != null){
+				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
+				FlxG.camera.setFilters(newEffect);
+			}
 		}
 		catch (e){
 			trace("Failed to apply shader : " + e.message);
+			return;
 		}
 	}
 
@@ -1725,11 +1727,14 @@ class PlayState extends MusicBeatState
 		shadersMap.remove(shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
 		try {
-			newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-			FlxG.camera.setFilters(newEffect);
+			if (shadersMap.get(shaderDef.shader) != null){
+				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
+				FlxG.camera.setFilters(newEffect);				
+			}
 		}
 		catch (e){
 			trace("Failed to apply shader : " + e.message);
+			return;
 		}
 	}
 
