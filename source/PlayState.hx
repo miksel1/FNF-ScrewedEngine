@@ -250,6 +250,10 @@ class PlayState extends MusicBeatState
 	public static var mosaicEffect:effects.MosaicEffect = new effects.MosaicEffect();
 	public static var globalChromaticAberration:effects.ChromaticAberration;
 	public static var colorReplacer:effects.ColorOverlay.ColorOverlay = new effects.ColorOverlay.ColorOverlay();
+	
+	// for enabling and disabling shaders
+	public static var shadersArray:Array<BitmapFilter> = new Array<BitmapFilter>();
+	public static var shadersMap:Map<String, ShaderFilter> = new Map<String, ShaderFilter>();
 
 	public static var activeWavy:Bool = false;
 
@@ -395,6 +399,11 @@ class PlayState extends MusicBeatState
 		for(asa in controlArray)
 			keysArray.push(ClientPrefs.copyKey(ClientPrefs.keyBinds.get(asa.toLowerCase())));
 
+		shadersArray = [];
+		// shadersMap.set('screenshader', screenshader);
+		// shadersMap.set('anotherScreenshader', anotherScreenshader);
+		// shadersMap.set('globalChromaticAberration', globalChromaticAberration);
+
 		// Shaders & effects
 		globalChromaticAberration = new ChromaticAberration(0);
 		add(globalChromaticAberration);
@@ -477,8 +486,7 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
-		persistentUpdate = true;
-		persistentDraw = true;
+		persistentUpdate = persistentDraw = true;
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('test');
@@ -1686,6 +1694,74 @@ class PlayState extends MusicBeatState
 					startCharacterLua(newGf.curCharacter);
 				}
 		}
+	}
+
+	// based on Andromeda engine code
+	inline public function addShaderToArray(name:String, shader:Dynamic){
+		// var conv = new ShaderFilter(shader);
+		// I totally had fun writing this
+		var shaderDef:ShaderDefs = {
+			name: name,
+			shader: shader
+		};
+		shadersMap.set(shaderDef.name, shaderDef.shader);
+		var newEffect = new Array<BitmapFilter>();
+		try {
+			if (shadersMap.get(shaderDef.shader) != null){
+				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
+				FlxG.camera.setFilters(newEffect);
+			}
+		}
+		catch (e){
+			trace("Failed to apply shader : " + e.message);
+			return;
+		}
+	}
+
+	inline public function removeShaderFromArray(name:String, shader:Dynamic){
+		// var conv = new ShaderFilter(shader);
+		var shaderDef:ShaderDefs = {
+			name: name,
+			shader: shader
+		};
+		shadersMap.remove(shaderDef.shader);
+		var newEffect = new Array<BitmapFilter>();
+		try {
+			if (shadersMap.get(shaderDef.shader) != null){
+				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
+				FlxG.camera.setFilters(newEffect);				
+			}
+		}
+		catch (e){
+			trace("Failed to apply shader : " + e.message);
+			return;
+		}
+	}
+
+	inline public function clearShadersFromArray(?amo:Int){
+		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
+	}
+
+	public function getShadersFromArray(name:String, shader:Dynamic) {
+		var shaderDef:ShaderDefs = {
+			name: name,
+			shader: shader
+		};
+		for (i in 0...shadersArray.length){
+			if (shaderDef.shader is String){
+				if (Reflect.hasField(shadersArray[i], shaderDef.shader)){
+					return Reflect.getProperty(shadersArray[i], shaderDef.shader);
+				}
+			}
+			else if (shadersArray.contains(shaderDef.shader)){
+				return shadersMap['${shaderDef.name}'].shader;
+			}
+		}
+		return null;
+	}
+
+	inline public function hasShader(name:Dynamic){
+		return shadersArray.contains(name);
 	}
 
 	function startCharacterLua(name:String)
@@ -3119,13 +3195,24 @@ class PlayState extends MusicBeatState
 		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
-		var filters:Array<BitmapFilter> = [new ShaderFilter(screenshader.shader)];
-		if (SONG.event7 == 'Rainbow Eyesore')
-			filters.push(new ShaderFilter(anotherScreenshader.shader));
-		else if (SONG.event7 == 'Chromatic Aberration')
-			filters.push(new ShaderFilter(globalChromaticAberration.shader));
+		addShaderToArray('screenShader', screenshader);
 
-		FlxG.camera.setFilters(filters);
+		if (SONG.event7 == 'Rainbow Eyesore')
+			addShaderToArray('anotherScreenshader', anotherScreenshader);
+		else if (SONG.event7 == 'Chromatic Aberration')
+			addShaderToArray('globalChromaticAberration', globalChromaticAberration);
+		else{
+			// var e = new ShaderFilter(anotherScreenshader.shader);
+			// var f = new ShaderFilter(globalChromaticAberration.shader);
+			if (shadersArray.length > 0)
+				shadersArray.resize(0);
+			else if (hasShader('anotherScreenshader'))
+				removeShaderFromArray('anotherScreenshader', anotherScreenshader);
+			else if (hasShader('globalChromaticAberration'))
+				removeShaderFromArray('globalChromaticAberration', globalChromaticAberration);
+		}
+
+		FlxG.camera.setFilters(shadersArray);
 		screenshader.update(elapsed);
 		if (SONG.event7 == 'Rainbow Eyesore')
 			anotherScreenshader.update(elapsed);
@@ -3387,7 +3474,9 @@ class PlayState extends MusicBeatState
 					case 'Rainbow Eyesore':
 						if (ClientPrefs.shaders)
 						{
-							FlxG.camera.setFilters([new ShaderFilter(anotherScreenshader.shader)]);
+							// FlxG.camera.setFilters([new ShaderFilter(anotherScreenshader.shader)]);
+							if (!shadersArray.contains(cast(anotherScreenshader, BitmapFilter)))
+								shadersArray.push(new ShaderFilter(anotherScreenshader.shader));
 							anotherScreenshader.waveAmplitude = 1;
 							anotherScreenshader.waveFrequency = 2;
 							if (SONG.event7Value.trim() == '')
@@ -3400,7 +3489,9 @@ class PlayState extends MusicBeatState
 						}
 					case 'Chromatic Aberration':
 						if (ClientPrefs.shaders){
-							FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
+							// FlxG.camera.setFilters([new ShaderFilter(globalChromaticAberration.shader)]);
+							if (!shadersArray.contains(cast(globalChromaticAberration, BitmapFilter)))
+								shadersArray.push(new ShaderFilter(globalChromaticAberration.shader));
 							if (SONG.event7Value.trim() == '' || Math.isNaN(Std.parseFloat(SONG.event7Value.trim())) && Std.parseFloat(SONG.event7Value.trim()) <= 0)
 								globalChromaticAberration.amount = 0;
 							else
@@ -4310,7 +4401,9 @@ class PlayState extends MusicBeatState
 					var speedRainbow:Float = Std.parseFloat(value2);
 					disableTheTripper = false;
 					disableTheTripperAt = timeRainbow;
-					FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
+					// FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
+					if (!shadersArray.contains(cast(screenshader, BitmapFilter)))
+						shadersArray.push(new ShaderFilter(screenshader.shader));
 					screenshader.waveAmplitude = 1;
 					screenshader.waveFrequency = 2;
 					screenshader.waveSpeed = speedRainbow;
@@ -5647,9 +5740,15 @@ class PlayState extends MusicBeatState
 	public static function rainbowEyesore(shader:effects.Shaders.PulseEffect, time:Int, speed:Float)
 	{
 		if (anotherScreenshader.Enabled)
-			FlxG.camera.setFilters([new ShaderFilter(shader.shader), new ShaderFilter(anotherScreenshader.shader)]);
+			// FlxG.camera.setFilters([new ShaderFilter(shader.shader), new ShaderFilter(anotherScreenshader.shader)]);
+			if (!shadersArray.contains(cast(shader, BitmapFilter)) && !shadersArray.contains(cast(anotherScreenshader, BitmapFilter))){
+				shadersArray.push(new ShaderFilter(shader.shader));
+				shadersArray.push(new ShaderFilter(anotherScreenshader.shader));
+			}
 		else
-			FlxG.camera.setFilters([new ShaderFilter(shader.shader)]);
+			// FlxG.camera.setFilters([new ShaderFilter(shader.shader)]);
+			if (!shadersArray.contains(cast(shader, BitmapFilter)))
+				shadersArray.push(new ShaderFilter(shader.shader));
 
 		instance.disableTheTripper = false;
 		instance.disableTheTripperAt = time;

@@ -5,7 +5,7 @@ import Alphabet.AlphaCharacter;
 import Language.LanguageString;
 import flixel.ui.FlxButton.FlxTypedButton;
 import effects.GrainEffect;
-import flixel.addons.effects.chainable.FlxEffectSprite;
+// import flixel.addons.effects.chainable.FlxEffectSprite;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -19,7 +19,9 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import flixel.addons.effects.chainable.FlxGlitchEffect;
+// import flixel.addons.effects.chainable.FlxGlitchEffect;
+// import flixel.graphics.frames.FlxFilterFrames;
+import openfl.filters.BitmapFilter;
 #if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
@@ -61,7 +63,7 @@ class CreditsState extends MusicBeatState
 		'Gamer Pablito']; // yes dude ;D
 
 	// var glitchEffect:FlxGlitchEffect;
-	var glitchBg:FlxEffectSprite;
+	// var glitchBg:FlxEffectSprite;
 
 	var grainEffect:GrainEffect;
 
@@ -80,9 +82,10 @@ class CreditsState extends MusicBeatState
 
 		persistentUpdate = true;
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.useFramePixels = true; // usually false for performance reasons, but it's needed for framePixels to not be null
 		add(bg);
 		bg.screenCenter();
-		add(glitchBg = new FlxEffectSprite(bg/*, (!ClientPrefs.lowQuality) ? [new FlxGlitchEffect(10, 2, 0.1)] : [null]*/));
+		// add(glitchBg = new FlxEffectSprite(bg/*, (!ClientPrefs.lowQuality) ? [new FlxGlitchEffect(10, 2, 0.1)] : [null]*/));
 		/*
 		add(glitchBg = new FlxEffectSprite(bg));
 		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
@@ -93,6 +96,14 @@ class CreditsState extends MusicBeatState
 				cast(glitchBg.effects[1], FlxGlitchEffect).active = false;
 			glitchEffect.active = false;
 		}*/
+
+		/*
+		glitchEffect = new FlxGlitchEffect(10, 2, 0.1);
+
+		var glitchFilter = FlxFilterFrames.fromFrames(bg.frames, 0, 0);
+		glitchFilter.addFilter(glitchEffect.apply(glitchFilter.filters[0]));
+		// glitchFilter.addFilter(cast(glitchEffect, BitmapFilter));
+		glitchFilter.applyToSprite(bg, false, false);*/
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		grpTitles = new FlxTypedGroup<Alphabet>();
