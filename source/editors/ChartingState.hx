@@ -1118,6 +1118,10 @@ class ChartingState extends MusicBeatState
 	var strumTimeInputText:FlxUIInputText; //I wanted to use a stepper but we can't scale these as far as i know :(
 	var noteTypeDropDown:FlxUIDropDownMenuCustom;
 	var currentType:Int = 0;
+	var stepperSpamCloseness:FlxUINumericStepper;
+	var stepperSpamLength:FlxUINumericStepper;
+	var spamLength:Float = 5;
+	var spamCloseness:Float = 2;
 
 	function addNoteUI():Void
 	{
@@ -1208,12 +1212,38 @@ class ChartingState extends MusicBeatState
 		});
 		blockPressWhileScrolling.push(noteTypeDropDown);
 
+		var spamButton:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function()
+		{
+			if (curSelectedNote != null) {
+				for(i in 0...Std.int(spamLength)) {
+					addNote(curSelectedNote[0] + (15000/_song.bpm)/spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
+				}
+				updateGrid();
+				updateNoteUI();
+			}
+		});
+		
+		stepperSpamCloseness = new FlxUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 64);
+		stepperSpamCloseness.value = spamCloseness;
+		stepperSpamCloseness.name = 'note_spamthing';
+		blockPressWhileTypingOnStepper.push(stepperSpamCloseness);
+
+		stepperSpamLength = new FlxUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 8192);
+		stepperSpamLength.value = spamLength;
+		stepperSpamLength.name = 'note_spamamount';
+		blockPressWhileTypingOnStepper.push(stepperSpamLength);
+
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
+		tab_group_note.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
 		tab_group_note.add(new FlxText(10, 50, 0, 'Strum time (in miliseconds):'));
 		tab_group_note.add(new FlxText(10, 90, 0, 'Note type:'));
 		tab_group_note.add(new FlxText(noteSkinInputText.x, noteSkinInputText.y - 15, 0, 'Opponent Note Texture:'));
 		tab_group_note.add(new FlxText(noteSplashesInputText.x, noteSplashesInputText.y - 15, 0, 'Note Splashes Texture:'));
 		tab_group_note.add(new FlxText(notePlayerSkinInputText.x, notePlayerSkinInputText.y - 15, 0, 'Player Note Texture:'));
+		tab_group_note.add(spamButton);
+		tab_group_note.add(stepperSpamCloseness);
+		tab_group_note.add(stepperSpamLength);
+		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(noteSkinInputText);
 		tab_group_note.add(notePlayerSkinInputText);
 		tab_group_note.add(noteSplashesInputText);
