@@ -1797,6 +1797,12 @@ class ChartingState extends MusicBeatState
 					updateZoom();
 				}
 			}
+			if (wname == 'note_spamthing' {
+			spamAmount = sender.value;
+			}
+			if(wname == 'note_spamamount') {
+			spamClotheness = sender.value;
+			}
 		}
 		else if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == noteSplashesInputText) {
