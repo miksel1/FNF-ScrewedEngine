@@ -542,7 +542,7 @@ class ChartingState extends MusicBeatState
 		manualZoomTxt.scrollFactor.set();
 		add(manualZoomTxt);
 
-		resetZoomText = new FlxText(manualZoomInput.x, manualZoomInput.y + 20, 0, Language.getText({s: "Press G to reset Manual Zoom", spanish: "Pulsa G para reinicial el Zoom Manual"}), 10);
+		resetZoomText = new FlxText(manualZoomInput.x, manualZoomInput.y + 20, 0, Language.getString({s: "Press G to reset Manual Zoom", spanish: "Pulsa G para reinicial el Zoom Manual"}), 10);
 		resetZoomText.scrollFactor.set();
 		resetZoomText.visible = false;
 		add(resetZoomText);
@@ -622,7 +622,7 @@ class ChartingState extends MusicBeatState
 		UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
 		blockPressWhileTypingOn.push(UI_songTitle);
 
-		var check_voices = new FlxUICheckBox(10, 25, null, null, Language.getText({s: "Has voice track", spanish: "Tiene sonido (Voces)"}), 100);
+		var check_voices = new FlxUICheckBox(10, 25, null, null, Language.getString({s: "Has voice track", spanish: "Tiene sonido (Voces)"}), 100);
 		check_voices.checked = _song.needsVoices;
 		// _song.needsVoices = check_voices.checked;
 		check_voices.callback = function()
@@ -633,7 +633,7 @@ class ChartingState extends MusicBeatState
 
 		//if(_song.ghostTappingAllowed == null) _song.ghostTappingAllowed = true;
 
-		var ghostTappingAllowed = new FlxUICheckBox(check_voices.x, 45, null, null, Language.getText({s: "Ghost Tap", spanish: "Activar Spameo:"}), 100);
+		var ghostTappingAllowed = new FlxUICheckBox(check_voices.x, 45, null, null, Language.getString({s: "Ghost Tap", spanish: "Activar Spameo:"}), 100);
 		ghostTappingAllowed.checked = _song.ghostTappingAllowed;
 		ghostTappingAllowed.callback = function()
 		{
@@ -641,53 +641,53 @@ class ChartingState extends MusicBeatState
 			addTextToDebug("ghost tapping: " + ghostTappingAllowed.checked);
 		};
 
-		var saveButton:FlxButton = new FlxButton(110, 8, Language.getText({s: "Save", spanish: "Guardar"}), function()
+		var saveButton:FlxButton = new FlxButton(110, 8, Language.getString({s: "Save", spanish: "Guardar"}), function()
 		{
 			saveLevel();
 		});
 
-		var reloadSong:FlxButton = new FlxButton(saveButton.x + 90, saveButton.y, Language.getText({s: "Reload Audio", spanish: "Recargar Audio"}), function()
+		var reloadSong:FlxButton = new FlxButton(saveButton.x + 90, saveButton.y, Language.getString({s: "Reload Audio", spanish: "Recargar Audio"}), function()
 		{
 			currentSongName = Paths.formatToSongPath(UI_songTitle.text);
 			loadSong();
 			updateWaveform();
 		});
 
-		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, Language.getText({s: "Reload JSON", spanish: "Recargar JSON"}), function()
+		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, Language.getString({s: "Reload JSON", spanish: "Recargar JSON"}), function()
 		{
-			openSubState(new Prompt(Language.getText({s: 'This action will clear current progress.\n\nProceed?', spanish: 'Esta acción borrará el progreso actual.\n\n¿Proceder?'}), 0, function() {
+			openSubState(new Prompt(Language.getString({s: 'This action will clear current progress.\n\nProceed?', spanish: 'Esta acción borrará el progreso actual.\n\n¿Proceder?'}), 0, function() {
 				loadJson(_song.song.toLowerCase());
 			}, null, ignoreWarnings));
 		});
 
-		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, Language.getText({s: 'Load Autosave', spanish: "Cargar Autoguardado"}), function()
+		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, Language.getString({s: 'Load Autosave', spanish: "Cargar Autoguardado"}), function()
 		{
-			openSubState(new Prompt(Language.getText({s: 'This action will add the last saved changes to\nthe current progress.\n\nProceed?', spanish: 'Esta acción añadirá los últimos cambios guardados\nal progreso actual.\n\n¿Proceder?'}), 0, function() {
+			openSubState(new Prompt(Language.getString({s: 'This action will add the last saved changes to\nthe current progress.\n\nProceed?', spanish: 'Esta acción añadirá los últimos cambios guardados\nal progreso actual.\n\n¿Proceder?'}), 0, function() {
 				PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
 				MusicBeatState.resetState();
 			}, null, ignoreWarnings));
 		});
 
-		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, Language.getText({s: 'Load Events', spanish: 'Cargar Eventos'}), function()
+		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, Language.getString({s: 'Load Events', spanish: 'Cargar Eventos'}), function()
 		{
 			loadEvents();
 		});
 
-		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, Language.getText({s: 'Save Events', spanish: 'Guardar Eventos'}), function ()
+		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, Language.getString({s: 'Save Events', spanish: 'Guardar Eventos'}), function ()
 		{
 			saveEvents();
 		});
 
-		var clear_events:FlxButton = new FlxButton(320, 310, Language.getText({s: 'Clear events', spanish: 'Eliminar Eventos'}), function()
+		var clear_events:FlxButton = new FlxButton(320, 310, Language.getString({s: 'Clear events', spanish: 'Eliminar Eventos'}), function()
 		{
-			openSubState(new Prompt(Language.getText({s: "This action will clear current progress's events.\n\nProceed?", spanish: 'Esta acción quitará todos los eventos actuales.\n\n¿Proceder?'}), 0, clearEvents, null, ignoreWarnings));
+			openSubState(new Prompt(Language.getString({s: "This action will clear current progress's events.\n\nProceed?", spanish: 'Esta acción quitará todos los eventos actuales.\n\n¿Proceder?'}), 0, clearEvents, null, ignoreWarnings));
 		});
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
 
-		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, Language.getText({s: 'Clear notes', spanish: 'ELIMINAR notas'}), function()
+		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, Language.getString({s: 'Clear notes', spanish: 'ELIMINAR notas'}), function()
 		{
-			openSubState(new Prompt(Language.getText({s: 'This action will clear current progress.\n\nProceed?', spanish: 'Esta acción quitará TODO el progreso actual.\n\n¿Proceder?'}), 0, function()
+			openSubState(new Prompt(Language.getString({s: 'This action will clear current progress.\n\nProceed?', spanish: 'Esta acción quitará TODO el progreso actual.\n\n¿Proceder?'}), 0, function()
 			{
 				for (sec in 0..._song.notes.length) {
 					_song.notes[sec].sectionNotes = [];
@@ -835,8 +835,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(creditInputText);
 		tab_group_song.add(screwYouInputText);
-		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, Language.getText({s: 'Song BPM:', spanish: 'BPM de canción:'})));
-		tab_group_song.add(new FlxText(stepperBPM.x + 100, stepperBPM.y - 15, 0, Language.getText({s: 'Song Offset:', spanish: 'Offset:'})));
+		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, Language.getString({s: 'Song BPM:', spanish: 'BPM de canción:'})));
+		tab_group_song.add(new FlxText(stepperBPM.x + 100, stepperBPM.y - 15, 0, Language.getString({s: 'Song Offset:', spanish: 'Offset:'})));
 		tab_group_song.add(new FlxText(stepperSpeed.x, stepperSpeed.y - 15, 0, 'Song Speed:'));
 		tab_group_song.add(new FlxText(player2DropDown.x, player2DropDown.y - 15, 0, 'Opponent:'));
 		tab_group_song.add(new FlxText(gfVersionDropDown.x, gfVersionDropDown.y - 15, 0, 'Girlfriend:'));
