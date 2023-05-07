@@ -11,14 +11,11 @@ Add more languages
 Achievements in other languages
 Add playmodes (only-notes, and more)
 Character Selector State (with lua, text, and JSON support IMPORTANT)
-Add freeplay sections by JSON
 Add lua support in terminal state
 Add lua support in freeplay sections (?)
-Add menu customizer by JSON (XD is doing it, i wanted he to try)
 Turn notes to red when passed x notes
 Mod credits in other languages (i have to test it)
 Auto-chart (maybe using the frequency of each rectangle in the waveform)
-Credit the shader's creators
 Add stage shader effects by JSON
 Fix icon offsets
 Heatwave shader
@@ -28,4 +25,9 @@ Fix PlaybackRate
 Done:
 Scroll Speed changer (instead of only constant and multiplicative, this one changes randomly)
 Chromatic Aberration shader (Kinda)
+Add freeplay sections by JSON
+Credit the shader's creators
 
+
+Well shit:
+Add menu customizer by JSON (XD is doing it, i wanted he to try)
