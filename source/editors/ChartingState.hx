@@ -1797,11 +1797,11 @@ class ChartingState extends MusicBeatState
 					updateZoom();
 				}
 			}
-			if (wname == 'note_spamthing' {
-			spamAmount = sender.value;
+			if (wname == 'note_spamthing') {
+			spamCloseness = nums.value;
 			}
 			if(wname == 'note_spamamount') {
-			spamClotheness = sender.value;
+			spamLength = nums.value;
 			}
 		}
 		else if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
@@ -1875,7 +1875,7 @@ class ChartingState extends MusicBeatState
 	var colorSine:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if(colorSwap != null)
+		if(colorSwap != null && !ClientPrefs.lowQuality)
 			colorSwap.hue += elapsed * 0.1;
 
 		curStep = recalculateSteps();
@@ -2142,14 +2142,8 @@ class ChartingState extends MusicBeatState
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
-					if (FlxG.mouse.wheel > 0)
-					{
-						var fuck:Float = CoolUtil.quantize(beat, snap) - increase;
-						FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
-					} else {
-						var fuck:Float = CoolUtil.quantize(beat, snap) + increase;
-						FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
-					}
+					var fuck:Float = CoolUtil.quantize(beat, snap) + (FlxG.mouse.wheel > 0 ? -increase : increase);
+					FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
 				}
 				if(vocals != null) {
 					vocals.pause();
@@ -2171,14 +2165,7 @@ class ChartingState extends MusicBeatState
 
 				var daTime:Float = 700 * FlxG.elapsed * holdingShift;
 
-				if (FlxG.keys.pressed.W)
-				{
-					FlxG.sound.music.time -= daTime;
-				}
-				else
-				{
-					FlxG.sound.music.time += daTime;
-				}
+				FlxG.sound.music.time += FlxG.keys.pressed.W ? -daTime : daTime;
 
 				if(vocals != null) {
 					vocals.pause();
@@ -2195,14 +2182,8 @@ class ChartingState extends MusicBeatState
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
-					if (FlxG.keys.pressed.UP)
-					{
-						var fuck:Float = CoolUtil.quantize(beat, snap) - increase; //(Math.floor((beat+snap) / snap) * snap);
-						FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
-					} else {
-						var fuck:Float = CoolUtil.quantize(beat, snap) + increase; //(Math.floor((beat+snap) / snap) * snap);
-						FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
-					}
+					var fuck:Float = CoolUtil.quantize(beat, snap) + (FlxG.keys.pressed.UP ? -increase : increase); //(Math.floor((beat+snap) / snap) * snap);
+					FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
 				}
 			}
 
@@ -2268,14 +2249,8 @@ class ChartingState extends MusicBeatState
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
-					if (FlxG.keys.pressed.UP)
-					{
-						var fuck:Float = CoolUtil.quantize(beat, snap) - increase;
-						feces = Conductor.beatToSeconds(fuck);
-					} else {
-						var fuck:Float = CoolUtil.quantize(beat, snap) + increase; //(Math.floor((beat + snap) / snap) * snap);
-						feces = Conductor.beatToSeconds(fuck);
-					}
+					var fuck:Float = CoolUtil.quantize(beat, snap) + (FlxG.keys.pressed.UP ? -increase : increase); //(Math.floor((beat + snap) / snap) * snap);
+					feces = Conductor.beatToSeconds(fuck);
 					FlxTween.tween(FlxG.sound.music, {time:feces}, 0.1, {ease:FlxEase.circOut});
 					if(vocals != null) {
 						vocals.pause();
@@ -2324,11 +2299,7 @@ class ChartingState extends MusicBeatState
 				changeSection(curSec + shiftThing);
 
 			if (FlxG.keys.justPressed.A) {
-				if(curSec <= 0) {
-					changeSection(_song.notes.length-1);
-				} else {
-					changeSection(curSec - shiftThing);
-				}
+				changeSection((curSec <= 0) ? (_song.notes.length-1) : (curSec - shiftThing));
 			}
 		} else if (FlxG.keys.justPressed.ENTER) {
 			for (i in 0...blockPressWhileTypingOn.length) {
@@ -2359,7 +2330,7 @@ class ChartingState extends MusicBeatState
 
 		// PLAYBACK SPEED CONTROLS //
 		var holdingShift = FlxG.keys.pressed.SHIFT;
-		var holdingLB = FlxG.keys.pressed.LBRACKET;
+		var holdingLB = FlxG.keys.pressed.LBRACKET; // WHICH FUCKING KEY IS THIS!? I CANT FIND IT!!
 		var holdingRB = FlxG.keys.pressed.RBRACKET;
 		var pressedLB = FlxG.keys.justPressed.LBRACKET;
 		var pressedRB = FlxG.keys.justPressed.RBRACKET;
@@ -2395,17 +2366,15 @@ class ChartingState extends MusicBeatState
 				note.shader = colorSwap.shader;
 
 			note.alpha = 1;
-			if(curSelectedNote != null) {
+			if(!ClientPrefs.lowQuality && curSelectedNote != null) { // less interactions, less lag
 				var noteDataToCheck:Int = note.noteData;
 				if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
 
-				if(!ClientPrefs.lowQuality) {
-					if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
-					{
-						colorSine += elapsed;
-						var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
-						note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
-					}
+				if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck)))
+				{
+					colorSine += elapsed;
+					var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
+					note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
 				}
 			}
 
@@ -2911,16 +2880,9 @@ class ChartingState extends MusicBeatState
 		var healthIconP1:String = loadHealthIconFromCharacter(_song.player1);
 		var healthIconP2:String = loadHealthIconFromCharacter(_song.player2);
 
-		if (_song.notes[curSec].mustHitSection)
-		{
-			leftIcon.changeIcon(healthIconP1);
-			rightIcon.changeIcon(healthIconP2);
-		}
-		else
-		{
-			leftIcon.changeIcon(healthIconP2);
-			rightIcon.changeIcon(healthIconP1);
-		}
+		leftIcon.changeIcon(_song.notes[curSec].mustHitSection ? healthIconP1 : healthIconP2);
+		rightIcon.changeIcon(_song.notes[curSec].mustHitSection ? healthIconP2 : healthIconP1);
+		
 		if (_song.notes[curSec].gfSection) leftIcon.changeIcon('gf');
 	}
 
@@ -2958,11 +2920,7 @@ class ChartingState extends MusicBeatState
 				stepperSusLength.value = curSelectedNote[2];
 				if(curSelectedNote[3] != null) {
 					currentType = noteTypeMap.get(curSelectedNote[3]);
-					if(currentType <= 0) {
-						noteTypeDropDown.selectedLabel = '';
-					} else {
-						noteTypeDropDown.selectedLabel = currentType + '. ' + curSelectedNote[3];
-					}
+					noteTypeDropDown.selectedLabel = (currentType <= 0 ? '' : currentType + '. ' + curSelectedNote[3]);
 				}
 			} else {
 				eventDropDown.selectedLabel = curSelectedNote[1][curEventSelected][0];
@@ -3116,7 +3074,7 @@ class ChartingState extends MusicBeatState
 		note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 		note.updateHitbox();
 		note.x = Math.floor(daNoteInfo * GRID_SIZE) + GRID_SIZE;
-		if(isNextSection && _song.notes[curSec].mustHitSection != _song.notes[curSec+1].mustHitSection) {
+		if(isNextSection && _song.notes[curSec].mustHitSection != _song.notes[curSec + 1].mustHitSection) {
 			if(daNoteInfo > 3) {
 				note.x -= GRID_SIZE * 4;
 			} else if(daSus != null) {
