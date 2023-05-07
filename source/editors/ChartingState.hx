@@ -461,15 +461,31 @@ class ChartingState extends MusicBeatState
 		\nUp/Down - Change Conductor's Strum Time with Snapping
 		\nLeft Bracket / Right Bracket - Change Song Playback Rate (SHIFT to go Faster)
 		\nALT + Left Bracket / Right Bracket - Reset Song Playback Rate
-		\nHold Shift to move 4x faster
-		\nHold Control and click on an arrow to select it
-		\n" + keyBonds["zoom+"][0].toString() + "/" + keyBonds["zoom-"][0].toString() + " - Zoom in/out
+		\nHold SHIFT to move 4x faster
+		\nHold CONTROL and click on an arrow to select it
+		\n" + keyBonds["zoom+"][0].toString() + /*keyBonds["zoom+"][1] == NONE ? "" : keyBonds["zoom+"][1].toString() + ")" +*/ "/" + keyBonds["zoom-"][0].toString() + " - Zoom in/out
 		\n" + keyBonds["save"][0].toString() + " - Save Chart (Autosave it)
 		\nHold C - Drawing
-		\nEsc - Test your chart inside Chart Editor
-		\nEnter - Play your chart
+		\nESC - Test your chart inside Chart Editor
+		\nENTER - Play your chart
 		\n" + keyBonds["decrease"][0].toString() + "/" + keyBonds["increase"][0].toString() + " - Decrease/Increase Note Sustain Length
-		\nSpace - Stop/Resume song"};
+		\nSPACE - Stop/Resume song",
+		spanish:
+		'W/S o Rueda del Mouse - Cambiar tiempo de la canción.
+		\nA/D - Ir a la anterior/siguiente sección.
+		\nIzquierda/Derecha - Cambiar "Snap".
+		\nArriba/Abajo - Cambiar tiempo de la canción con "Snap".
+		\n"Bracket" Izquierdo / "Bracket" Derecho - Cambiar Playback Rate (pulsa SHIFT para ir más rápido)
+		\nALT + "Bracket" Izquierdo / "Bracket" - Reiniciar Playback Rate.
+		\nMantén SHIFT para mover 4 veces más rápido.
+		\nMantén CONTROL y haz CLICK IZQUIERDO en una nota para seleccionarla.
+		\n' /*+ "("*/ + keyBonds['zoom+'][0].toString() + /*keyBonds["zoom+"][1] == NONE ? "" : keyBonds["zoom+"][1].toString() + ")" +*/ "/" + keyBonds['zoom-'][0].toString() + ' - Incrementar/Decrecer Zoom.
+		\n' + keyBonds['save'][0].toString() + ' - Guardar "Chart" (Autoguardarlo)
+		\nMantener C - "Dibujo"
+		\nESC - Prueba tu "chart" con el Editor de Charts.
+		\nENTER - Jugar al "chart".
+		\n' + keyBonds["decrease"][0].toString() + "/" + keyBonds["increase"][0].toString() + ' - Decrecer/Incrementar Largo de la Nota.
+		\nESPACIO - Parar/Resumir canción.'};
 
 		var tipTextArray:Array<String> = Language.getString(text).split('\n');
 		for (i in 0...tipTextArray.length) {
@@ -522,11 +538,11 @@ class ChartingState extends MusicBeatState
 		blockPressWhileTypingOnStepper.push(manualZoomInput);
 		add(manualZoomInput);
 
-		var manualZoomTxt:FlxText = new FlxText(manualZoomInput.x, manualZoomInput.y - 20, -1, 'Manual Zoom:', 10);
+		var manualZoomTxt:FlxText = new FlxText(manualZoomInput.x, manualZoomInput.y - 20, -1, Language.getString({s: 'Manual Zoom:', spanish: 'Zoom Manual:'}), 10);
 		manualZoomTxt.scrollFactor.set();
 		add(manualZoomTxt);
 
-		resetZoomText = new FlxText(manualZoomInput.x, manualZoomInput.y + 20, 0, "Press G to reset Manual Zoom", 10);
+		resetZoomText = new FlxText(manualZoomInput.x, manualZoomInput.y + 20, 0, Language.getText({s: "Press G to reset Manual Zoom", spanish: "Pulsa G para reinicial el Zoom Manual"}), 10);
 		resetZoomText.scrollFactor.set();
 		resetZoomText.visible = false;
 		add(resetZoomText);
@@ -606,7 +622,7 @@ class ChartingState extends MusicBeatState
 		UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
 		blockPressWhileTypingOn.push(UI_songTitle);
 
-		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
+		var check_voices = new FlxUICheckBox(10, 25, null, null, Language.getText({s: "Has voice track", spanish: "Tiene sonido (Voces)"}), 100);
 		check_voices.checked = _song.needsVoices;
 		// _song.needsVoices = check_voices.checked;
 		check_voices.callback = function()
@@ -617,7 +633,7 @@ class ChartingState extends MusicBeatState
 
 		//if(_song.ghostTappingAllowed == null) _song.ghostTappingAllowed = true;
 
-		var ghostTappingAllowed = new FlxUICheckBox(check_voices.x, 45, null, null, "Ghost Tap", 100);
+		var ghostTappingAllowed = new FlxUICheckBox(check_voices.x, 45, null, null, Language.getText({s: "Ghost Tap", spanish: "Activar Spameo:"}), 100);
 		ghostTappingAllowed.checked = _song.ghostTappingAllowed;
 		ghostTappingAllowed.callback = function()
 		{
@@ -625,53 +641,53 @@ class ChartingState extends MusicBeatState
 			addTextToDebug("ghost tapping: " + ghostTappingAllowed.checked);
 		};
 
-		var saveButton:FlxButton = new FlxButton(110, 8, "Save", function()
+		var saveButton:FlxButton = new FlxButton(110, 8, Language.getText({s: "Save", spanish: "Guardar"}), function()
 		{
 			saveLevel();
 		});
 
-		var reloadSong:FlxButton = new FlxButton(saveButton.x + 90, saveButton.y, "Reload Audio", function()
+		var reloadSong:FlxButton = new FlxButton(saveButton.x + 90, saveButton.y, Language.getText({s: "Reload Audio", spanish: "Recargar Audio"}), function()
 		{
 			currentSongName = Paths.formatToSongPath(UI_songTitle.text);
 			loadSong();
 			updateWaveform();
 		});
 
-		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
+		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, Language.getText({s: "Reload JSON", spanish: "Recargar JSON"}), function()
 		{
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', 0, function() {
+			openSubState(new Prompt(Language.getText({s: 'This action will clear current progress.\n\nProceed?', spanish: 'Esta acción borrará el progreso actual.\n\n¿Proceder?'}), 0, function() {
 				loadJson(_song.song.toLowerCase());
 			}, null, ignoreWarnings));
 		});
 
-		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', function()
+		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, Language.getText({s: 'Load Autosave', spanish: "Cargar Autoguardado"}), function()
 		{
-			openSubState(new Prompt('This action will add the last saved changes to\nthe current progress.\n\nProceed?', 0, function() {
+			openSubState(new Prompt(Language.getText({s: 'This action will add the last saved changes to\nthe current progress.\n\nProceed?', spanish: 'Esta acción añadirá los últimos cambios guardados\nal progreso actual.\n\n¿Proceder?'}), 0, function() {
 				PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
 				MusicBeatState.resetState();
 			}, null, ignoreWarnings));
 		});
 
-		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, 'Load Events', function()
+		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, Language.getText({s: 'Load Events', spanish: 'Cargar Eventos'}), function()
 		{
 			loadEvents();
 		});
 
-		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', function ()
+		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, Language.getText({s: 'Save Events', spanish: 'Guardar Eventos'}), function ()
 		{
 			saveEvents();
 		});
 
-		var clear_events:FlxButton = new FlxButton(320, 310, 'Clear events', function()
+		var clear_events:FlxButton = new FlxButton(320, 310, Language.getText({s: 'Clear events', spanish: 'Eliminar Eventos'}), function()
 		{
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', 0, clearEvents, null, ignoreWarnings));
+			openSubState(new Prompt(Language.getText({s: "This action will clear current progress's events.\n\nProceed?", spanish: 'Esta acción quitará todos los eventos actuales.\n\n¿Proceder?'}), 0, clearEvents, null, ignoreWarnings));
 		});
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
 
-		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, 'Clear notes', function()
+		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, Language.getText({s: 'Clear notes', spanish: 'ELIMINAR notas'}), function()
 		{
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', 0, function()
+			openSubState(new Prompt(Language.getText({s: 'This action will clear current progress.\n\nProceed?', spanish: 'Esta acción quitará TODO el progreso actual.\n\n¿Proceder?'}), 0, function()
 			{
 				for (sec in 0..._song.notes.length) {
 					_song.notes[sec].sectionNotes = [];
@@ -819,8 +835,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(creditInputText);
 		tab_group_song.add(screwYouInputText);
-		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, 'Song BPM:'));
-		tab_group_song.add(new FlxText(stepperBPM.x + 100, stepperBPM.y - 15, 0, 'Song Offset:'));
+		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, Language.getText({s: 'Song BPM:', spanish: 'BPM de canción:'})));
+		tab_group_song.add(new FlxText(stepperBPM.x + 100, stepperBPM.y - 15, 0, Language.getText({s: 'Song Offset:', spanish: 'Offset:'})));
 		tab_group_song.add(new FlxText(stepperSpeed.x, stepperSpeed.y - 15, 0, 'Song Speed:'));
 		tab_group_song.add(new FlxText(player2DropDown.x, player2DropDown.y - 15, 0, 'Opponent:'));
 		tab_group_song.add(new FlxText(gfVersionDropDown.x, gfVersionDropDown.y - 15, 0, 'Girlfriend:'));
