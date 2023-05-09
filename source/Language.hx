@@ -24,6 +24,13 @@ typedef LanguageDynamic = {
 	@:optional var german:Dynamic;
 }
 
+@:structInit
+typedef LanguageArrayT<T> = {
+	var t:T;
+	@:optional var spanish:T;
+	@:optional var german:T;
+}
+
 class Language {
 	/**
 	 * Returns all the languages
