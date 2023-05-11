@@ -381,6 +381,15 @@ class PlayState extends MusicBeatState
 	var npsArray:Array<Date> = [];
 	var maxNPS:Int = 0;
 
+	#if cpp @:unreflective #end
+	@:isVar
+	var shadersEnabled(get, never):Bool;
+
+	inline function get_shadersEnabled(){
+		FlxG.camera.filtersEnabled = shadersEnabled;
+		return (ClientPrefs.shaders) ? true : false;
+	}
+
 	override public function create()
 	{
 		// trace('Playback Rate: ' + playbackRate);
@@ -499,13 +508,9 @@ class PlayState extends MusicBeatState
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		if (isStoryMode)
-		{
 			detailsText = "Story Mode: " + WeekData.getCurrentWeek().weekName;
-		}
 		else
-		{
 			detailsText = "Freeplay";
-		}
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
@@ -1697,7 +1702,9 @@ class PlayState extends MusicBeatState
 	}
 
 	// based on Andromeda engine code
-	inline public function addShaderToArray(name:String, shader:Dynamic){
+	inline public function addShaderToArray(name:String, shader:Dynamic, ?camera:Dynamic){
+		if (!ClientPrefs.shaders)
+			return;
 		// var conv = new ShaderFilter(shader);
 		// I totally had fun writing this
 		var shaderDef:ShaderDefs = {
@@ -1709,7 +1716,10 @@ class PlayState extends MusicBeatState
 		try {
 			if (shadersMap.get(shaderDef.shader) != null){
 				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-				FlxG.camera.setFilters(newEffect);
+				if (camera != null && camera is FlxCamera)
+					camera.setFilters(newEffect);
+				else
+					FlxG.camera.setFilters(newEffect);
 			}
 		}
 		catch (e){
@@ -1718,7 +1728,10 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	inline public function removeShaderFromArray(name:String, shader:Dynamic){
+	inline public function removeShaderFromArray(name:String, shader:Dynamic, ?camera:Dynamic){
+		if (!ClientPrefs.shaders)
+			return;
+
 		// var conv = new ShaderFilter(shader);
 		var shaderDef:ShaderDefs = {
 			name: name,
@@ -1729,7 +1742,10 @@ class PlayState extends MusicBeatState
 		try {
 			if (shadersMap.get(shaderDef.shader) != null){
 				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-				FlxG.camera.setFilters(newEffect);				
+				if (camera != null && camera is FlxCamera)
+					camera.setFilters(newEffect);
+				else
+					FlxG.camera.setFilters(newEffect);
 			}
 		}
 		catch (e){
@@ -1738,11 +1754,13 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	inline public function clearShadersFromArray(?amo:Int){
+	inline public function clearShadersFromArray(?amo:Int)
 		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
-	}
 
-	public function getShadersFromArray(name:String, shader:Dynamic) {
+	public function getShaderFromArray(name:String, shader:Dynamic):Dynamic {
+		if (!ClientPrefs.shaders)
+			return null;
+
 		var shaderDef:ShaderDefs = {
 			name: name,
 			shader: shader
@@ -1760,9 +1778,8 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
-	inline public function hasShader(name:Dynamic){
+	inline public function hasShader(name:Dynamic)
 		return shadersArray.contains(name);
-	}
 
 	function startCharacterLua(name:String)
 	{
@@ -3201,6 +3218,7 @@ class PlayState extends MusicBeatState
 			addShaderToArray('anotherScreenshader', anotherScreenshader);
 		else if (SONG.event7 == 'Chromatic Aberration')
 			addShaderToArray('globalChromaticAberration', globalChromaticAberration);
+		/*
 		else{
 			// var e = new ShaderFilter(anotherScreenshader.shader);
 			// var f = new ShaderFilter(globalChromaticAberration.shader);
@@ -3210,7 +3228,7 @@ class PlayState extends MusicBeatState
 				removeShaderFromArray('anotherScreenshader', anotherScreenshader);
 			else if (hasShader('globalChromaticAberration'))
 				removeShaderFromArray('globalChromaticAberration', globalChromaticAberration);
-		}
+		}*/
 
 		FlxG.camera.setFilters(shadersArray);
 		screenshader.update(elapsed);
