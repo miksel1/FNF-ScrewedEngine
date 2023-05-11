@@ -3424,7 +3424,7 @@ class PlayState extends MusicBeatState
 
 		// for nps
 		var pooper = npsArray.length - 1;
-		while (pooper > 0){
+		while (pooper >= 0){
 			var fondler:Date = npsArray[pooper];
 			if (fondler != null && fondler.getTime() + 1000 < Date.now().getTime()){
 				npsArray.remove(fondler);
