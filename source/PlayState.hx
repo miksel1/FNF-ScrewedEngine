@@ -262,7 +262,7 @@ class PlayState extends MusicBeatState
 
 	var notesHitArray:Array<Date> = [];
 
-	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
+	var dialogue:Array<String> = null;
 	var dialogueJson:DialogueFile = null;
 
 	var dadbattleBlack:BGSprite;
@@ -1701,7 +1701,12 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	// based on Andromeda engine code
+	/**
+	 * [Description] Adds a shader to the game (through an array, then a map). Based on Andromeda engine by Nebula_Zorua.
+	 * @param name Shader name
+	 * @param shader The Shader
+	 * @param camera Optional: The camera for the shader
+	 */
 	inline public function addShaderToArray(name:String, shader:Dynamic, ?camera:Dynamic){
 		if (!ClientPrefs.shaders)
 			return;
@@ -1728,6 +1733,12 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	/**
+	 * [Description] Ditto, but removes a shader from the (internal) Shader Map
+	 * @param name Shader name
+	 * @param shader The Shader
+	 * @param camera Optional: The camera for the shader
+	 */
 	inline public function removeShaderFromArray(name:String, shader:Dynamic, ?camera:Dynamic){
 		if (!ClientPrefs.shaders)
 			return;
@@ -1754,9 +1765,20 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	/**
+	 * [Description] Removes a shader from the (internal) Shaders Array
+	 * @param amo Optional: Amount, if blank, removes all by default
+	 * @return shadersArray.resize(amo > 0 || amo != null ? amo : 0)
+	 */
 	inline public function clearShadersFromArray(?amo:Int)
 		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
 
+	/**
+	 * [Description] Gets a `certain` shader from an shaders array or map
+	 * @param name The name of the shader
+	 * @param shader The shader itself
+	 * @return Dynamic
+	 */
 	public function getShaderFromArray(name:String, shader:Dynamic):Dynamic {
 		if (!ClientPrefs.shaders)
 			return null;
@@ -1778,7 +1800,12 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
-	inline public function hasShader(name:Dynamic)
+	/**
+	 * [Description] Whether the shader array contains a shader, returns `false` if it doesn't
+	 * @param name The name of the shader
+	 * @return return shadersArray.contains(name)
+	 */
+	inline public function hasShader(name:Dynamic):Bool
 		return shadersArray.contains(name);
 
 	function startCharacterLua(name:String)
@@ -4430,23 +4457,16 @@ class PlayState extends MusicBeatState
 					screenshader.Enabled = true;
 				}
 			case 'Popup':
-				var title:String = (value1);
-				var message:String = (value2);
 				FlxG.sound.music.pause();
 				vocals.pause();
 
-				lime.app.Application.current.window.alert(message, title);
+				lime.app.Application.current.window.alert(value2, value1);
 				FlxG.sound.music.resume();
 				vocals.resume();
 			case 'Popup (No Pause)':
-				var title:String = (value1);
-				var message:String = (value2);
-
-				lime.app.Application.current.window.alert(message, title);
+				lime.app.Application.current.window.alert(value2, value1);
 			case '"Screw you!" Text Change':
-				var text:String = (value1);
-
-				screwYouTxt.text = text;
+				screwYouTxt.text = value1;
 			case 'Deactivate CPU LIGHT':
 				canCPULight = false;
 			case 'Activate CPU LIGHT':
