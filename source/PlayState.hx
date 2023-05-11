@@ -467,9 +467,7 @@ class PlayState extends MusicBeatState
 
 		// For the "Just the Two of Us" achievement
 		for (i in 0...keysArray.length)
-		{
 			keysPressed.push(false);
-		}
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -1244,31 +1242,16 @@ class PlayState extends MusicBeatState
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
 
-		if (SONG.credit != null)
-		{
-			watermarkTxt = new FlxText(10, healthBarBG.y
-				- 30, 0,
-				'['
-				+ CoolUtil.difficultyString()
-				+ '] - '
-				+ '${SONG.song} by ${SONG.credit} - Screwed Engine', 74);
-			watermarkTxt.scrollFactor.set();
-			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			watermarkTxt.size = 18;
-			watermarkTxt.updateHitbox();
-			watermarkTxt.alpha = 0.8;
-			add(watermarkTxt);
-		}
-		else
-		{
-			watermarkTxt = new FlxText(10, healthBarBG.y - 30, 0, '[' + CoolUtil.difficultyString() + '] - ' + '${SONG.song} - Screwed Engine', 74);
-			watermarkTxt.scrollFactor.set();
-			watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			watermarkTxt.size = 18;
-			watermarkTxt.updateHitbox();
-			watermarkTxt.alpha = 0.8;
-			add(watermarkTxt);
-		}
+		// shuts haxe up, idk why I can't just add it to the string
+		final credText:String = (SONG.credit != null) ? '${SONG.song} by ${SONG.credit} - Screwed Engine' : '${SONG.song} - Screwed Engine';
+
+		watermarkTxt = new FlxText(10, healthBarBG.y - 30, 0, '[' + CoolUtil.difficultyString() + '] - ' + credText, 74);
+		watermarkTxt.scrollFactor.set();
+		watermarkTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		watermarkTxt.size = 18;
+		watermarkTxt.updateHitbox();
+		watermarkTxt.alpha = 0.8;
+		add(watermarkTxt);
 
 		screwYouTxt = new FlxText(10, healthBarBG.y, 0, SONG.screwYou, 74);
 		screwYouTxt.scrollFactor.set();
@@ -1280,10 +1263,7 @@ class PlayState extends MusicBeatState
 		screwYouTxt.cameras = [camHUD];
 
 		if (ClientPrefs.hideHud)
-		{
-			watermarkTxt.visible = false;
-			screwYouTxt.visible = false;
-		}
+			watermarkTxt.visible = screwYouTxt.visible = false;
 
 		if (ClientPrefs.crazyCounter)
 		{ // theoyeah engine?
