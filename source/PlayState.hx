@@ -385,13 +385,10 @@ class PlayState extends MusicBeatState
 	var npsArray:Array<Date> = [];
 	var maxNPS:Int = 0;
 
-	#if cpp @:unreflective #end
-	@:isVar
-	var shadersEnabled(get, never):Bool;
+	var shadersEnabled(default, set):Bool = true;
 
-	inline function get_shadersEnabled(){
-		FlxG.camera.filtersEnabled = shadersEnabled;
-		return (ClientPrefs.shaders) ? true : false;
+	inline function set_shadersEnabled(v:Bool):Bool {
+		return FlxG.camera.filtersEnabled = shadersEnabled = v;
 	}
 
 	override public function create()
@@ -399,6 +396,7 @@ class PlayState extends MusicBeatState
 		// trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
 
+		shadersEnabled = ClientPrefs.shadersEnabled;
 		// for lua
 		instance = this;
 
