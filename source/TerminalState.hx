@@ -20,15 +20,17 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxTimer;
 import flash.system.System;
+#if (flixel >= "5.3.0")
+import flixel.sound.FlxSound;
+#else
 import flixel.system.FlxSound;
+#end
 import flixel.FlxG;
 #if sys
 import sys.io.File;
 #end
 
 using StringTools;
-
-import PlayState; // why the hell did this work LMAO.
 
 class TerminalState extends MusicBeatState
 {

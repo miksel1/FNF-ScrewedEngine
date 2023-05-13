@@ -30,7 +30,11 @@ import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+#if (flixel >= "5.3.0")
+import flixel.sound.FlxSound;
+#else
 import flixel.system.FlxSound;
+#end
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -68,10 +72,13 @@ import sys.io.Process;
 
 using StringTools;
 
+
+#if (flixel >= "5.3.0")
+@:access(flixel.sound.FlxSound._sound)
+#else
 @:access(flixel.system.FlxSound._sound)
+#end
 @:access(openfl.media.Sound.__buffer)
-
-
 class ChartingState extends MusicBeatState
 {
 	public static var noteTypeList:Array<String> = //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
