@@ -1,3 +1,4 @@
+import gamejolt.GJClient;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;

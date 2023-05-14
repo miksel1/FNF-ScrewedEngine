@@ -207,33 +207,28 @@ class CoolUtil
 	 */
 	public static function slideEffect(amplitude:Float, calcMethod:SlideCalcMethod, slowness:Float = 1, delayIndex:Float = 0, ?offset:Float):Float
 	{
-		if (slowness > 0)
-		{
-			var slider:Float = (FlxG.sound.music.time / 1000) * (Conductor.bpm / 60);
+		if (slowness < 0)
+			slowness = 1;
+		var slider:Float = (FlxG.sound.music.time / 1000) * (Conductor.bpm / 60);
 
-			/*
-				while (delayIndex >= 2)
-				{
-					delayIndex -= 2;
-				}
-			 */
-
-			var slideValue:Float;
-
-			switch (calcMethod)
+		/*
+			while (delayIndex >= 2)
 			{
-				case SIN:
-					slideValue = offset + amplitude * Math.sin(((slider + delayIndex) / slowness) * Math.PI);
-				case COS:
-					slideValue = offset + amplitude * Math.cos(((slider + delayIndex) / slowness) * Math.PI);
-				default:
-					throw 'The current calc method for the slide effect function is not valid!';
+				delayIndex -= 2;
 			}
+		 */
 
-			return slideValue;
+		var slideValue:Float;
+
+		switch (calcMethod)
+		{
+			case SIN:
+				slideValue = offset + amplitude * Math.sin(((slider + delayIndex) / slowness) * Math.PI);
+			case COS:
+				slideValue = offset + amplitude * Math.cos(((slider + delayIndex) / slowness) * Math.PI);
 		}
-		else
-			throw 'Slide Effect slowness value cannot be less than 0!';
+
+		return slideValue;
 	}
 
 	public static function objectCenter(object:FlxObject, target:FlxObject, axis:FlxAxes = XY)
@@ -244,7 +239,8 @@ class CoolUtil
 			object.y = target.y + target.height / 2 - object.height / 2;
 	}
 
-	public static function debugTrace(s:Dynamic...) {
+	public static function debugTrace(...s:Dynamic)
+	{
 		#if debug
 		trace(s);
 		#end

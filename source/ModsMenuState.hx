@@ -2,6 +2,8 @@ package;
 
 #if desktop
 import Discord.DiscordClient;
+import sys.io.File;
+import sys.FileSystem;
 #end
 import flash.text.TextField;
 import flixel.FlxG;
@@ -17,15 +19,12 @@ import flixel.tweens.FlxTween;
 import lime.utils.Assets;
 import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
-import sys.io.File;
-import sys.FileSystem;
 import haxe.Json;
 import haxe.format.JsonParser;
 import openfl.display.BitmapData;
 import flash.geom.Rectangle;
 import flixel.ui.FlxButton;
 import flixel.FlxBasic;
-import sys.io.File;
 
 using StringTools;
 
@@ -199,9 +198,7 @@ class ModsMenuState extends MusicBeatState
 		startX -= 190;
 		buttonDisableAll = new FlxButton(startX, 0, "DISABLE ALL", function() {
 			for (i in modsList)
-			{
 				i[1] = false;
-			}
 			for (mod in mods)
 			{
 				if (mod.restart)
@@ -250,9 +247,6 @@ class ModsMenuState extends MusicBeatState
 
 		// more buttons
 		var startX:Int = 1100;
-
-
-
 
 		/*
 		installButton = new FlxButton(startX, 620, "Install Mod", function()
@@ -337,9 +331,7 @@ class ModsMenuState extends MusicBeatState
 			var loadedIcon:BitmapData = null;
 			var iconToUse:String = Paths.mods(values[0] + '/pack.png');
 			if(FileSystem.exists(iconToUse))
-			{
 				loadedIcon = BitmapData.fromFile(iconToUse);
-			}
 
 			newMod.icon = new AttachedSprite();
 			if(loadedIcon != null)

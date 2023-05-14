@@ -934,27 +934,17 @@ class FreeplayState extends MusicBeatState
 			if (FlxG.keys.justPressed.SHIFT && canSmash)
 			{
 				if (sectionImages.length == 0)
-				{
 					curSelectingSection = 1;
-				}
 				else
-				{
 					curSelectingSection = sectionImages.length;
-				}
 				selectSection();
 			}
 			else if (controls.ACCEPT && canSmash)
-			{
 				selectSection();
-			}
 			else if (controls.UI_LEFT_P)
-			{
 				changeSection(-1);
-			}
 			else if (controls.UI_RIGHT_P)
-			{
 				changeSection(1);
-			}
 		}
 
 		super.update(elapsed);
@@ -1095,9 +1085,7 @@ class FreeplayState extends MusicBeatState
 			var sectionImage:FlxSprite = new FlxSprite(0, 0).loadGraphic(file);
 			sectionImage.centerOffsets(false);
 			if (position == -1)
-			{
 				sectionImage.x = (1000 * lastInt + 1) + (512 - sectionImage.width);
-			}
 			else
 			{
 				sectionImage.x = (1000 * position + 1) + (512 - sectionImage.width);

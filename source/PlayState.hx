@@ -396,7 +396,7 @@ class PlayState extends MusicBeatState
 		// trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
 
-		shadersEnabled = ClientPrefs.shadersEnabled;
+		shadersEnabled = ClientPrefs.shaders;
 		// for lua
 		instance = this;
 
@@ -3556,7 +3556,7 @@ class PlayState extends MusicBeatState
 			health = maxHealth;
 
 		// fixing the yandere dev code
-		switch (iconP1.animation.frames){
+		switch (iconP1.animation.numFrames){
 			case 3:
 				if (healthBar.percent < 20)
 					iconP1.animation.curAnim.curFrame = 1;
@@ -3571,7 +3571,7 @@ class PlayState extends MusicBeatState
 					iconP1.animation.curAnim.curFrame = 0;
 		}
 		// player 2
-		switch (iconP2.animation.frames){
+		switch (iconP2.animation.numFrames){
 			case 3:
 				if (healthBar.percent > 80)
 					iconP2.animation.curAnim.curFrame = 1;
