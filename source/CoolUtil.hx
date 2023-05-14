@@ -243,4 +243,10 @@ class CoolUtil
 		if (axis == XY || axis == Y)
 			object.y = target.y + target.height / 2 - object.height / 2;
 	}
+
+	public static function debugTrace(s:Dynamic...) {
+		#if debug
+		trace(s);
+		#end
+	}
 }
