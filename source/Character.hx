@@ -97,18 +97,15 @@ class Character extends FlxSprite
 
 				#if MODS_ALLOWED
 				var path:String = Paths.modFolders(characterPath);
-				if (!FileSystem.exists(path)) {
+				if (!FileSystem.exists(path))
 					path = Paths.getPreloadPath(characterPath);
-				}
 
 				if (!FileSystem.exists(path))
 				#else
 				var path:String = Paths.getPreloadPath(characterPath);
 				if (!Assets.exists(path))
 				#end
-				{
-					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
-				}
+					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to the default character (BF) just to prevent a crash
 
 				#if MODS_ALLOWED
 				var rawJson = File.getContent(path);
@@ -132,33 +129,28 @@ class Character extends FlxSprite
 				#else
 				if (Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT)))
 				#end
-				{
 					spriteType = "packer";
-				}
-				
+
 				#if MODS_ALLOWED
 				var modAnimToFind:String = Paths.modFolders('images/' + json.image + '/Animation.json');
 				var animToFind:String = Paths.getPath('images/' + json.image + '/Animation.json', TEXT);
-				
+
 				//var modTextureToFind:String = Paths.modFolders("images/"+json.image);
 				//var textureToFind:String = Paths.getPath('images/' + json.image, new AssetType();
-				
+
 				if (FileSystem.exists(modAnimToFind) || FileSystem.exists(animToFind) || Assets.exists(animToFind))
 				#else
 				if (Assets.exists(Paths.getPath('images/' + json.image + '/Animation.json', TEXT)))
 				#end
-				{
 					spriteType = "texture";
-				}
 
-				switch (spriteType){
-					
+				switch (spriteType) {
 					case "packer":
 						frames = Paths.getPackerAtlas(json.image);
-					
+
 					case "sparrow":
 						frames = Paths.getSparrowAtlas(json.image);
-					
+
 					case "texture":
 						frames = AtlasFrameMaker.construct(json.image);
 				}
@@ -175,7 +167,7 @@ class Character extends FlxSprite
 
 				healthIcon = json.healthicon;
 				singDuration = json.sing_duration;
-				flipX = !!json.flip_x;
+				flipX = json.flip_x;
 				if(json.no_antialiasing) {
 					antialiasing = false;
 					noAntialiasing = true;
@@ -193,13 +185,12 @@ class Character extends FlxSprite
 						var animAnim:String = '' + anim.anim;
 						var animName:String = '' + anim.name;
 						var animFps:Int = anim.fps;
-						var animLoop:Bool = !!anim.loop; //Bruh
+						var animLoop:Bool = anim.loop;
 						var animIndices:Array<Int> = anim.indices;
-						if(animIndices != null && animIndices.length > 0) {
+						if(animIndices != null && animIndices.length > 0)
 							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
-						} else {
+						else
 							animation.addByPrefix(animAnim, animName, animFps, animLoop);
-						}
 
 						if(anim.offsets != null && anim.offsets.length > 1) {
 							addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
@@ -208,7 +199,7 @@ class Character extends FlxSprite
 				} else {
 					quickAnimAdd('idle', 'BF idle dance');
 				}
-				//trace('Loaded file to character ' + curCharacter);
+				//CoolUtil.debugTrace('Loaded file to character ' + curCharacter);
 		}
 		originalFlipX = flipX;
 
@@ -217,9 +208,7 @@ class Character extends FlxSprite
 		dance();
 
 		if (isPlayer)
-		{
 			flipX = !flipX;
-		}
 
 		switch(curCharacter)
 		{
@@ -251,7 +240,7 @@ class Character extends FlxSprite
 				specialAnim = false;
 				dance();
 			}
-			
+
 			switch(curCharacter)
 			{
 				case 'pico-speaker':
@@ -270,9 +259,7 @@ class Character extends FlxSprite
 			if (!isPlayer)
 			{
 				if (animation.curAnim.name.startsWith('sing'))
-				{
 					holdTimer += elapsed;
-				}
 
 				if (holdTimer >= Conductor.stepCrochet * (0.0011 / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1)) * singDuration)
 				{
@@ -282,9 +269,7 @@ class Character extends FlxSprite
 			}
 
 			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-			{
 				playAnim(animation.curAnim.name + '-loop');
-			}
 		}
 		super.update(elapsed);
 	}
@@ -302,27 +287,24 @@ class Character extends FlxSprite
 			{
 				danced = !danced;
 
-				if (danced)
-					playAnim('danceRight' + idleSuffix);
-				else
-					playAnim('danceLeft' + idleSuffix);
+				playAnim('dance' + (danced ? 'Right' : 'Left') + idleSuffix);
 			}
 			else if(animation.getByName('idle' + idleSuffix) != null) {
-					playAnim('idle' + idleSuffix);
+				playAnim('idle' + idleSuffix);
 			}
 		}
 	}
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
+		if(!contains(AnimName)) return; // brrrrrooooooo
+
 		specialAnim = false;
 		animation.play(AnimName, Force, Reversed, Frame);
 
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))
-		{
 			offset.set(daOffset[0], daOffset[1]);
-		}
 		else
 			offset.set(0, 0);
 
@@ -343,15 +325,13 @@ class Character extends FlxSprite
 			}
 		}
 	}
-	
-	function loadMappedAnims():Void
+
+	function loadMappedAnims(name:String = 'picospeaker'):Void
 	{
-		var noteData:Array<SwagSection> = Song.loadFromJson('picospeaker', Paths.formatToSongPath(PlayState.SONG.song)).notes;
-		for (section in noteData) {
-			for (songNotes in section.sectionNotes) {
+		var noteData:Array<SwagSection> = Song.loadFromJson(name, Paths.formatToSongPath(PlayState.SONG.song)).notes;
+		for (section in noteData)
+			for (songNotes in section.sectionNotes)
 				animationNotes.push(songNotes);
-			}
-		}
 		TankmenBG.animationNotes = animationNotes;
 		animationNotes.sort(sortAnims);
 	}
@@ -368,9 +348,7 @@ class Character extends FlxSprite
 		danceIdle = (animation.getByName('danceLeft' + idleSuffix) != null && animation.getByName('danceRight' + idleSuffix) != null);
 
 		if(settingCharacterUp)
-		{
 			danceEveryNumBeats = (danceIdle ? 1 : 2);
-		}
 		else if(lastDanceIdle != danceIdle)
 		{
 			var calc:Float = danceEveryNumBeats;
@@ -392,5 +370,9 @@ class Character extends FlxSprite
 	inline public function quickAnimAdd(name:String, anim:String)
 	{
 		animation.addByPrefix(name, anim, 24, false);
+	}
+	inline public function contains(animName:String):Bool
+	{
+		return animation.getByName(animName) != null;
 	}
 }
