@@ -115,10 +115,10 @@ class Note extends FlxSprite
 	private function set_multScroll(v:Float):Float {
 		return multScroll = v;
 	}
-	private function set_botplayMustHit(v:Bool):Bool {
+	private function set_botplayMustHit(v:Null<Bool>):Null<Bool> {
 		return botplayMustHit = v;
 	}
-	private function get_botplayMustHit():Bool {
+	private function get_botplayMustHit():Null<Bool> { // in reality it doesnt return null.
 		if(botplayMustHit == null)
 			return mustPress;
 		return botplayMustHit;
@@ -315,7 +315,7 @@ class Note extends FlxSprite
 		}
 
 		var arraySkin:Array<String> = skin.split('/');
-		arraySkin[arraySkin.length-1] = prefix + arraySkin[arraySkin.length-1] + suffix;
+		arraySkin[arraySkin.length - 1] = prefix + arraySkin[arraySkin.length - 1] + suffix;
 
 		var lastScaleY:Float = scale.y;
 		var blahblah:String = arraySkin.join('/');
@@ -392,7 +392,7 @@ class Note extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if(rainbow && colorSwap != null) {
+		if(rainbow && colorSwap != null && !ClientPrefs.lowQuality) {
 			colorSwap.hue += 0.1; // :)))))))))))))))
 		}
 		super.update(elapsed);
