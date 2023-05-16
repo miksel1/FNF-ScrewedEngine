@@ -37,7 +37,7 @@ class AtlasFrameMaker extends FlxFramesCollection
 	*
 	*/
 
-	public static function construct(key:String,?_excludeArray:Array<String> = null, ?noAntialiasing:Bool = false):FlxFramesCollection
+	public static function construct(key:String, ?_excludeArray:Array<String> = null, ?noAntialiasing:Bool = false):FlxFramesCollection
 	{
 		// widthoffset = _widthoffset;
 		// heightoffset = _heightoffset;
@@ -66,18 +66,12 @@ class AtlasFrameMaker extends FlxFramesCollection
 		trace('Creating: ' + _excludeArray);
 
 		frameCollection = new FlxFramesCollection(graphic, FlxFrameCollectionType.IMAGE);
-		for(x in _excludeArray)
-		{
+		for (x in _excludeArray)
 			frameArray.push(getFramesArray(t, x));
-		}
 
-		for(x in frameArray)
-		{
-			for(y in x)
-			{
+		for (x in frameArray)
+			for (y in x)
 				frameCollection.pushFrame(y);
-			}
-		}
 		return frameCollection;
 	}
 
@@ -102,13 +96,13 @@ class AtlasFrameMaker extends FlxFramesCollection
 
 				if (firstPass)
 				{
-					frameSize.set(bitmapShit.width,bitmapShit.height);
+					frameSize.set(bitmapShit.width, bitmapShit.height);
 					firstPass = false;
 				}
 			}
-			else break;
+			else break; // i dont think this is useful...
 		}
-		
+
 		for (i in 0...bitMapArray.length)
 		{
 			var b = FlxGraphic.fromBitmapData(bitMapArray[i]);
