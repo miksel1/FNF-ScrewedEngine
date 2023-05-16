@@ -52,15 +52,17 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.changeValue = 0.05;
 		option.decimals = 2;
 		option.id = 'SS';
-		if (goption.getValue() != "constant")
+		if (goption.getValue() == "multiplicative")
 		{
 			option.displayFormat = '%vX';
 			option.maxValue = 3;
 		}
-		else
+		else if(goption.getValue() == "constant")
 		{
 			option.displayFormat = "%v";
 			option.maxValue = 6;
+		} else {
+			option.displayFormat = "";
 		}
 		optionsArray.push(option);
 
@@ -195,9 +197,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		{
 			var usesCheckbox = true;
 			if(curOption.type != 'bool')
-			{
 				usesCheckbox = false;
-			}
 
 			if(usesCheckbox)
 			{
@@ -255,16 +255,19 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 										var oOption:GameplayOption = getOptionByID("SS");
 										if (oOption != null)
 										{
-											if (curOption.getValue() == "constant")
+											if (curOption.getValue() == "multiplicative")
+											{
+
+												oOption.displayFormat = '%vX';
+												oOption.maxValue = 3;
+												if(oOption.getValue() > 3) oOption.setValue(3);
+											}
+											else if(curOption.getValue() == "constant")
 											{
 												oOption.displayFormat = "%v";
 												oOption.maxValue = 6;
-											}
-											else
-											{
-												oOption.displayFormat = "%vX";
-												oOption.maxValue = 3;
-												if(oOption.getValue() > 3) oOption.setValue(3);
+											} else {
+												oOption.displayFormat = "";
 											}
 											updateTextFrom(oOption);
 										}
@@ -368,15 +371,13 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			bullShit++;
 
 			item.alpha = 0.6;
-			if (item.targetY == 0) {
+			if (item.targetY == 0)
 				item.alpha = 1;
-			}
 		}
 		for (text in grpTexts) {
 			text.alpha = 0.6;
-			if(text.ID == curSelected) {
+			if(text.ID == curSelected)
 				text.alpha = 1;
-			}
 		}
 		curOption = optionsArray[curSelected]; //shorter lol
 		FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -391,7 +392,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 class GameplayOption
 {
-	private var child:Alphabet;
+	public var child:Alphabet;
 	public var text(get, set):String;
 	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
 
