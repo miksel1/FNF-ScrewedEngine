@@ -3412,7 +3412,7 @@ class PlayState extends MusicBeatState
 				boyfriendIdleTime = 0;
 		}
 
-		if (ClientPrefs.crazyCounter)
+		if (ClientPrefs.crazyCounter && judgementCounter != null)
 			judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nTotal Hits: ${totals}\nCombo: ${combo}\n';
 
 		super.update(elapsed);
@@ -3425,19 +3425,21 @@ class PlayState extends MusicBeatState
 			scoreTxt.text += ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;
 
 		// for nps
-		var pooper = npsArray.length - 1;
-		while (pooper >= 0){
-			var fondler:Date = npsArray[pooper];
-			if (fondler != null && fondler.getTime() + 1000 < Date.now().getTime()){
-				npsArray.remove(fondler);
+		//if(ClientPrefs.nps) { // i dont know man! This constantly causes me lag!
+			var pooper = npsArray.length - 1;
+			while (pooper >= 0) {
+				var fondler:Date = npsArray[pooper];
+				if (fondler != null && fondler.getTime() + 1000 < Date.now().getTime()) {
+					npsArray.remove(fondler);
+				}
+				else
+					pooper = 0;
+				pooper--;
 			}
-			else
-				pooper = 0;
-			pooper--;
-		}
-		nps = npsArray.length;
-		if (nps > maxNPS)
-			maxNPS = nps;
+			nps = npsArray.length;
+			if (nps > maxNPS)
+				maxNPS = nps;
+		//}
 
 		if (ClientPrefs.showHealth)
 			if (healthTxt != null)
@@ -3717,7 +3719,7 @@ class PlayState extends MusicBeatState
 					&& !boyfriend.animation.curAnim.name.endsWith('miss'))
 					boyfriend.dance();
 
-				if (startedCountdown)
+				if (startedCountdown && notes != null)
 				{
 					var fakeCrochet:Float = (60 / SONG.bpm) * 1000;
 					notes.forEachAlive(function(daNote:Note)
@@ -3726,12 +3728,18 @@ class PlayState extends MusicBeatState
 						if (!daNote.mustPress)
 							strumGroup = opponentStrums;
 
-						var strumX:Float = strumGroup.members[daNote.noteData].x;
-						var strumY:Float = strumGroup.members[daNote.noteData].y;
-						var strumAngle:Float = strumGroup.members[daNote.noteData].angle;
-						var strumDirection:Float = strumGroup.members[daNote.noteData].direction;
-						var strumAlpha:Float = strumGroup.members[daNote.noteData].alpha;
-						var strumScroll:Bool = strumGroup.members[daNote.noteData].downScroll;
+						if(strumGroup != null) // idk, just cheking
+							if(strumGroup.members == null)
+								return;
+						else
+							return;
+
+						var strumX:Float = strumGroup.members[daNote.noteData % 4].x;
+						var strumY:Float = strumGroup.members[daNote.noteData % 4].y;
+						var strumAngle:Float = strumGroup.members[daNote.noteData % 4].angle;
+						var strumDirection:Float = strumGroup.members[daNote.noteData % 4].direction;
+						var strumAlpha:Float = strumGroup.members[daNote.noteData % 4].alpha;
+						var strumScroll:Bool = strumGroup.members[daNote.noteData % 4].downScroll;
 
 						strumX += daNote.offsetX;
 						strumY += daNote.offsetY;
@@ -3789,7 +3797,7 @@ class PlayState extends MusicBeatState
 						}
 
 						var center:Float = strumY + Note.swagWidth / 2;
-						if (strumGroup.members[daNote.noteData].sustainReduce
+						if (strumGroup.members[daNote.noteData % 4].sustainReduce
 							&& daNote.isSustainNote
 							&& (daNote.mustPress || !daNote.ignoreNote)
 							&& (!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
