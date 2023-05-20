@@ -3734,12 +3734,12 @@ class PlayState extends MusicBeatState
 						else
 							return;
 
-						var strumX:Float = strumGroup.members[daNote.noteData % 4].x;
-						var strumY:Float = strumGroup.members[daNote.noteData % 4].y;
-						var strumAngle:Float = strumGroup.members[daNote.noteData % 4].angle;
-						var strumDirection:Float = strumGroup.members[daNote.noteData % 4].direction;
-						var strumAlpha:Float = strumGroup.members[daNote.noteData % 4].alpha;
-						var strumScroll:Bool = strumGroup.members[daNote.noteData % 4].downScroll;
+						var strumX:Float = strumGroup.members[daNote.noteData].x;
+						var strumY:Float = strumGroup.members[daNote.noteData].y;
+						var strumAngle:Float = strumGroup.members[daNote.noteData].angle;
+						var strumDirection:Float = strumGroup.members[daNote.noteData].direction;
+						var strumAlpha:Float = strumGroup.members[daNote.noteData].alpha;
+						var strumScroll:Bool = strumGroup.members[daNote.noteData].downScroll;
 
 						strumX += daNote.offsetX;
 						strumY += daNote.offsetY;
@@ -3797,7 +3797,7 @@ class PlayState extends MusicBeatState
 						}
 
 						var center:Float = strumY + Note.swagWidth / 2;
-						if (strumGroup.members[daNote.noteData % 4].sustainReduce
+						if (strumGroup.members[daNote.noteData].sustainReduce
 							&& daNote.isSustainNote
 							&& (daNote.mustPress || !daNote.ignoreNote)
 							&& (!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
