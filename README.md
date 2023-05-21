@@ -3,7 +3,7 @@ Engine originally created for (Screwed Edition)[link soon...] (a mod of Dave And
 
 **This engine adds languages!!!!**
 
-### [Click here to skip this and go to **Features**.](https://github.com/miksel1/FNF-ScrewedEngine/blob/main/README.md#features)
+### [Click here to skip this and go to **Features**.](#features)
 
 ## Join our discord now!
 It's a fun way to get **information**/**releases**/**teasers** about the engine ***and*** from the **mod**! Just take in mind the rules. [Link here: https://discord.gg/ACY3MQgB2A](https://discord.gg/ACY3MQgB2A)
