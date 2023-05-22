@@ -62,13 +62,10 @@ class CoolUtil
 
 		var fileSuffix:String = difficulties[num];
 		if (fileSuffix != defaultDifficulty)
-		{
 			fileSuffix = '-' + fileSuffix;
-		}
 		else
-		{
 			fileSuffix = '';
-		}
+
 		return Paths.formatToSongPath(fileSuffix);
 	}
 
@@ -82,37 +79,19 @@ class CoolUtil
 		return Math.max(min, Math.min(max, value));
 	}
 
-	public static function coolTextFile(path:String):Array<String>
+	inline public static function coolTextFile(path:String):Array<String>
 	{
-		var daList:Array<String> = [];
 		#if sys
-		if (FileSystem.exists(path))
-			daList = File.getContent(path).trim().split('\n');
+		if(FileSystem.exists(path)) return [for (i in File.getContent(path).trim().split('\n')) i.trim()];
 		#else
-		if (Assets.exists(path))
-			daList = Assets.getText(path).trim().split('\n');
+        if(Assets.exists(path)) return [for (i in Assets.getText(path).trim().split('\n')) i.trim()];
 		#end
 
-		for (i in 0...daList.length)
-		{
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
+		return [];
 	}
 
-	public static function listFromString(string:String):Array<String>
-	{
-		var daList:Array<String> = [];
-		daList = string.trim().split('\n');
-
-		for (i in 0...daList.length)
-		{
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
-	}
+	inline public static function listFromString(string:String):Array<String>
+		return string.trim().split('\n').map(str -> str.trim());
 
 	public static function dominantColor(sprite:flixel.FlxSprite):Int
 	{
