@@ -6022,7 +6022,7 @@ class PlayState extends MusicBeatState
 				return;
 		}
 
-		if (spr != null)
+		if (spr != null && spr.animation.exists('confirm'))
 		{
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time;
