@@ -26,7 +26,7 @@ class Note extends FlxSprite
 	public var strumTime:Float = 0;
 	public var mustPress:Bool = false;
 	@:isVar
-	public var botplayMustHit(get, set):Null<Bool>;
+	public var botplayMustHit(get, default):Null<Bool>;
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
@@ -82,7 +82,7 @@ class Note extends FlxSprite
 	/**
 	 * Basically the same, but without resizing and shit
 	 */
-	public var multScroll(default, set):Float = 1;
+	public var multScroll(default, null):Float = 1;
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
@@ -111,12 +111,6 @@ class Note extends FlxSprite
 		multSpeed = value;
 		//trace('fuck cock');
 		return value;
-	}
-	private function set_multScroll(v:Float):Float {
-		return multScroll = v;
-	}
-	private function set_botplayMustHit(v:Null<Bool>):Null<Bool> {
-		return botplayMustHit = v;
 	}
 	private function get_botplayMustHit():Null<Bool> { // in reality it doesnt return null.
 		if(botplayMustHit == null)
