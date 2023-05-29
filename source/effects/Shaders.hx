@@ -424,10 +424,10 @@ class BlockedGlitchShader extends FlxShader
 
     void main(void) {
       vec2 uv = openfl_TextureCoordv;
-      gl_FragColor = texture(bitmap, uv);
-      gl_FragColor.r = texture(bitmap, uv + vec2(offset(64.0, uv) * 0.03, 0.0)).r;
-      gl_FragColor.g = texture(bitmap, uv + vec2(offset(64.0, uv) * 0.03 * 0.16666666, 0.0)).g;
-      gl_FragColor.b = texture(bitmap, uv + vec2(offset(64.0, uv) * 0.03, 0.0)).b;
+      gl_FragColor = texture2D(bitmap, uv);
+      gl_FragColor.r = texture2D(bitmap, uv + vec2(offset(64.0, uv) * 0.03, 0.0)).r;
+      gl_FragColor.g = texture2D(bitmap, uv + vec2(offset(64.0, uv) * 0.03 * 0.16666666, 0.0)).g;
+      gl_FragColor.b = texture2D(bitmap, uv + vec2(offset(64.0, uv) * 0.03, 0.0)).b;
     }
     ')
     #end
