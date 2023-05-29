@@ -264,8 +264,6 @@ class PlayState extends MusicBeatState
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
 
-	var notesHitArray:Array<Date> = [];
-
 	var dialogue:Array<String> = null;
 	var dialogueJson:DialogueFile = null;
 
@@ -387,9 +385,8 @@ class PlayState extends MusicBeatState
 
 	var shadersEnabled(default, set):Bool = true;
 
-	inline function set_shadersEnabled(v:Bool):Bool {
+	inline function set_shadersEnabled(v:Bool):Bool
 		return FlxG.camera.filtersEnabled = shadersEnabled = v;
-	}
 
 	override public function create()
 	{
@@ -3643,7 +3640,6 @@ class PlayState extends MusicBeatState
 
 					if(ClientPrefs.timeBarType.endsWith(' / Total'))
 						finale += ' / ' + totalLengthString;
-
 
 					if (ClientPrefs.timeBarType != 'Song Name')
 						timeTxt.text = finale;
