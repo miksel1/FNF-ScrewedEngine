@@ -80,7 +80,9 @@ import sys.io.File;
 #end
 
 #if VIDEOS_ALLOWED
-#if (hxCodec >= "2.6.1")
+#if (hxCodec >= "2.7.0")
+import hxcodec.flixel.FlxVideo as MP4Handler;
+#elseif (hxCodec == "2.6.1")
 import hxcodec.VideoHandler as MP4Handler;
 #elseif (hxCodec == "2.6.0")
 import VideoHandler as MP4Handler;
@@ -1872,8 +1874,13 @@ class PlayState extends MusicBeatState
 			judgementCounter.visible = false;
 
 		var video:MP4Handler = new MP4Handler();
-		video.playVideo(filepath);
-		video.finishCallback = function()
+		#if (hxCodec >= "2.7.0")
+                video.play(filepath);
+                video.onEndReached.add(() -> video.dispose());
+                #else
+                video.playVideo(filepath);
+		#end
+ 		video.finishCallback = () ->
 		{
 			startAndEnd();
 			return;
