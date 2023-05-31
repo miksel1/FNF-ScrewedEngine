@@ -2562,7 +2562,6 @@ class PlayState extends MusicBeatState
 			{
 				daNote.ignoreNote = true;
 
-				daNote.kill();
 				unspawnNotes.remove(daNote);
 				daNote.destroy();
 			}
@@ -2577,7 +2576,6 @@ class PlayState extends MusicBeatState
 			{
 				daNote.ignoreNote = true;
 
-				daNote.kill();
 				notes.remove(daNote, true);
 				daNote.destroy();
 			}
@@ -5035,7 +5033,6 @@ class PlayState extends MusicBeatState
 						{
 							if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 1)
 							{
-								doubleNote.kill();
 								notes.remove(doubleNote, true);
 								doubleNote.destroy();
 							}
@@ -5197,12 +5194,10 @@ class PlayState extends MusicBeatState
 
 	private function parseKeys(suffix:String = ''):Array<Bool>
 	{
-		var ret:Array<Bool> = [];
-		for (i in 0...controlArray.length)
-		{
-			ret[i] = Reflect.getProperty(controls, controlArray[i] + suffix);
-		}
-		return ret;
+		return [
+			for (i in 0...controlArray.length)
+				Reflect.getProperty(controls, controlArray[i] + suffix)
+		];
 	}
 
 	function noteMiss(daNote:Note):Void
@@ -5216,7 +5211,6 @@ class PlayState extends MusicBeatState
 				&& daNote.isSustainNote == note.isSustainNote
 				&& Math.abs(daNote.strumTime - note.strumTime) < 1)
 			{
-				note.kill();
 				notes.remove(note, true);
 				note.destroy();
 			}
@@ -5348,7 +5342,6 @@ class PlayState extends MusicBeatState
 
 		if (!note.isSustainNote)
 		{
-			note.kill();
 			notes.remove(note, true);
 			note.destroy();
 		}
@@ -5389,7 +5382,6 @@ class PlayState extends MusicBeatState
 				note.wasGoodHit = true;
 				if (!note.isSustainNote)
 				{
-					note.kill();
 					notes.remove(note, true);
 					note.destroy();
 				}
@@ -5469,7 +5461,6 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
-				note.kill();
 				notes.remove(note, true);
 				note.destroy();
 			}
@@ -5596,8 +5587,6 @@ class PlayState extends MusicBeatState
 		}
 		phillyTrain.x = FlxG.width + 200;
 		trainMoving = false;
-		// trainSound.stop();
-		// trainSound.time = 0;
 		trainCars = 8;
 		trainFinishing = false;
 		startedMoving = false;
@@ -6045,9 +6034,7 @@ class PlayState extends MusicBeatState
 
 				// Rating Name
 				if (ratingPercent >= 1)
-				{
 					ratingName = ratingStuff[ratingStuff.length - 1][0]; // Uses last string
-				}
 				else
 				{
 					for (i in 0...ratingStuff.length - 1)
@@ -6156,7 +6143,7 @@ class PlayState extends MusicBeatState
 							}
 						}
 					case 'toastie':
-						if (/*ClientPrefs.framerate <= 60 &&*/ !ClientPrefs.shaders && ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing)
+						if (!ClientPrefs.shaders && ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing)
 						{
 							unlock = true;
 						}
