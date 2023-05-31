@@ -4827,11 +4827,24 @@ class PlayState extends MusicBeatState
 		if (cpuControlled)
 			return; // fuck it
 
+		var ratingGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+		final ratingsX:Float = FlxG.width * 0.35 - 40;
+		final ratingsY:Float = 60;
+		if (ratingGroup.countDead() > 0)
+		{
+			rating = ratingGroup.getFirstDead();
+			rating.reset(ratingsX, ratingsY);
+		}
+		else
+		{
+			rating = new FlxSprite();
+			ratingGroup.add(rating);
+		}
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
 		rating.cameras = [camHUD];
 		rating.screenCenter();
-		rating.x = FlxG.width * 0.35 - 40;
-		rating.y -= 60;
+		rating.x = ratingsX;
+		rating.y -= ratingsY;
 		rating.acceleration.y = 550 * playbackRate * playbackRate;
 		rating.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
 		rating.velocity.x -= FlxG.random.int(0, 10) * playbackRate;
@@ -4839,16 +4852,30 @@ class PlayState extends MusicBeatState
 		rating.x += ClientPrefs.comboOffset[0];
 		rating.y -= ClientPrefs.comboOffset[1];
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
+		var comboGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+		var comboSpr:FlxSprite;
+		final comboX:Float = FlxG.width * 0.35;
+		final comboY:Float = 60;
+		if (comboGroup.countDead() > 0)
+		{
+			comboSpr = comboGroup.getFirstDead();
+			comboSpr.reset(comboX, comboY);
+		}
+		else
+		{
+			comboSpr = new FlxSprite();
+			comboGroup.add(comboSpr);
+		}
+		comboSpr.loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 		comboSpr.cameras = [camHUD];
 		comboSpr.screenCenter();
-		comboSpr.x = FlxG.width * 0.35;
+		comboSpr.x = comboX;
 		comboSpr.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
 		comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
 		comboSpr.visible = (!ClientPrefs.hideHud && showCombo);
 		comboSpr.x += ClientPrefs.comboOffset[0];
 		comboSpr.y -= ClientPrefs.comboOffset[1];
-		comboSpr.y += 60;
+		comboSpr.y += comboY;
 		comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate;
 
 		insert(members.indexOf(strumLineNotes), rating);
@@ -4900,7 +4927,21 @@ class PlayState extends MusicBeatState
 		}
 		for (i in seperatedScore)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2));
+			var numScoreGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+			var numScore:FlxSprite;
+			final numScoreX:Float = FlxG.width * 0.35 + (43 * daLoop) - 90;
+			final numScoreY:Float = 80;
+			if (numScoreGroup.countDead() > 0)
+			{
+				numScore = numScoreGroup.getFirstDead();
+				numScore.reset(numScoreX, numScoreY);
+			}
+			else
+			{
+				numScore = new FlxSprite();
+				numScoreGroup.add(numScore);
+			}
+			numScore.loadGraphic(Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2));
 			numScore.cameras = [camHUD];
 			numScore.screenCenter();
 			numScore.x = FlxG.width * 0.35 + (43 * daLoop) - 90;
