@@ -70,21 +70,19 @@ class CoolUtil
 	}
 
 	public static function difficultyString():String
-	{
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
-	}
 
 	inline public static function boundTo(value:Float, min:Float, max:Float):Float
-	{
 		return Math.max(min, Math.min(max, value));
-	}
 
 	inline public static function coolTextFile(path:String):Array<String>
 	{
 		#if sys
-		if(FileSystem.exists(path)) return [for (i in File.getContent(path).trim().split('\n')) i.trim()];
+		if(FileSystem.exists(path)) 
+			return [for (i in File.getContent(path).trim().split('\n')) i.trim()];
 		#else
-        if(Assets.exists(path)) return [for (i in Assets.getText(path).trim().split('\n')) i.trim()];
+        if(Assets.exists(path)) 
+			return [for (i in Assets.getText(path).trim().split('\n')) i.trim()];
 		#end
 
 		return [];
@@ -104,13 +102,9 @@ class CoolUtil
 				if (colorOfThisPixel != 0)
 				{
 					if (countByColor.exists(colorOfThisPixel))
-					{
 						countByColor[colorOfThisPixel] = countByColor[colorOfThisPixel] + 1;
-					}
 					else if (countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687))
-					{
 						countByColor[colorOfThisPixel] = 1;
-					}
 				}
 			}
 		}
@@ -129,20 +123,17 @@ class CoolUtil
 	}
 
 	inline public static function numberArray(max:Int, ?min = 0):Array<Int>
-	{
-		return [for (i in min...max) i];
-	}
+		return [
+			for (i in min...max) 
+				i
+		];
 
 	// uhhhh does this even work at all? i'm starting to doubt
 	public static function precacheSound(sound:String, ?library:String = null):Void
-	{
 		Paths.sound(sound, library);
-	}
 
 	public static function precacheMusic(sound:String, ?library:String = null):Void
-	{
 		Paths.music(sound, library);
-	}
 
 	public static function browserLoad(site:String)
 	{
