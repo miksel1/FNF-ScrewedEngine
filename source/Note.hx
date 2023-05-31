@@ -334,13 +334,6 @@ class Note extends FlxSprite
 				offsetX += lastNoteOffsetXForPixelAutoAdjusting;
 				lastNoteOffsetXForPixelAutoAdjusting = (width - 7) * (PlayState.daPixelZoom / 2);
 				offsetX -= lastNoteOffsetXForPixelAutoAdjusting;
-
-				/*if(animName != null && !animName.endsWith('end'))
-				{
-					lastScaleY /= lastNoteScaleToo;
-					lastNoteScaleToo = (6 / height);
-					lastScaleY *= lastNoteScaleToo;
-				}*/
 			}
 		} else {
 			frames = Paths.getSparrowAtlas(blahblah);
@@ -424,7 +417,8 @@ class Note extends FlxSprite
 	@:noCompletion
 	override function set_clipRect(rect:FlxRect):FlxRect // original fix by NeeEoo
 	{
-		clipRect = rect;
+		if (rect != null)
+			clipRect = rect;
 
 		if (frames != null)
 			frame = frames.frames[animation.frameIndex];
