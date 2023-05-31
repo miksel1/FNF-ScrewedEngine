@@ -4959,9 +4959,8 @@ class PlayState extends MusicBeatState
 				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			}
 			else
-			{
 				numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
-			}
+
 			numScore.updateHitbox();
 
 			numScore.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
@@ -4975,7 +4974,9 @@ class PlayState extends MusicBeatState
 			FlxTween.tween(numScore, {alpha: 0}, 0.2 / playbackRate, {
 				onComplete: function(tween:FlxTween)
 				{
-					numScore.destroy();
+					remove(numScore, true);
+					numScore.kill();
+					numScore.alpha = 1;
 				},
 				startDelay: Conductor.crochet * 0.002 / playbackRate
 			});
@@ -4987,15 +4988,19 @@ class PlayState extends MusicBeatState
 		comboSpr.x = xThing + 50;
 
 		FlxTween.tween(rating, {alpha: 0}, 0.2 / playbackRate, {
+			onComplete: _ -> {
+				remove(rating, true);
+				rating.kill();
+				rating.alpha = 1;
+			},
 			startDelay: Conductor.crochet * 0.001 / playbackRate
 		});
 
 		FlxTween.tween(comboSpr, {alpha: 0}, 0.2 / playbackRate, {
 			onComplete: function(tween:FlxTween)
 			{
-				comboSpr.destroy();
-
-				rating.destroy();
+				comboSpr.kill();
+				comboSpr.alpha = 1;
 			},
 			startDelay: Conductor.crochet * 0.002 / playbackRate
 		});
