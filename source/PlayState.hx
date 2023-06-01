@@ -331,6 +331,7 @@ class PlayState extends MusicBeatState
 	public static var daPixelZoom:Float = 6;
 
 	private var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	public var introSounds:Array<String> = ['intro3', 'intro2', 'intro1', 'introGo'];
 
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
@@ -2347,10 +2348,8 @@ class PlayState extends MusicBeatState
 		for (asset in introAlts)
 			Paths.image(asset);
 
-		Paths.sound('intro3' + introSoundsSuffix);
-		Paths.sound('intro2' + introSoundsSuffix);
-		Paths.sound('intro1' + introSoundsSuffix);
-		Paths.sound('introGo' + introSoundsSuffix);
+		for (i in introSounds)
+			Paths.sound(i + introSoundsSuffix);
 	}
 
 	public function startCountdown():Void
@@ -2454,7 +2453,7 @@ class PlayState extends MusicBeatState
 				switch (swagCounter)
 				{
 					case 0:
-						FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound(introSounds[0] + introSoundsSuffix), 0.6);
 					case 1:
 						countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
 						countdownReady.cameras = [camHUD];
@@ -2475,7 +2474,7 @@ class PlayState extends MusicBeatState
 								countdownReady.destroy();
 							}
 						});
-						FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound(introSounds[1] + introSoundsSuffix), 0.6);
 					case 2:
 						countdownSet = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
 						countdownSet.cameras = [camHUD];
@@ -2495,7 +2494,7 @@ class PlayState extends MusicBeatState
 								countdownSet.destroy();
 							}
 						});
-						FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound(introSounds[2] + introSoundsSuffix), 0.6);
 					case 3:
 						countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 						countdownGo.cameras = [camHUD];
@@ -2517,7 +2516,7 @@ class PlayState extends MusicBeatState
 								countdownGo.destroy();
 							}
 						});
-						FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound(introSounds[3] + introSoundsSuffix), 0.6);
 				}
 
 				notes.forEachAlive(function(note:Note)
@@ -2706,7 +2705,7 @@ class PlayState extends MusicBeatState
 			case "constant":
 				songSpeed = ClientPrefs.getGameplaySetting('scrollspeed', 1);
 			case "random":
-				songSpeed = FlxG.random.float(1, 5);
+				songSpeed = FlxG.random.float(ClientPrefs.getGameplaySetting('scrollspeed', 1), 5);
 		}
 
 		Conductor.changeBPM(SONG.bpm);
