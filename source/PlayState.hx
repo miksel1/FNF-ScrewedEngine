@@ -3714,7 +3714,6 @@ class PlayState extends MusicBeatState
 						var strumGroup:FlxTypedGroup<StrumNote> = !daNote.mustPress ? opponentStrums : playerStrums;
 
 						// idk, just cheking
-						// why does this cunt always have to be null bruuu
 						if(strumGroup != null && strumGroup.members[daNote.noteData] != null){
 							var strumX:Float = strumGroup.members[daNote.noteData].x;
 							var strumY:Float = strumGroup.members[daNote.noteData].y;
