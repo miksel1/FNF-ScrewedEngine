@@ -337,6 +337,8 @@ class Note extends FlxSprite
 			}
 		} else {
 			frames = Paths.getSparrowAtlas(blahblah);
+			if (frames == null)
+				frames = Paths.getSparrowAtlas('NOTE_assets'); // fail safe
 			loadNoteAnims();
 			antialiasing = ClientPrefs.globalAntialiasing;
 		}
@@ -364,17 +366,42 @@ class Note extends FlxSprite
 			animation.addByPrefix(colArray[noteData] + 'hold', colArray[noteData] + ' hold piece');
 		}
 
+		// IGNORE THIS
+		// trace(haxe.xml.Access(Xml.parse()));
+
 		setGraphicSize(Std.int(width * 0.7));
 		updateHitbox();
 	}
+
+	// for debugging purposes mainly
+	/*
+	inline function getXMLData(anim:haxe.xml.Access){
+		var xmlData:NoteAnims = {
+			name: null,
+			arrowDir: [null, null, null, null],
+			confirm: [null, null, null, null],
+			press: [null, null, null, null],
+			color: [null, null, null, null],
+
+			// sustain shit
+			holds: [null, null, null, null],
+			tails: [null, null, null, null]
+		};
+
+		if (anim.has.name)
+			xmlData.name = anim.att.name;
+
+		if (anim.has.arrowLEFT && anim.has.arrowRIGHT && anim.has.arrowUP && anim.has.arrowDOWN)
+			xmlData.arrowDir = [anim.att.arrowLEFT, anim.att.arrowRIGHT, anim.att.arrowUP, anim.att.arrowDOWN];
+	}*/
 
 	function loadPixelNoteAnims() {
 		if(isSustainNote) {
 			animation.add(colArray[noteData] + 'holdend', [pixelInt[noteData] + 4]);
 			animation.add(colArray[noteData] + 'hold', [pixelInt[noteData]]);
-		} else {
+		} 
+		else
 			animation.add(colArray[noteData] + 'Scroll', [pixelInt[noteData] + 4]);
-		}
 	}
 
 	override function update(elapsed:Float)
@@ -426,3 +453,16 @@ class Note extends FlxSprite
 		return rect;
 	}	
 }
+
+/*
+typedef NoteAnims = {
+	var name:String;
+	var arrowDir:Array<String>;
+	var confirm:Array<String>;
+	var press:Array<String>;
+	var color:Array<String>;
+
+	// sustains
+	var holds:Array<String>;
+	var tails:Array<String>;
+}*/

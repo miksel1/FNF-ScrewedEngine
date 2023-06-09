@@ -149,7 +149,6 @@ class FreeplayState extends MusicBeatState
 
 	var ALLTHEFUCKINGSECTIONS:Array<String> = [];
 
-	var sortedSectionJSOns:Array<FreeplaySectionData> = [];
 	var sectionJSONs:Array<FreeplaySectionData> = [];
 
 	var informationAboutThings:FlxText;
@@ -969,11 +968,11 @@ class FreeplayState extends MusicBeatState
 		{
 			for (i in 0...sectionImages.length)
 			{
-				FlxTween.tween(sectionImages[i], {y: fakeBg.height}, 1 + (i / 10), {
+				FlxTween.tween(sectionImages[i], {y: fakeBg.height}, 1 + (i / 10) * (FlxG.updateFramerate / 60), {
 					ease: FlxEase.bounceOut,
 					onComplete: function(twn:FlxTween)
 					{
-						FlxTween.tween(sectionAlphabets[i], {y: fakeBg.height}, 0.5 + (1 / 10), {
+						FlxTween.tween(sectionAlphabets[i], {y: fakeBg.height}, 0.5 + (1 / 10) * (FlxG.updateFramerate / 60), {
 							ease: FlxEase.bounceOut,
 							onComplete: function(twn:FlxTween)
 							{
