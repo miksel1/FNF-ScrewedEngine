@@ -3711,13 +3711,11 @@ class PlayState extends MusicBeatState
 					var fakeCrochet:Float = (60 / SONG.bpm) * 1000;
 					notes.forEachAlive((daNote:Note) ->
 					{
-						var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
-						if (!daNote.mustPress)
-							strumGroup = opponentStrums;
+						var strumGroup:FlxTypedGroup<StrumNote> = !daNote.mustPress ? opponentStrums : playerStrums;
 
 						// idk, just cheking
 						// why does this cunt always have to be null bruuu
-						if(strumGroup != null && strumGroup.members != null && daNote != null){
+						if(strumGroup != null && strumGroup.members[daNote.noteData] != null){
 							var strumX:Float = strumGroup.members[daNote.noteData].x;
 							var strumY:Float = strumGroup.members[daNote.noteData].y;
 							var strumAngle:Float = strumGroup.members[daNote.noteData].angle;

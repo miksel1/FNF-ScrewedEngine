@@ -3466,6 +3466,9 @@ class ChartingState extends MusicBeatState
 	 */
 	public static function addTextToDebug(text:String, color:FlxColor = 0xFFFFFFFF) { // thanks Raltyro
 		#if LUA_ALLOWED
+		if (debugGroup == null)
+			return;
+
 		if (debugGroup != null){
 			debugGroup.forEachAlive(function(spr:DebugLuaText) {
 				if (spr != null)
