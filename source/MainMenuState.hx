@@ -73,8 +73,8 @@ class MainMenuState extends MusicBeatState
 		    #end 
 		    var e = haxe.macro.Context.getDefines();
 		    for (i in 0...optionShit.length){
-		      if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"]
-		        || optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"])
+		      if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"])
+		        || optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"]))
                           continue;
                     }
 		    catch(e){
