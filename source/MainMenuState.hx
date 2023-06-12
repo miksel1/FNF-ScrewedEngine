@@ -76,19 +76,19 @@ class MainMenuState extends MusicBeatState
 		      if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"])
 		        || optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"]))
                           continue;
-                    }
-		    catch(e){
+                   }
+		   catch(e){
                        trace("Error! " + e);
-			optionShit = [
-		           'story_mode',
-		           'freeplay',
-		            #if MODS_ALLOWED 'mods', #end
-		            #if ACHIEVEMENTS_ALLOWED 'awards', #end
-		            'credits',
-		            'options'
-			];
-                    }
-		}
+	                optionShit = [
+		             'story_mode',
+		             'freeplay',
+		             #if MODS_ALLOWED 'mods', #end
+		             #if ACHIEVEMENTS_ALLOWED 'awards', #end
+		             'credits',
+		             'options'
+	                ];
+		   }
+                }
 
 		#if desktop
 		// Updating Discord Rich Presence
