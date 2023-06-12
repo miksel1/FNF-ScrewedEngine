@@ -63,7 +63,7 @@ class MainMenuState extends MusicBeatState
 		WeekData.loadTheFirstEnabledMod();
 		
 		// TODO: mod support
-		if (#if sys Filesystem.exists(Paths.txt(optionsList)) #else Assets.exists(Paths.txt(optionsList)){
+		if (#if sys Filesystem.exists(Paths.txt(optionsList)) #else Assets.exists(Paths.txt(optionsList) #end){
 		    try{
 		    optionShit = 
 		    #if sys 
