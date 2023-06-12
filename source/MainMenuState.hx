@@ -24,6 +24,11 @@ import flixel.input.keyboard.FlxKey;
 import gamejolt.GJClient;
 import gamejolt.formats.User;
 #end
+#if sys
+import sys.Filesystem;
+#else
+import openfl.utils.Assets;	
+#end
 
 using StringTools;
 
@@ -43,14 +48,7 @@ class MainMenuState extends MusicBeatState
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var terminalKeysBuffer:String = '';
 
-	var optionShit:Array<String> = [
-		'story_mode',
-		'freeplay',
-		#if MODS_ALLOWED 'mods', #end
-		#if ACHIEVEMENTS_ALLOWED 'awards', #end
-		'credits',
-		'options'
-	];
+	var optionShit:Array<String> = [];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -63,6 +61,34 @@ class MainMenuState extends MusicBeatState
 		Paths.pushGlobalMods();
 		#end
 		WeekData.loadTheFirstEnabledMod();
+		
+		// TODO: mod support
+		if (#if sys Filesystem.exists(Paths.txt(optionsList)) #else Assets.exists(Paths.txt(optionsList)){
+		    try{
+		    optionShit = 
+		    #if sys 
+		    sys.io.File.getContent(Paths.txt(optionsList)); 
+		    #else 
+	            Assets.getText(Paths.txt(optionsList));
+		    #end 
+		    var e = haxe.macro.Context.getDefines();
+		    for (i in 0...optionShit.length){
+		      if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"]
+		        || optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"])
+                          continue;
+                    }
+		    catch(e){
+                       trace("Error! " + e);
+			optionShit = [
+		           'story_mode',
+		           'freeplay',
+		            #if MODS_ALLOWED 'mods', #end
+		            #if ACHIEVEMENTS_ALLOWED 'awards', #end
+		            'credits',
+		            'options'
+			];
+                    }
+		}
 
 		#if desktop
 		// Updating Discord Rich Presence
