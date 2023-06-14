@@ -29,13 +29,12 @@ class HealthIcon extends FlxSprite
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 
 		updateFrame(isPlayer ? PlayState.instance.healthBar.percent : 100 - PlayState.instance.healthBar.percent);
+		offset.y = 0;
 	}
 
 	inline public function swapOldIcon():Void {
 		(isOldIcon = !isOldIcon) ? changeIcon('bf-old') : changeIcon('bf');
 	}
-
-	private var iconOffsets:FlxPoint = new FlxPoint(0, 0);
 
 	public function changeIcon(char:String):Void {
 		if(this.char != char) {
@@ -44,25 +43,19 @@ class HealthIcon extends FlxSprite
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
 			var file:Dynamic = Paths.image(name);
 
-			loadGraphic(file); //Get file size
-			loadGraphic(file, true, Math.floor(Math.abs(width)), Math.floor(Math.abs(height))); //Then load it fr
+			loadGraphic(file); //load graphic to get the width and height
+
+			var dumbWidth:Int = Std.int(file.width / 150);
+			loadGraphic(file, true, Std.int(width / dumbWidth), Std.int(file.height)); //Then load it fr
 
 			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
 			animation.play(char);
 			this.char = char;
 
-			iconOffsets.set((width - 150) / frames.frames.length, (height - 150) / frames.frames.length);
-
 			antialiasing = (ClientPrefs.globalAntialiasing && !char.endsWith('-pixel'));
 			scrollFactor.set();
 			updateHitbox();
 		}
-	}
-
-	override function updateHitbox():Void
-	{
-		super.updateHitbox();
-		offset = iconOffsets;
 	}
 
 	/**
