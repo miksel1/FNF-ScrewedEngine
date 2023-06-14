@@ -27,6 +27,9 @@ class HealthIcon extends FlxSprite
 
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
+
+		updateFrame(isPlayer ? PlayState.instance.healthBar.percent : 100 - PlayState.instance.healthBar.percent);
+
 	}
 
 	inline public function swapOldIcon():Void {
