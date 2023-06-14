@@ -1,7 +1,7 @@
 package;
 
 import flixel.FlxSprite;
-import openfl.utils.Assets as OpenFlAssets;
+import flixel.math.FlxPoint;
 
 using StringTools;
 
@@ -29,7 +29,6 @@ class HealthIcon extends FlxSprite
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 
 		updateFrame(isPlayer ? PlayState.instance.healthBar.percent : 100 - PlayState.instance.healthBar.percent);
-
 	}
 
 	inline public function swapOldIcon():Void {
@@ -46,7 +45,7 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //Get file size
-			loadGraphic(file, true, 150, 150); //Then load it fr
+			loadGraphic(file, true, Math.floor(Math.abs(width)), Math.floor(Math.abs(height))); //Then load it fr
 
 			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
 			animation.play(char);
@@ -72,8 +71,8 @@ class HealthIcon extends FlxSprite
 	 */
 	public var animationMap:Map<Int, Int> = [
 		0 => 0, // Default
-		20 => 1 // Lose
-		80 => 2 // Winning
+		20 => 1, // Lose
+		80 => 2, // Winning
 	];
 
 	public dynamic function updateFrame(health:Float):Void {
