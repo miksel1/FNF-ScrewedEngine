@@ -70,7 +70,7 @@ class HealthIcon extends FlxSprite
 
 	public dynamic function updateFrame(health:Float):Void {
 		for (healthPercent => frame in animationMap)
-			if (health < healthPercent)
+			if (health < healthPercent && animationMap.exists(animation.curAnim.numFrames))
 				animation.curAnim.curFrame = frame;
 	}
 
