@@ -388,7 +388,7 @@ class TerminalState extends MusicBeatState
 				{
 					arguments.shift();
 					calledFunc = true;
-					v.FuncToCall(arguments);
+					v.funcToCall(arguments);
 					break;
 				}
 			}
@@ -448,7 +448,7 @@ class TerminalCommand
 {
 	public var commandName:String = "undefined";
 	public var commandHelp:String = "if you see this you are very homosexual and dumb."; // hey im not homosexual. kinda mean ngl
-	public var FuncToCall:Dynamic;
+	public var funcToCall:Dynamic;
 	public var showInHelp:Bool;
 	public var oneCommand:Bool;
 
@@ -456,7 +456,7 @@ class TerminalCommand
 	{
 		commandName = name;
 		commandHelp = help;
-		FuncToCall = func;
+		funcToCall = func;
 		this.showInHelp = showInHelp;
 		this.oneCommand = oneCommand;
 	}
