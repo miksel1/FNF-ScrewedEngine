@@ -64,9 +64,7 @@ class TerminalState extends MusicBeatState
 		var swagGoodArray:Array<Array<String>> = [];
 
 		for (i in firstArray)
-		{
 			swagGoodArray.push(i.split('--'));
-		}
 
 		return swagGoodArray;
 	}
@@ -116,7 +114,6 @@ class TerminalState extends MusicBeatState
 		typeSound = FlxG.sound.load(Paths.sound('terminal_space'), 0.6);
 		witherThings.set('sound', FlxG.sound.load(Paths.sound('wither_fade_in')));
 		witherThings.set('soundLength', witherThings.get('sound').length);
-		//FlxG.sound.playMusic(Paths.music('TheAmbience'), 0.7);
 
 		CommandList.push(new TerminalCommand("help", Language.getString(languageStrings.get("term_help_ins")), function(arguments:Array<String>)
 		{
@@ -125,9 +122,7 @@ class TerminalState extends MusicBeatState
 			for (v in CommandList)
 			{
 				if (v.showInHelp)
-				{
 					helpText += (v.commandName + " - " + v.commandHelp + "\n");
-				}
 			}
 			UpdateText("\n" + helpText);
 		}));
@@ -248,9 +243,7 @@ class TerminalState extends MusicBeatState
 															});
 															new FlxTimer().start(timerLength, function(tmr:FlxTimer)
 															{
-																FlxG.sound.play(Paths.sound('wither_fade_in'), 1, false, null, true, function()
-																{
-																});
+																FlxG.sound.play(Paths.sound('wither_fade_in'), 1, false, null, true);
 															});
 														}
 														// });
