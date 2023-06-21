@@ -103,11 +103,6 @@ class TerminalState extends MusicBeatState
 		".", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "", ";", "", "[", "]", ",", "="
 	];
 
-	public var fakeDisplayGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
-	public var expungedTimer:FlxTimer;
-
-	var curExpungedAlpha:Float = 0;
-
 	var witherThings:Map<String, Dynamic> = [];
 
 	override public function create():Void
@@ -343,10 +338,8 @@ class TerminalState extends MusicBeatState
 		super.create();
 	}
 
-	public function UpdateText(val:String)
-	{
+	inline public function UpdateText(val:String)
 		displayText.text = previousText + val;
-	}
 
 	public function UpdatePreviousText(reset:Bool)
 	{
@@ -441,9 +434,8 @@ class TerminalState extends MusicBeatState
 			UpdateText(curCommand);
 		}
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.BACKSPACE)
-		{
 			curCommand = "";
-		}
+
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			ClientPrefs.showFPS = FlxG.save.data.showFPS;
