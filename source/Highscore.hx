@@ -6,16 +6,9 @@ using StringTools;
 
 class Highscore
 {
-	#if (haxe >= "4.0.0")
 	public static var weekScores:Map<String, Int> = new Map();
 	public static var songScores:Map<String, Int> = new Map();
 	public static var songRating:Map<String, Float> = new Map();
-	#else
-	public static var weekScores:Map<String, Int> = new Map();
-	public static var songScores:Map<String, Int> = new Map<String, Int>();
-	public static var songRating:Map<String, Float> = new Map<String, Float>();
-	#end
-
 
 	public static function resetSong(song:String, diff:Int = 0):Void
 	{
@@ -33,15 +26,12 @@ class Highscore
 	public static function floorDecimal(value:Float, decimals:Int):Float
 	{
 		if(decimals < 1)
-		{
 			return Math.floor(value);
-		}
 
 		var tempMult:Float = 1;
 		for (i in 0...decimals)
-		{
 			tempMult *= 10;
-		}
+
 		var newValue:Float = Math.floor(value * tempMult);
 		return newValue / tempMult;
 	}
@@ -136,16 +126,10 @@ class Highscore
 	public static function load():Void
 	{
 		if (FlxG.save.data.weekScores != null)
-		{
 			weekScores = FlxG.save.data.weekScores;
-		}
 		if (FlxG.save.data.songScores != null)
-		{
 			songScores = FlxG.save.data.songScores;
-		}
 		if (FlxG.save.data.songRating != null)
-		{
 			songRating = FlxG.save.data.songRating;
-		}
 	}
 }
