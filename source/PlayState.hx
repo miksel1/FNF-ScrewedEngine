@@ -3550,37 +3550,6 @@ class PlayState extends MusicBeatState
 		if (health > maxHealth)
 			health = maxHealth;
 
-		// fixing the yandere dev code
-		switch (iconP1.animation.numFrames){
-			case 3:
-				if (healthBar.percent < 20)
-					iconP1.animation.curAnim.curFrame = 1;
-				else if (healthBar.percent > 80)
-					iconP1.animation.curAnim.curFrame = 2;
-				else
-					iconP1.animation.curAnim.curFrame = 0;
-			case 2:
-				if (healthBar.percent < 20)
-					iconP1.animation.curAnim.curFrame = 1;
-				else
-					iconP1.animation.curAnim.curFrame = 0;
-		}
-		// player 2
-		switch (iconP2.animation.numFrames){
-			case 3:
-				if (healthBar.percent > 80)
-					iconP2.animation.curAnim.curFrame = 1;
-				else if (healthBar.percent < 20)
-					iconP2.animation.curAnim.curFrame = 2;
-				else
-					iconP2.animation.curAnim.curFrame = 0;
-			case 2:
-				if (healthBar.percent > 80)
-					iconP2.animation.curAnim.curFrame = 1;
-				else
-					iconP2.animation.curAnim.curFrame = 0;
-		}
-
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene)
 		{
 			var ret:Dynamic = callOnLuas('onCharacterEditor', []);

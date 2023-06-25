@@ -1,7 +1,7 @@
 package;
 
 import flixel.FlxSprite;
-import openfl.utils.Assets as OpenFlAssets;
+import flixel.math.FlxPoint;
 
 using StringTools;
 
@@ -19,7 +19,6 @@ class HealthIcon extends FlxSprite
 		isOldIcon = (char == 'bf-old');
 		this.isPlayer = isPlayer;
 		changeIcon(char);
-		scrollFactor.set();
 	}
 
 	override function update(elapsed:Float)
@@ -28,62 +27,61 @@ class HealthIcon extends FlxSprite
 
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
+
+		if (PlayState.instance != null)
+			// TODO: fix win icons if they're broken
+			updateFrame(isPlayer ? PlayState.instance.healthBar.percent * 3 + 45 : PlayState.instance.healthBar.percent - 85);
+		else
+		{
+			// I forgot this was dynamic :skull:
+			updateFrame = fakeHealth -> animation.curAnim.curFrame = Std.int(fakeHealth);
+			// updateFrame(0);
+		}
+		offset.y = 0;
 	}
 
-	inline public function swapOldIcon() {
+	inline public function swapOldIcon():Void {
 		(isOldIcon = !isOldIcon) ? changeIcon('bf-old') : changeIcon('bf');
 	}
 
-	private var iconOffsets:Array<Float> = [0, 0];
-	public function changeIcon(char:String) {
+	public function changeIcon(char:String):Void {
 		if(this.char != char) {
 			var name:String = 'icons/' + char;
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
-			var file:Dynamic = Paths.image(name);
+			final file:Dynamic = Paths.image(name);
 
-			loadGraphic(file); //Load stupidly first for getting the file size
-			var frames:Array<Int> = [0, 1, 2];
-			var finalWidth = 3;
-			switch (file.width)
-			{
-				case 450:
-					finalWidth = 3;
-					frames = [0, 1, 2];
-					iconOffsets[0] = (width - 450) / 3;
-					iconOffsets[1] = (width - 450) / 3;
-				case 300:
-					finalWidth = 2;
-					frames = [0, 1];
-					iconOffsets[0] = (width - 300) / 2;
-					iconOffsets[1] = (width - 300) / 2;
-				case 150:
-					finalWidth = 1;
-					frames = [0];
-					iconOffsets[0] = (width - 150) / 1;
-			}
-			loadGraphic(file, true, Math.floor(width / finalWidth), Math.floor(height)); //Then load it fr
-			updateHitbox();
+			loadGraphic(file); //load graphic to get the width and height
 
-			animation.add(char, frames, 0, false, isPlayer);
+			final dumbWidth:Int = Std.int(file.width / 150);
+			loadGraphic(file, true, Std.int(width / dumbWidth), Std.int(file.height)); //Then load it fr
+
+			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
 			animation.play(char);
 			this.char = char;
 
-			antialiasing = ClientPrefs.globalAntialiasing;
-			if(char.endsWith('-pixel')) {
-				antialiasing = false;
-			}
+			antialiasing = (ClientPrefs.globalAntialiasing && !char.endsWith('-pixel'));
+			scrollFactor.set();
+			updateHitbox();
 		}
 	}
 
-	override function updateHitbox()
-	{
-		super.updateHitbox();
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
+	/**
+	 * Store which health percentage will make a frame play
+	 * Percentage => Frame
+	 */
+	public var animationMap:Map<Int, Int> = [
+		0 => 0, // Default
+		20 => 1, // Lose
+		80 => 2 // Winning
+	];
+
+	public dynamic function updateFrame(health:Float):Void {
+		for (healthPercent => frame in animationMap)
+			if (health < healthPercent)
+				animation.curAnim.curFrame = frame;
 	}
 
-	inline public function getCharacter():String {
+	inline public function getCharacter():String
 		return char;
-	}
 }
