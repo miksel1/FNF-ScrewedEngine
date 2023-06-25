@@ -28,7 +28,14 @@ class HealthIcon extends FlxSprite
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 
-		updateFrame(isPlayer ? PlayState.instance.healthBar.percent : 100 - PlayState.instance.healthBar.percent);
+		if (PlayState.instance != null)
+			updateFrame(isPlayer ? PlayState.instance.healthBar.percent * 3 + 50 : PlayState.instance.healthBar.percent - 50);
+		else
+		{
+			// I forgot this was dynamic :skull:
+			updateFrame = fakeHealth -> animation.curAnim.curFrame = Std.int(fakeHealth);
+			// updateFrame(0);
+		}
 		offset.y = 0;
 	}
 
@@ -41,11 +48,11 @@ class HealthIcon extends FlxSprite
 			var name:String = 'icons/' + char;
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
-			var file:Dynamic = Paths.image(name);
+			final file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //load graphic to get the width and height
 
-			var dumbWidth:Int = Std.int(file.width / 150);
+			final dumbWidth:Int = Std.int(file.width / 150);
 			loadGraphic(file, true, Std.int(width / dumbWidth), Std.int(file.height)); //Then load it fr
 
 			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
@@ -65,16 +72,15 @@ class HealthIcon extends FlxSprite
 	public var animationMap:Map<Int, Int> = [
 		0 => 0, // Default
 		20 => 1, // Lose
-		80 => 2, // Winning
+		80 => 2 // Winning
 	];
 
 	public dynamic function updateFrame(health:Float):Void {
 		for (healthPercent => frame in animationMap)
-			if (health < healthPercent && animationMap.exists(animation.curAnim.numFrames))
+			if (health < healthPercent)
 				animation.curAnim.curFrame = frame;
 	}
 
-	inline public function getCharacter():String {
+	inline public function getCharacter():String
 		return char;
-	}
 }
