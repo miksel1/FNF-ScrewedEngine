@@ -29,7 +29,8 @@ class HealthIcon extends FlxSprite
 			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 
 		if (PlayState.instance != null)
-			updateFrame(isPlayer ? PlayState.instance.healthBar.percent * 3 + 50 : PlayState.instance.healthBar.percent - 50);
+			// TODO: fix win icons if they're broken
+			updateFrame(isPlayer ? PlayState.instance.healthBar.percent * 3 + 45 : PlayState.instance.healthBar.percent - 85);
 		else
 		{
 			// I forgot this was dynamic :skull:

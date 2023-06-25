@@ -20,6 +20,7 @@ Add stage shader effects by JSON
 Fix icon offsets
 Heatwave shader
 Fix PlaybackRate
+Fix bugs with health icons
 
 
 Done:
