@@ -57,6 +57,7 @@ class ResetScoreSubState extends MusicBeatSubstate
 			icon.updateHitbox();
 			icon.setPosition(text.x - icon.width + (10 * tooLong), text.y - 30);
 			icon.alpha = 0;
+			// icon.updateFrame = null;
 			add(icon);
 		}
 
@@ -115,6 +116,7 @@ class ResetScoreSubState extends MusicBeatSubstate
 		yesText.scale.set(scales[confirmInt], scales[confirmInt]);
 		noText.alpha = alphas[1 - confirmInt];
 		noText.scale.set(scales[1 - confirmInt], scales[1 - confirmInt]);
-		if(week == -1) icon.animation.curAnim.curFrame = confirmInt;
+		if(week == -1)
+			icon.updateFrame = daHealth -> icon.animation.curAnim.curFrame = confirmInt;
 	}
 }
