@@ -119,7 +119,7 @@ class LanguageState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function getDaText():String {
+	inline function getDaText():String {
 		return Language.getString({
 			s: "Hey, looks like you didn't selected language!\n
 			Select the one you prefer in the options menu!\n

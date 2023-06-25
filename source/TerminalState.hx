@@ -64,9 +64,7 @@ class TerminalState extends MusicBeatState
 		var swagGoodArray:Array<Array<String>> = [];
 
 		for (i in firstArray)
-		{
 			swagGoodArray.push(i.split('--'));
-		}
 
 		return swagGoodArray;
 	}
@@ -103,11 +101,6 @@ class TerminalState extends MusicBeatState
 		".", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "", ";", "", "[", "]", ",", "="
 	];
 
-	public var fakeDisplayGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
-	public var expungedTimer:FlxTimer;
-
-	var curExpungedAlpha:Float = 0;
-
 	var witherThings:Map<String, Dynamic> = [];
 
 	override public function create():Void
@@ -121,7 +114,6 @@ class TerminalState extends MusicBeatState
 		typeSound = FlxG.sound.load(Paths.sound('terminal_space'), 0.6);
 		witherThings.set('sound', FlxG.sound.load(Paths.sound('wither_fade_in')));
 		witherThings.set('soundLength', witherThings.get('sound').length);
-		//FlxG.sound.playMusic(Paths.music('TheAmbience'), 0.7);
 
 		CommandList.push(new TerminalCommand("help", Language.getString(languageStrings.get("term_help_ins")), function(arguments:Array<String>)
 		{
@@ -130,9 +122,7 @@ class TerminalState extends MusicBeatState
 			for (v in CommandList)
 			{
 				if (v.showInHelp)
-				{
 					helpText += (v.commandName + " - " + v.commandHelp + "\n");
-				}
 			}
 			UpdateText("\n" + helpText);
 		}));
@@ -253,9 +243,7 @@ class TerminalState extends MusicBeatState
 															});
 															new FlxTimer().start(timerLength, function(tmr:FlxTimer)
 															{
-																FlxG.sound.play(Paths.sound('wither_fade_in'), 1, false, null, true, function()
-																{
-																});
+																FlxG.sound.play(Paths.sound('wither_fade_in'), 1, false, null, true);
 															});
 														}
 														// });
@@ -343,10 +331,8 @@ class TerminalState extends MusicBeatState
 		super.create();
 	}
 
-	public function UpdateText(val:String)
-	{
+	inline public function UpdateText(val:String)
 		displayText.text = previousText + val;
-	}
 
 	public function UpdatePreviousText(reset:Bool)
 	{
@@ -395,7 +381,7 @@ class TerminalState extends MusicBeatState
 				{
 					arguments.shift();
 					calledFunc = true;
-					v.FuncToCall(arguments);
+					v.funcToCall(arguments);
 					break;
 				}
 			}
@@ -441,9 +427,8 @@ class TerminalState extends MusicBeatState
 			UpdateText(curCommand);
 		}
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.BACKSPACE)
-		{
 			curCommand = "";
-		}
+
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			ClientPrefs.showFPS = FlxG.save.data.showFPS;
@@ -456,7 +441,7 @@ class TerminalCommand
 {
 	public var commandName:String = "undefined";
 	public var commandHelp:String = "if you see this you are very homosexual and dumb."; // hey im not homosexual. kinda mean ngl
-	public var FuncToCall:Dynamic;
+	public var funcToCall:Dynamic;
 	public var showInHelp:Bool;
 	public var oneCommand:Bool;
 
@@ -464,7 +449,7 @@ class TerminalCommand
 	{
 		commandName = name;
 		commandHelp = help;
-		FuncToCall = func;
+		funcToCall = func;
 		this.showInHelp = showInHelp;
 		this.oneCommand = oneCommand;
 	}
