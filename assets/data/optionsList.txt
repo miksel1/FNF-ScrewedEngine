@@ -1,0 +1,6 @@
+story_mode,
+freeplay,
+mods,
+awards,
+credits,
+options

@@ -25,7 +25,7 @@ import gamejolt.GJClient;
 import gamejolt.formats.User;
 #end
 #if sys
-import sys.Filesystem;
+import sys.FileSystem;
 #else
 import openfl.utils.Assets;	
 #end
@@ -63,21 +63,19 @@ class MainMenuState extends MusicBeatState
 		WeekData.loadTheFirstEnabledMod();
 		
 		// TODO: mod support
-		if (#if sys Filesystem.exists(Paths.txt(optionsList)) #else Assets.exists(Paths.txt(optionsList) #end)){
-		    try
-			{
-				optionShit =
-				#if sys 
-				sys.io.File.getContent(Paths.txt(optionsList));
-				#else
-				Assets.getText(Paths.txt(optionsList));
-				#end 
-				var e = haxe.macro.Context.getDefines();
-				for (i in 0...optionShit.length){
-					if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"])
-						|| optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"]))
-						continue;
-				}
+		if (#if sys FileSystem.exists(Paths.txt('optionsList')) #else Assets.exists(Paths.txt('optionsList')) #end){
+		    try{
+				optionShit = CoolUtil.coolTextFile(Paths.txt('optionsList'));
+
+				#if !MODS_ALLOWED
+				if (optionShit.contains('mods'))
+					optionShit.remove('mods');
+				#end
+
+				#if !ACHIVEMENTS_ALLOWED
+				if (optionShit.contains('awards')) // else if is a big no no
+					optionShit.remove('awards');
+				#end
 			}
 		   	catch(e){
 				trace("Error! " + e);
@@ -90,6 +88,16 @@ class MainMenuState extends MusicBeatState
 					'options'
 				];
 		   	}
+		}
+		else{
+			optionShit = [
+				'story_mode',
+				'freeplay',
+				#if MODS_ALLOWED 'mods', #end
+				#if ACHIEVEMENTS_ALLOWED 'awards', #end
+				'credits',
+				'options'
+			];
 		}
 
 		#if desktop
@@ -257,9 +265,7 @@ class MainMenuState extends MusicBeatState
 			if (controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
-				{
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
-				}
 				else
 				{
 					selectedSomethin = true;
@@ -270,21 +276,14 @@ class MainMenuState extends MusicBeatState
 					menuItems.forEach(function(spr:FlxSprite)
 					{
 						if (curSelected != spr.ID)
-						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
-						}
+							FlxTween.tween(spr, {alpha: 0}, 0.4, {ease: FlxEase.quadOut, onComplete: _ -> spr.kill()});
 						else
 						{
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 							{
 								var daChoice:String = optionShit[curSelected];
 
+								// TODO: add softcoded options here
 								switch (daChoice)
 								{
 									case 'story_mode':
