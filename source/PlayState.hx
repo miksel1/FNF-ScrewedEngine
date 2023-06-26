@@ -1678,13 +1678,14 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	// TODO: optimize and cleanup the shader shit
 	/**
 	 * [Description] Adds a shader to the game (through an array, then a map). Based on Andromeda engine by Nebula_Zorua.
 	 * @param name Shader name
 	 * @param shader The Shader
 	 * @param camera Optional: The camera for the shader
 	 */
-	inline public function addShaderToArray(name:String, shader:Dynamic, ?camera:Dynamic){
+	inline public function addShaderToArray(name:String, shader:Dynamic, ?camera:FlxCamera){
 		if (!ClientPrefs.shaders)
 			return;
 		// var conv = new ShaderFilter(shader);
@@ -1698,7 +1699,7 @@ class PlayState extends MusicBeatState
 		try {
 			if (shadersMap.get(shaderDef.shader) != null){
 				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-				if (camera != null && camera is FlxCamera)
+				if (camera != null)
 					camera.setFilters(newEffect);
 				else
 					FlxG.camera.setFilters(newEffect);
@@ -1716,7 +1717,7 @@ class PlayState extends MusicBeatState
 	 * @param shader The Shader
 	 * @param camera Optional: The camera for the shader
 	 */
-	inline public function removeShaderFromArray(name:String, shader:Dynamic, ?camera:Dynamic){
+	inline public function removeShaderFromArray(name:String, shader:Dynamic, ?camera:FlxCamera){
 		if (!ClientPrefs.shaders)
 			return;
 
@@ -1730,7 +1731,7 @@ class PlayState extends MusicBeatState
 		try {
 			if (shadersMap.get(shaderDef.shader) != null){
 				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
-				if (camera != null && camera is FlxCamera)
+				if (camera != null)
 					camera.setFilters(newEffect);
 				else
 					FlxG.camera.setFilters(newEffect);
