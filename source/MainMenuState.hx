@@ -63,32 +63,34 @@ class MainMenuState extends MusicBeatState
 		WeekData.loadTheFirstEnabledMod();
 		
 		// TODO: mod support
-		if (#if sys Filesystem.exists(Paths.txt(optionsList)) #else Assets.exists(Paths.txt(optionsList) #end){
-		    try{
-		    optionShit = 
-		    #if sys 
-		    sys.io.File.getContent(Paths.txt(optionsList)); 
-		    #else 
-	            Assets.getText(Paths.txt(optionsList));
-		    #end 
-		    var e = haxe.macro.Context.getDefines();
-		    for (i in 0...optionShit.length){
-		      if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"])
-		        || optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"]))
-                          continue;
-                   }
-		   catch(e){
-                       trace("Error! " + e);
-	                optionShit = [
-		             'story_mode',
-		             'freeplay',
-		             #if MODS_ALLOWED 'mods', #end
-		             #if ACHIEVEMENTS_ALLOWED 'awards', #end
-		             'credits',
-		             'options'
-	                ];
-		   }
-                }
+		if (#if sys Filesystem.exists(Paths.txt(optionsList)) #else Assets.exists(Paths.txt(optionsList) #end)){
+		    try
+			{
+				optionShit =
+				#if sys 
+				sys.io.File.getContent(Paths.txt(optionsList));
+				#else
+				Assets.getText(Paths.txt(optionsList));
+				#end 
+				var e = haxe.macro.Context.getDefines();
+				for (i in 0...optionShit.length){
+					if(optionShit[i] != null && optionShit[i].contains('mods') && optionShit[i].contains(e["MODS_ALLOWED"])
+						|| optionShit[i] != null && optionShit[i].contains('awards') && optionShit[i].contains(e["ACHIEVEMENTS_ALLOWED"]))
+						continue;
+				}
+			}
+		   	catch(e){
+				trace("Error! " + e);
+				optionShit = [
+					'story_mode',
+					'freeplay',
+					#if MODS_ALLOWED 'mods', #end
+					#if ACHIEVEMENTS_ALLOWED 'awards', #end
+					'credits',
+					'options'
+				];
+		   	}
+		}
 
 		#if desktop
 		// Updating Discord Rich Presence
