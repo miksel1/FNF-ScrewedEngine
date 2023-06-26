@@ -24,11 +24,7 @@ import flixel.input.keyboard.FlxKey;
 import gamejolt.GJClient;
 import gamejolt.formats.User;
 #end
-#if sys
-import sys.FileSystem;
-#else
-import openfl.utils.Assets;	
-#end
+import openfl.utils.Assets;
 
 using StringTools;
 
@@ -63,10 +59,13 @@ class MainMenuState extends MusicBeatState
 		WeekData.loadTheFirstEnabledMod();
 		
 		// TODO: mod support
-		if (#if sys FileSystem.exists(Paths.txt('optionsList')) #else Assets.exists(Paths.txt('optionsList')) #end){
+		if (Assets.exists(Paths.txt('optionsList'))){
 		    try{
-				optionShit = CoolUtil.coolTextFile(Paths.txt('optionsList'));
-
+				var textShit:Array<String> = CoolUtil.coolTextFile(Paths.txt('optionsList'));
+				for (i in 0...textShit.length){
+					final splitter:Array<String> = textShit[i].split(',');
+					optionShit = splitter; // alternate way to do this as a fix
+				}
 				#if !MODS_ALLOWED
 				if (optionShit.contains('mods'))
 					optionShit.remove('mods');
