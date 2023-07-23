@@ -369,9 +369,9 @@ class FreeplayState extends MusicBeatState
 					}
 					catch (e){
 						if (i == null)
-							throw "Invalid Section or songs are missing/null, full error: " + e.message;
+							trace("Invalid Section or songs are missing/null, full error: " + e);
 						else
-							throw "Error: " + e.message;
+							trace("Error: " + e);
 					}
 				}
 			}
