@@ -80,7 +80,7 @@ import sys.io.File;
 #end
 
 #if VIDEOS_ALLOWED
-#if (hxCodec >= "2.7.0")
+#if (hxCodec >= "3.0.0")
 import hxcodec.flixel.FlxVideo as MP4Handler;
 #elseif (hxCodec == "2.6.1")
 import hxcodec.VideoHandler as MP4Handler;
@@ -95,7 +95,7 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
-	public static var STRUM_X = 42;
+	public static var STRUM_X = 48.5;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
@@ -411,9 +411,6 @@ class PlayState extends MusicBeatState
 			keysArray.push(ClientPrefs.copyKey(ClientPrefs.keyBinds.get(asa.toLowerCase())));
 
 		shadersArray = [];
-		// shadersMap.set('screenshader', screenshader);
-		// shadersMap.set('anotherScreenshader', anotherScreenshader);
-		// shadersMap.set('globalChromaticAberration', globalChromaticAberration);
 
 		// Shaders & effects
 		globalChromaticAberration = new ChromaticAberration(0);
@@ -490,7 +487,7 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
-		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>(8);
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
@@ -1071,7 +1068,7 @@ class PlayState extends MusicBeatState
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
 
-		var camPos:FlxPoint = new FlxPoint(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
+		var camPos:FlxPoint = FlxPoint.get(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 		if (gf != null)
 		{
 			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
@@ -1726,10 +1723,13 @@ class PlayState extends MusicBeatState
 			name: name,
 			shader: shader
 		};
-		shadersMap.remove(shaderDef.shader);
+		if (Lambda.has(shadersMap, shaderDef.shader))
+			shadersMap.remove(shaderDef.shader);
 		var newEffect = new Array<BitmapFilter>();
 		try {
 			if (shadersMap.get(shaderDef.shader) != null){
+				if (Lambda.empty(shadersMap))
+					return;
 				newEffect.push(new ShaderFilter(shadersMap['${shaderDef.name}'].shader));
 				if (camera != null)
 					camera.setFilters(newEffect);
@@ -1876,17 +1876,17 @@ class PlayState extends MusicBeatState
 			judgementCounter.visible = false;
 
 		var video:MP4Handler = new MP4Handler();
-		#if (hxCodec >= "2.7.0")
-                video.play(filepath);
-                video.onEndReached.add(() -> video.dispose());
-                #else
-                video.playVideo(filepath);
-		#end
+		#if (hxCodec >= "3.0.0")
+		video.play(filepath);
+		video.onEndReached.add(() -> video.dispose());
+		#else
+		video.playVideo(filepath);
  		video.finishCallback = () ->
 		{
 			startAndEnd();
 			return;
 		}
+		#end
 		#else
 		FlxG.log.warn('Platform not supported!');
 		startAndEnd();
@@ -3215,23 +3215,13 @@ class PlayState extends MusicBeatState
 		if (disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
-		addShaderToArray('screenShader', screenshader);
+		if (SONG.events.contains('Rainbow Eyesore'))
+			addShaderToArray('screenShader', screenshader);
 
 		if (SONG.event7 == 'Rainbow Eyesore')
 			addShaderToArray('anotherScreenshader', anotherScreenshader);
 		else if (SONG.event7 == 'Chromatic Aberration')
 			addShaderToArray('globalChromaticAberration', globalChromaticAberration);
-		/*
-		else{
-			// var e = new ShaderFilter(anotherScreenshader.shader);
-			// var f = new ShaderFilter(globalChromaticAberration.shader);
-			if (shadersArray.length > 0)
-				shadersArray.resize(0);
-			else if (hasShader('anotherScreenshader'))
-				removeShaderFromArray('anotherScreenshader', anotherScreenshader);
-			else if (hasShader('globalChromaticAberration'))
-				removeShaderFromArray('globalChromaticAberration', globalChromaticAberration);
-		}*/
 
 		FlxG.camera.setFilters(shadersArray);
 		screenshader.update(elapsed);
