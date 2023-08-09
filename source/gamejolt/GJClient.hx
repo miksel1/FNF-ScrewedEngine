@@ -591,8 +591,12 @@ class GJClient
 			if (logged)
 				printMsg('Initialized successfully!');
 		}
-		else
-			printMsg('Initializing failed!');
+		else{
+			if (!hasLoginInfo())
+				printMsg('Initializing failed: User or game token unavailable, make sure they are correct!');
+			else
+				printMsg('Initializing failed!');
+		}
 	}
 
 	// INTERNAL FUNCTIONS (DON'T ALTER IF YOU DON'T KNOW WHAT YOU'RE DOING!!)

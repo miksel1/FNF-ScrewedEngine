@@ -346,6 +346,10 @@ class FreeplayState extends MusicBeatState
 			ahg = false;
 			if (action == FlxInputText.INPUT_ACTION)
 			{
+				if(fakeSongs.length <= 0) {
+					trace("Invalid Section or songs are missing/null");
+					return;
+				}
 				for (i in 0...fakeSongs.length)
 				{
 					var i:Null<Int> = fakeSongs.length;
@@ -369,9 +373,9 @@ class FreeplayState extends MusicBeatState
 					}
 					catch (e){
 						if (i == null)
-							throw "Invalid Section or songs are missing/null, full error: " + e.message;
+							trace("Invalid Section or songs are missing/null, full error: " + e);
 						else
-							throw "Error: " + e.message;
+							trace("Error: " + e);
 					}
 				}
 			}
