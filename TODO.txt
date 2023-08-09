@@ -21,6 +21,8 @@ Fix icon offsets
 Heatwave shader
 Fix PlaybackRate
 Fix bugs with health icons
+Optimize shaders
+GPU cache support
 
 
 Done:
@@ -31,4 +33,4 @@ Credit the shader's creators
 
 
 Well shit:
-Add menu customizer by JSON (XD is doing it, i wanted he to try)
+Add menu customizer by JSON (XD is doing it, I wanted him to try)
