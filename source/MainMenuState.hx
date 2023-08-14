@@ -63,15 +63,18 @@ class MainMenuState extends MusicBeatState
 		    try{
 				var textShit:Array<String> = CoolUtil.coolTextFile(Paths.txt('optionsList'));
 				for (i in 0...textShit.length){
-					final splitter:Array<String> = textShit[i].split(',');
-					optionShit = splitter; // alternate way to do this as a fix
+					trace('parsed options: ${textShit[i].split('\n')}');
+					// final splitter:Array<String> = textShit[i].split('\n');
+					optionShit = textShit; // alternate way to do this as a fix
 				}
+				for (e in 0...optionShit.length)
+					trace('list of options: ${optionShit[e].split('\n')}');
 				#if !MODS_ALLOWED
 				if (optionShit.contains('mods'))
 					optionShit.remove('mods');
 				#end
 
-				#if !ACHIVEMENTS_ALLOWED
+				#if !ACHIEVEMENTS_ALLOWED
 				if (optionShit.contains('awards')) // else if is a big no no
 					optionShit.remove('awards');
 				#end
