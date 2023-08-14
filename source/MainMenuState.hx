@@ -24,6 +24,7 @@ import flixel.input.keyboard.FlxKey;
 import gamejolt.GJClient;
 import gamejolt.formats.User;
 #end
+import openfl.utils.Assets;
 
 using StringTools;
 
@@ -43,14 +44,7 @@ class MainMenuState extends MusicBeatState
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var terminalKeysBuffer:String = '';
 
-	var optionShit:Array<String> = [
-		'story_mode',
-		'freeplay',
-		#if MODS_ALLOWED 'mods', #end
-		#if ACHIEVEMENTS_ALLOWED 'awards', #end
-		'credits',
-		'options'
-	];
+	var optionShit:Array<String> = [];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -63,6 +57,50 @@ class MainMenuState extends MusicBeatState
 		Paths.pushGlobalMods();
 		#end
 		WeekData.loadTheFirstEnabledMod();
+		
+		// TODO: mod support
+		if (Assets.exists(Paths.txt('optionsList'))){
+		    try{
+				var textShit:Array<String> = CoolUtil.coolTextFile(Paths.txt('optionsList'));
+				for (i in 0...textShit.length){
+					trace('parsed options: ${textShit[i].split('\n')}');
+					// final splitter:Array<String> = textShit[i].split('\n');
+					optionShit = textShit; // alternate way to do this as a fix
+				}
+				for (e in 0...optionShit.length)
+					trace('list of options: ${optionShit[e].split('\n')}');
+				#if !MODS_ALLOWED
+				if (optionShit.contains('mods'))
+					optionShit.remove('mods');
+				#end
+
+				#if !ACHIEVEMENTS_ALLOWED
+				if (optionShit.contains('awards')) // else if is a big no no
+					optionShit.remove('awards');
+				#end
+			}
+		   	catch(e){
+				trace("Error! " + e);
+				optionShit = [
+					'story_mode',
+					'freeplay',
+					#if MODS_ALLOWED 'mods', #end
+					#if ACHIEVEMENTS_ALLOWED 'awards', #end
+					'credits',
+					'options'
+				];
+		   	}
+		}
+		else{
+			optionShit = [
+				'story_mode',
+				'freeplay',
+				#if MODS_ALLOWED 'mods', #end
+				#if ACHIEVEMENTS_ALLOWED 'awards', #end
+				'credits',
+				'options'
+			];
+		}
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -229,9 +267,7 @@ class MainMenuState extends MusicBeatState
 			if (controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
-				{
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
-				}
 				else
 				{
 					selectedSomethin = true;
@@ -242,21 +278,14 @@ class MainMenuState extends MusicBeatState
 					menuItems.forEach(function(spr:FlxSprite)
 					{
 						if (curSelected != spr.ID)
-						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
-						}
+							FlxTween.tween(spr, {alpha: 0}, 0.4, {ease: FlxEase.quadOut, onComplete: _ -> spr.kill()});
 						else
 						{
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 							{
 								var daChoice:String = optionShit[curSelected];
 
+								// TODO: add softcoded options here
 								switch (daChoice)
 								{
 									case 'story_mode':
