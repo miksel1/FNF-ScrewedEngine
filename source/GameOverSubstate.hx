@@ -55,7 +55,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
 
-		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
+		camFollow = FlxPoint.weak(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
 		Conductor.changeBPM(100);
@@ -143,13 +143,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 		PlayState.instance.callOnLuas('onUpdatePost', [elapsed]);
-	}
-
-	override function beatHit()
-	{
-		super.beatHit();
-
-		//FlxG.log.add('beat');
 	}
 
 	var isEnding:Bool = false;

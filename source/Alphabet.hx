@@ -1,7 +1,6 @@
 package;
 
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.addons.ui.FlxUI.NamedBool;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -9,14 +8,6 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
-#if (flixel >= "5.3.0")
-import flixel.sound.FlxSound;
-#else
-import flixel.system.FlxSound;
-#end
-#if flash
-import flash.media.Sound;
-#end
 import effects.ColorSwap;
 
 using StringTools;
@@ -46,8 +37,8 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 	public var scaleY(default, set):Float = 1;
 	public var rows:Int = 0;
 
-	public var distancePerItem:FlxPoint = new FlxPoint(20, 120);
-	public var startPosition:FlxPoint = new FlxPoint(0, 0); //for the calculations
+	public var distancePerItem:FlxPoint = FlxPoint.weak(20, 120);
+	public var startPosition:FlxPoint = FlxPoint.get(0, 0); //for the calculations
 
 	public var useColorSwap(default, set):Bool = false;
 	public var colorEffect(default, set):Null<Float> = 0.1;
@@ -290,18 +281,17 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 		});
 		return colorEffect = v;
 	}
+
+	override function destroy(){
+		startPosition.put();
+		super.destroy();
+	}
 }
 
 
 ///////////////////////////////////////////
 // ALPHABET LETTERS, SYMBOLS AND NUMBERS //
 ///////////////////////////////////////////
-
-/*enum LetterType
-{
-	ALPHABET;
-	NUMBER_OR_SYMBOL;
-}*/
 
 @:structInit
 typedef Letter = {
@@ -312,10 +302,6 @@ typedef Letter = {
 
 class AlphaCharacter extends FlxSprite
 {
-	//public static var alphabet:String = "abcdefghijklmnopqrstuvwxyz";
-	//public static var numbers:String = "1234567890";
-	//public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
-
 	public var image(default, set):String;
 
 	var colorSwap:ColorSwap;

@@ -1177,7 +1177,7 @@ class PlayState extends MusicBeatState
 			ghostTappersOff = true;
 		}
 
-		camFollow = new FlxPoint();
+		camFollow = FlxPoint.get();
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 
 		snapCamFollowToPos(camPos.x, camPos.y);
