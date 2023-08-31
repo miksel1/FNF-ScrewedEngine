@@ -2587,6 +2587,10 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
+		// why do this when you can't see the score
+		if (scoreTxt.alpha <= 0 || (!scoreTxt.visible))
+			return;
+
 		var ret:Dynamic = callOnLuas('onUpdateScore', [miss]);
 		if (ret != FunkinLua.Function_Stop){
 			if (ClientPrefs.scoreZoom && !miss && !cpuControlled)
