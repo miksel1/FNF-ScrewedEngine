@@ -1281,7 +1281,7 @@ class PlayState extends MusicBeatState
 		if (ClientPrefs.showHealth)
 		{
 			healthTxt = new FlxText(botplayTxt.x, !ClientPrefs.downScroll ? botplayTxt.y + 100 : botplayTxt.y - 100, botplayTxt.fieldWidth,
-				"HEALTH: " + Highscore.floorDecimal(healthBar.percent, 2) + '%');
+				"HEALTH: " + CoolUtil.floorDecimal(healthBar.percent, 2) + '%');
 
 			healthTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			healthTxt.scrollFactor.set();
@@ -2587,22 +2587,24 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		if (ClientPrefs.scoreZoom && !miss && !cpuControlled)
-		{
-			if (scoreTxtTween != null)
+		var ret:Dynamic = callOnLuas('onUpdateScore', [miss]);
+		if (ret != FunkinLua.Function_Stop){
+			if (ClientPrefs.scoreZoom && !miss && !cpuControlled)
 			{
-				scoreTxtTween.cancel();
-			}
-			scoreTxt.scale.x = 1.075;
-			scoreTxt.scale.y = 1.075;
-			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2 /* / playbackRate*/, {
-				onComplete: function(twn:FlxTween)
+				if (scoreTxtTween != null)
 				{
-					scoreTxtTween = null;
+					scoreTxtTween.cancel();
 				}
-			});
+				scoreTxt.scale.x = 1.075;
+				scoreTxt.scale.y = 1.075;
+				scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2 /* / playbackRate*/, {
+					onComplete: function(twn:FlxTween)
+					{
+						scoreTxtTween = null;
+					}
+				});
+			}
 		}
-		callOnLuas('onUpdateScore', [miss]);
 	}
 
 	public function setSongTime(time:Float)
@@ -3406,7 +3408,7 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + combo + ' | NPS: ' + '$nps/$maxNPS'  + ' | Rating: ' + ratingName;
 		if (ratingName != '?')
-			scoreTxt.text += ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;
+			scoreTxt.text += ' (' + CoolUtil.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;
 
 		// for nps
 		//if(ClientPrefs.nps) { // i dont know man! This constantly causes me lag!
@@ -3427,7 +3429,7 @@ class PlayState extends MusicBeatState
 
 		if (ClientPrefs.showHealth)
 			if (healthTxt != null)
-				healthTxt.text = "HEALTH: " + Highscore.floorDecimal(healthBar.percent, 2) + '%';
+				healthTxt.text = "HEALTH: " + CoolUtil.floorDecimal(healthBar.percent, 2) + '%';
 
 		if (botplayTxt.visible)
 		{

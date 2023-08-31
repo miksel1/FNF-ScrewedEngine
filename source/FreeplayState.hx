@@ -66,9 +66,8 @@ class FreeplayState extends MusicBeatState
 	var cathegoriesInt:Map<Int, String> = [0 => 'MAIN'];
 	@:isVar
 	var currentCathegory(default, set):String = 'MAIN';
-	function set_currentCathegory(v:String):String {
+	inline final function set_currentCathegory(v:String):String
 		return currentCathegory = v.replace('--', '').toUpperCase();
-	}
 
 	var songs:Array<SongMetadata> = [];
 	var fakeSongs:Array<SongMetadata> = []; // I might have a go at it, since Wither is on break
@@ -85,7 +84,7 @@ class FreeplayState extends MusicBeatState
 
 	var curFreeplaySection(get, null):String;
 
-	inline function get_curFreeplaySection():String
+	inline final function get_curFreeplaySection():String
 	{
 		return (curSelected < 0) ? 'MAIN' : sections[curSelected];
 	}
@@ -681,7 +680,7 @@ class FreeplayState extends MusicBeatState
 		if (Math.abs(lerpRating - intendedRating) <= 0.01)
 			lerpRating = intendedRating;
 
-		var ratingSplit:Array<String> = Std.string(Highscore.floorDecimal(lerpRating * 100, 2)).split('.');
+		var ratingSplit:Array<String> = Std.string(CoolUtil.floorDecimal(lerpRating * 100, 2)).split('.');
 		if (ratingSplit.length < 2)
 		{ // No decimals, add an empty space
 			ratingSplit.push('');
