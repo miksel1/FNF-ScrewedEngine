@@ -1749,7 +1749,7 @@ class PlayState extends MusicBeatState
 	 * @return shadersArray.resize(amo > 0 || amo != null ? amo : 0)
 	 */
 	inline public function clearShadersFromArray(?amo:Int)
-		shadersArray.resize(amo > 0 || amo != null ? amo : 0);
+		shadersArray.resize(amo > 0 || (amo != null) ? amo : 0);
 
 	/**
 	 * [Description] Gets a `certain` shader from an shaders array or map
@@ -1767,13 +1767,11 @@ class PlayState extends MusicBeatState
 		};
 		for (i in 0...shadersArray.length){
 			if (shaderDef.shader is String){
-				if (Reflect.hasField(shadersArray[i], shaderDef.shader)){
+				if (Reflect.hasField(shadersArray[i], shaderDef.shader))
 					return Reflect.getProperty(shadersArray[i], shaderDef.shader);
-				}
 			}
-			else if (shadersArray.contains(shaderDef.shader)){
+			else if (shadersArray.contains(shaderDef.shader))
 				return shadersMap['${shaderDef.name}'].shader;
-			}
 		}
 		return null;
 	}
@@ -1878,10 +1876,15 @@ class PlayState extends MusicBeatState
 		var video:MP4Handler = new MP4Handler();
 		#if (hxCodec >= "3.0.0")
 		video.play(filepath);
-		video.onEndReached.add(() -> video.dispose());
+		video.onEndReached.add(function()
+		{
+			video.dispose();
+			startAndEnd();
+			return;
+		});
 		#else
 		video.playVideo(filepath);
- 		video.finishCallback = () ->
+ 		video.finishCallback = function()
 		{
 			startAndEnd();
 			return;
@@ -1953,6 +1956,12 @@ class PlayState extends MusicBeatState
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
 	{
+		// saves a lot of resources
+		if (dialogueBox == null){
+			startCountdown();
+			return;
+		}
+
 		inCutscene = true;
 		var black:FlxSprite = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 		black.scrollFactor.set();
@@ -1992,44 +2001,39 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				if (dialogueBox != null)
+				if (Paths.formatToSongPath(SONG.song) == 'thorns')
 				{
-					if (Paths.formatToSongPath(SONG.song) == 'thorns')
+					add(senpaiEvil);
+					senpaiEvil.alpha = 0;
+					new FlxTimer().start(0.3, function(swagTimer:FlxTimer)
 					{
-						add(senpaiEvil);
-						senpaiEvil.alpha = 0;
-						new FlxTimer().start(0.3, function(swagTimer:FlxTimer)
+						senpaiEvil.alpha += 0.15;
+						if (senpaiEvil.alpha < 1)
 						{
-							senpaiEvil.alpha += 0.15;
-							if (senpaiEvil.alpha < 1)
+							swagTimer.reset();
+						}
+						else
+						{
+							senpaiEvil.animation.play('idle');
+							FlxG.sound.play(Paths.sound('Senpai_Dies'), 1, false, null, true, function()
 							{
-								swagTimer.reset();
-							}
-							else
+								remove(senpaiEvil);
+								remove(red);
+								FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
+								{
+									add(dialogueBox);
+									camHUD.visible = true;
+								}, true);
+							});
+							new FlxTimer().start(3.2, function(deadTime:FlxTimer)
 							{
-								senpaiEvil.animation.play('idle');
-								FlxG.sound.play(Paths.sound('Senpai_Dies'), 1, false, null, true, function()
-								{
-									remove(senpaiEvil);
-									remove(red);
-									FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
-									{
-										add(dialogueBox);
-										camHUD.visible = true;
-									}, true);
-								});
-								new FlxTimer().start(3.2, function(deadTime:FlxTimer)
-								{
-									FlxG.camera.fade(FlxColor.WHITE, 1.6, false);
-								});
-							}
-						});
-					}
-					else
-						add(dialogueBox);
+								FlxG.camera.fade(FlxColor.WHITE, 1.6, false);
+							});
+						}
+					});
 				}
 				else
-					startCountdown();
+					add(dialogueBox);
 
 				remove(black);
 			}
@@ -2630,7 +2634,6 @@ class PlayState extends MusicBeatState
 		}
 		vocals.play();
 		Conductor.songPosition = time;
-		songTime = time;
 	}
 
 	function startNextDialogue()
@@ -2644,14 +2647,9 @@ class PlayState extends MusicBeatState
 		callOnLuas('onSkipDialogue', [dialogueCount]);
 	}
 
-	var previousFrameTime:Int = 0;
-	var songTime:Float = 0;
-
 	function startSong():Void
 	{
 		startingSong = false;
-
-		previousFrameTime = FlxG.game.ticks;
 
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		FlxG.sound.music.pitch = playbackRate;
@@ -3573,16 +3571,6 @@ class PlayState extends MusicBeatState
 		{
 			if (!paused)
 			{
-				songTime += FlxG.game.ticks - previousFrameTime;
-				previousFrameTime = FlxG.game.ticks;
-
-				// Interpolation type beat
-				if (Conductor.lastSongPos != Conductor.songPosition)
-				{
-					songTime = (songTime + Conductor.songPosition) / 2;
-					Conductor.lastSongPos = Conductor.songPosition;
-				}
-
 				if (updateTime)
 				{
 					var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;

@@ -81,6 +81,7 @@ class Main extends Sprite
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
 		#end
+		FlxG.fixedTimestep = false;
 
 		#if CRASH_HANDLER
 		// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

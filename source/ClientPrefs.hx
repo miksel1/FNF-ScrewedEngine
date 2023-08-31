@@ -10,12 +10,8 @@ class ClientPrefs {
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
 	public static var opponentStrums:Bool = true;
-	@:isVar
-	public static var showFPS(get, set):Bool = true;
-	static function get_showFPS():Bool {
-		return showFPS;
-	}
-	static function set_showFPS(v:Bool):Bool {
+	public static var showFPS(default, set):Bool = true;
+	inline static function set_showFPS(v:Bool):Bool {
 		showFPS = v;
 		if(Main.fpsVar != null) {
 			Main.fpsVar.visible = showFPS;
@@ -73,8 +69,6 @@ class ClientPrefs {
 	public static var safeFrames:Float = 10;
 
 	public static var shaders:Bool = true;
-	public static var grainEffect:Bool = true;
-	public static var mosaicEffect:Bool = true;
 
 	public static var language:String = 'English';
 
