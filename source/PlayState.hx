@@ -5344,7 +5344,7 @@ class PlayState extends MusicBeatState
 				return;
 
 			if (!note.isSustainNote)
-				npsArray.unshift(Date.now());
+				npsArray.push(Date.now());
 
 			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled && canPlayerLight)
 				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.hitsoundVolume);
