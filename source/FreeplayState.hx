@@ -34,6 +34,7 @@ import flixel.sound.FlxSound;
 import flixel.system.FlxSound;
 #end
 import openfl.utils.Assets as OpenFlAssets;
+import flixel.graphics.FlxGraphic;
 import WeekData;
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -1082,8 +1083,19 @@ class FreeplayState extends MusicBeatState
 			var name:String = sectionJSONs[i].name;
 			var image:String = sectionJSONs[i].image;
 			var position:Int = sectionJSONs[i].position;
+			// TODO: find a better & short way to do this
+			final daFile:FlxGraphic = Paths.image('freeplaysections/' + image);
+			final moddedFile:FlxGraphic = #if MODS_ALLOWED FlxGraphic.fromAssetKey(Paths.modsImages('freeplaysections/' + image)); #else null; #end
 
-			var file = Paths.image('freeplaysections/' + image);
+			// var file:FlxGraphic = daFile != null ? daFile : #if MODS_ALLOWED moddedFile != null ? moddedFile : #else null; #end
+			var file:FlxGraphic = null;
+			if (daFile != null)
+				file = daFile;
+			else if (moddedFile != null)
+				file = moddedFile;
+			else
+				file = Paths.image('freeplaysections/main');
+
 			var sectionImage:FlxSprite = new FlxSprite(0, 0).loadGraphic(file);
 			sectionImage.centerOffsets(false);
 			if (position == -1)
@@ -1098,7 +1110,7 @@ class FreeplayState extends MusicBeatState
 			sectionImage.antialiasing = ClientPrefs.globalAntialiasing;
 			sectionImage.cameras = [cameraSection];
 
-			var sectionAlphabet:Alphabet = new Alphabet(40 /*???*/, 20, name.toUpperCase());
+			var sectionAlphabet:Alphabet = new Alphabet(40, 20, name.toUpperCase());
 			sectionAlphabet.cameras = [cameraSection];
 			sectionAlphabet.x = sectionImage.x;
 

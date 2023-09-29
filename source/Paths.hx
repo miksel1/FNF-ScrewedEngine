@@ -287,7 +287,7 @@ class Paths
 	inline static public function fileExists(key:String, ?type:AssetType, ignoreMods:Bool = false, ?library:String)
 	{
 		#if MODS_ALLOWED
-		if(FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key))) {
+		if(FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key)) && !ignoreMods) {
 			//trace('mod data exists: ' + key);
 			return true;
 		}
