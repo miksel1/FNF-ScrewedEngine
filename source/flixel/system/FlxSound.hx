@@ -798,4 +798,6 @@ class FlxSound extends FlxBasic
 		]);
 	}
 }
+#else
+typedef FlxSound = flixel.sound.FlxSound;
 #end

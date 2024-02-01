@@ -1,12 +1,5 @@
 package flixel.sound;
 
-#if (flixel >= "5.3.0")
-import flash.events.Event;
-import flash.events.IEventDispatcher;
-import flash.media.Sound;
-import flash.media.SoundChannel;
-import flash.media.SoundTransform;
-import flash.net.URLRequest;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.math.FlxMath;
@@ -15,8 +8,14 @@ import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
+import openfl.events.Event;
+import openfl.events.IEventDispatcher;
+import openfl.media.Sound;
+import openfl.media.SoundChannel;
+import openfl.media.SoundTransform;
+import openfl.net.URLRequest;
 #if flash11
-import flash.utils.ByteArray;
+import openfl.utils.ByteArray;
 #end
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
@@ -798,4 +797,3 @@ class FlxSound extends FlxBasic
 		]);
 	}
 }
-#end
