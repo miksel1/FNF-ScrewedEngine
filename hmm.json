@@ -36,11 +36,6 @@
 			"version": null
 		},
 		{
-			"name": "tjson",
-			"type": "haxelib",
-			"version": null
-		},
-		{
 			"name": "hxjsonast",
 			"type": "haxelib",
 			"version": null
@@ -48,7 +43,7 @@
 		{
 			"name": "hxCodec",
 			"type": "haxelib",
-			"version": "2.5.1"
+			"version": "2.6.1"
 		},
 		{
 			"name": "hscript",
