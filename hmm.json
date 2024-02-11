@@ -36,11 +36,6 @@
 			"version": null
 		},
 		{
-			"name": "hxjsonast",
-			"type": "haxelib",
-			"version": null
-		},
-		{
 			"name": "hxCodec",
 			"type": "haxelib",
 			"version": "2.6.1"
@@ -61,13 +56,6 @@
 			"dir": null,
 			"ref": "master",
 			"url": "https://github.com/Aidan63/linc_discord-rpc"
-		},
-		{
-			"name": "hscript-ex",
-			"type": "git",
-			"dir": null,
-			"ref": "6d5e4fa",
-			"url": "https://github.com/ianharrigan/hscript-ex"
 		},
 		{
 			"name": "linc_luajit",
