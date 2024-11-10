@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="vs. DAB: Screwed Engine" file="ScrewedEngine" packageName="com.wither362.screwedengine" package="com.wither362.screwedengine" main="Main" version="0.2.8" company="Wither362" />
+	<app title="vs. DAB: Screwed Engine" file="ScrewedEngine" packageName="com.moxie.screwedengine" package="com.moxie.screwedengine" main="Main" version="0.2.8" company="Moxie" />
 	<app preloader="flixel.system.FlxPreloader" />
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
@@ -37,7 +37,7 @@
 	<define name="MODS_ALLOWED" if="desktop" />
 	<define name="LUA_ALLOWED" if="desktop" />
 	<define name="ACHIEVEMENTS_ALLOWED" />
-	<define name='GAMEJOLT_ALLOWED' if="desktop" />
+	<define name="GAMEJOLT_ALLOWED" if="desktop" />
 	<define name="VIDEOS_ALLOWED" if="desktop" unless="32bits"/>
 	<define name="SHADERS_ENABLED" />
 	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE WATERMARKS/DEV NAMES ON TITLE SCREEN -->
@@ -68,23 +68,23 @@
 		<library name="week6"         preload="true" />
 		<library name="week7"         preload="true" />
 
-	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
-	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
-	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week7"         library="week7"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week7"         library="week7"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
+		<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
+		<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
+		<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
+		<assets path="assets/week2"         library="week2"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week2"         library="week2"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week3"         library="week3"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week3"         library="week3"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week4"         library="week4"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week4"         library="week4"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week5"         library="week5"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week5"         library="week5"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week7"         library="week7"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week7"         library="week7"         exclude="*.mp3" unless="web"/>
 	</section>
 
 	<section if="NO_PRELOAD_ALL">
@@ -98,23 +98,23 @@
 		<library name="week6"         preload="false" />
 		<library name="week7"         preload="false" />
 
-	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
-	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
-	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week7"         library="week7"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week7"         library="week7"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
+		<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
+		<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
+		<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
+		<assets path="assets/week2"         library="week2"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week2"         library="week2"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week3"         library="week3"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week3"         library="week3"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week4"         library="week4"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week4"         library="week4"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week5"         library="week5"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week5"         library="week5"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
+		<assets path="assets/week7"         library="week7"         exclude="*.ogg" if="web"/>
+		<assets path="assets/week7"         library="week7"         exclude="*.mp3" unless="web"/>
 	</section>
 
 	<section if="MODS_ALLOWED">
@@ -128,6 +128,7 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
+	<haxelib name="openfl" version="9.2.2" />
 	<haxedev set='webgl' />
 
 	<!--In case you want to use the addons package-->
