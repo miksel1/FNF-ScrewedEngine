@@ -129,6 +129,7 @@
 
 	<haxelib name="flixel" />
 	<haxelib name="openfl" version="9.2.2" />
+	<haxelib name="openfl" version="8.1.2" />
 	<haxedev set='webgl' />
 
 	<!--In case you want to use the addons package-->
