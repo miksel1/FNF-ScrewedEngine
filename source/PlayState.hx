@@ -381,8 +381,8 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
-	// nps
-	var nps:Int = 0;
+	// Notes per second
+	var nps(default, set):Int = 0;
 	var npsArray:Array<Date> = [];
 	var maxNPS:Int = 0;
 
@@ -3426,7 +3426,8 @@ class PlayState extends MusicBeatState
 				pooper--;
 			}
 			nps = npsArray.length;
-			maxNPS = Math.max(maxNPS, nps);
+			if (nps > maxNPS)
+				maxNPS = nps;
 		//}
 
 		if (ClientPrefs.showHealth)
@@ -6147,6 +6148,11 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
+	function set_nps(i:Int) {
+		if (i > maxNPS)
+			maxNPS = i;
+		return nps = i;
+	}
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
 }
