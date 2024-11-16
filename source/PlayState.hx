@@ -1075,7 +1075,7 @@ class PlayState extends MusicBeatState
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
 		}
 
-		if (dad.curCharacter.startsWith('gf'))
+		if (dad.curCharacter.startsWith('gf')) // I will change this in the future.
 		{
 			dad.setPosition(GF_X, GF_Y);
 			if (gf != null)
@@ -1098,7 +1098,7 @@ class PlayState extends MusicBeatState
 			dialogueJson = DialogueBoxPsych.parseDialogue(file);
 
 		var file:String = Paths.txt(songName + '/' + songName + 'Dialogue'); // Checks for vanilla/Senpai dialogue
-		if (OpenFlAssets.exists(file))
+		if (OpenFlAssets.exists(file)) // Shouldn't be this Paths.fileExists???
 			dialogue = CoolUtil.coolTextFile(file);
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
@@ -1123,11 +1123,9 @@ class PlayState extends MusicBeatState
 		timeTxt.visible = showTime;
 		if (ClientPrefs.downScroll)
 			timeTxt.y = FlxG.height - 44;
-
 		if (ClientPrefs.timeBarType == 'Song Name')
-		{
 			timeTxt.text = SONG.song;
-		}
+
 		updateTime = showTime;
 
 		timeBarBG = new AttachedSprite('timeBar');
@@ -3093,6 +3091,8 @@ class PlayState extends MusicBeatState
 			if (carTimer != null)
 				carTimer.active = true;
 
+			// time to make sure all the tweens are active again.
+			// I think I will have to make a LUA option to disable this shit if necessary... Shouldn't we?
 			var chars:Array<Character> = [boyfriend, gf, dad];
 			for (char in chars)
 			{
@@ -3137,6 +3137,7 @@ class PlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
 		#if desktop
+		// Discord presence and shit
 		if (health > 0 && !paused)
 		{
 			if (Conductor.songPosition > 0.0)
@@ -3182,6 +3183,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.pitch = playbackRate;
 		Conductor.songPosition = FlxG.sound.music.time;
 
+		// Just to make sure the voice vocals are the same length than the instrumental music
 		if (vocalsFinished) 
 			return;
 
@@ -3216,9 +3218,6 @@ class PlayState extends MusicBeatState
 		for (effect in modchartGlitchEffects)
 			effect.update(elapsed);
 
-		if (disableTheTripperAt == curStep || isDead)
-			disableTheTripper = true;
-
 		if (SONG.events.contains('Rainbow Eyesore'))
 			addShaderToArray('screenShader', screenshader);
 
@@ -3231,6 +3230,9 @@ class PlayState extends MusicBeatState
 		screenshader.update(elapsed);
 		if (SONG.event7 == 'Rainbow Eyesore')
 			anotherScreenshader.update(elapsed);
+
+		if (disableTheTripperAt >= curStep || isDead)
+			disableTheTripper = true;
 
 		if (disableTheTripper)
 			screenshader.shader.uampmul.value[0] -= (elapsed / 2);
@@ -3345,8 +3347,7 @@ class PlayState extends MusicBeatState
 
 						case 3:
 							limoSpeed -= 2000 * elapsed;
-							if (limoSpeed < 1000)
-								limoSpeed = 1000;
+							limoSpeed = Math.max(limoSpeed, 1000);
 
 							bgLimo.x -= limoSpeed * elapsed;
 							if (bgLimo.x < -275)
@@ -3425,8 +3426,7 @@ class PlayState extends MusicBeatState
 				pooper--;
 			}
 			nps = npsArray.length;
-			if (nps > maxNPS)
-				maxNPS = nps;
+			maxNPS = Math.max(maxNPS, nps);
 		//}
 
 		if (ClientPrefs.showHealth)
@@ -3542,8 +3542,7 @@ class PlayState extends MusicBeatState
 			- (150 * iconP2.scale.x) / 2
 			- iconOffset * 2;
 
-		if (health > maxHealth)
-			health = maxHealth;
+		health = Math.min(health, maxHealth); // Just to make sure the player can't get more health than it's supposed to.
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene)
 		{
