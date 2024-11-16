@@ -37,8 +37,8 @@ If you want video support on your mod, simply do `haxelib install hxCodec 2.5.1`
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Screwed Engine Credits:
-* [@Wither362](https://github.com/Wither362) - Basically making everything on the engine (ALL).
-* [@Moxie](https://github.com/moxie-coder) - Additional Programmer and Deleting-Coder.
+* [@Wither362](https://github.com/Wither362) - Basically making everything on the engine.
+* [@Moxie](https://github.com/moxie-coder) - Additional Programmer and Deleting-Coder. <- This guy is awesome. I just can't explain all this guy has made to this engine. Without him, any of this would be possible.
 * [@miksel](https://github.com/miksel1) - The one who broke most of the code at the beginning
 * Dante - Strident Engine coder
 * not capcha - Helping with _Legacy_ Freeplay Sections
