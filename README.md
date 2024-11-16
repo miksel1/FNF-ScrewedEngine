@@ -30,9 +30,9 @@ same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, 
 Just watch longestsoloever's video, I've used his tutorial and I've been successful with it.
 https://www.youtube.com/watch?v=4IuC8ti6_4o _-miksel_
 
-If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then _re-install linc_luajit_ via `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit`.
+If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then _re-install linc_luajit_ via `haxelib git linc_luajit https://github.com/superpowers04/linc_luajit`.
 
-If you want video support on your mod, simply do `haxelib install hxCodec` on a Command prompt/PowerShell
+If you want video support on your mod, simply do `haxelib install hxCodec 2.5.1` on a Command prompt/PowerShell
 
 otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
