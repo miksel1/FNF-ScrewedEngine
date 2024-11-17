@@ -38,7 +38,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(timeBarOption);
 
 		timeBarDivisionsOption = new Option({s: 'Time Bar Divisions', spanish: 'Divisiones de la Barra de Tiempo'},
-			{s: 'How many divisions the Time Bar has.\n(CAN CAUSE LAG IF TOO HIGH)', spanish: '¿Cuántas divisiones tiene la Barra de Tiempo?\n(PUEDE CAUSAR LAG SI ESTÁ MUY ALTO)'},
+			{s: 'How many divisions the Time Bar has.\n(CAN CAUSE LAG IF TOO HIGH)', spanish: '¿Cuántas divisiones puede tener la Barra de Tiempo?\n(PUEDE CAUSAR LAG SI ESTÁ MUY ALTO)'},
 			'timeBarDivisions',
 			'int',
 			800);
@@ -82,7 +82,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option({s: 'Max Notes in Freeplay', spanish: 'Máximo de notas en Freeplay'},
-			{s: 'How much notes can you play?', spanish: '¿Cuánto es el máximo de notas que puedes tocar?'},
+			{s: 'How much notes can you play?\nThis will determinate the maximum notes a song could have in\nfreeplay selection', spanish: '¿Cuánto es el máximo de notas que puedes tocar?\nEsto determinará un aviso en el menú de "Freeplay" cuando\nla cantidad de notas de la canción exceda este valor.'},
 			'maxNotes',
 			'int',
 			5000);
@@ -94,7 +94,7 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		#if !mobile
 		var option:Option = new Option({s: 'FPS Counter', spanish: 'Mostrar FPS'},
-			{s: 'If unchecked, hides FPS Counter.', spanish: 'Si está desactivado, oculta el texto de FPS.'},
+			{s: 'If unchecked, hides FPS Counter.', spanish: 'Si está activado, muestra cuántos FPS hay.'},
 			'showFPS',
 			'bool',
 			true);
@@ -103,14 +103,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		#end
 
 		var option:Option = new Option({s: 'Judgement Counter', spanish: 'Contador de Notas'},
-			{s: 'If checked, a counter at the left side.', spanish: 'Si está activado, un contador aparecerá a la izquierda.'},
+			{s: 'If checked, a counter will apear at the left side with each rating.', spanish: 'Si está activado, un contador con cada puntuación general\naparecerá a la izquierda.'},
 			'crazyCounter',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option({s: 'Pause Screen Song:', spanish: 'Música del Menú de Pausa:'},
-			{s: "What song do you prefer for the Pause Screen?", spanish: '¿Qué música prefieres para el Menú de Pausa?'},
+			{s: "What song do you prefer for the Pause Screen?", spanish: '¿Qué canción prefieres para el Menú de Pausa?'},
 			'pauseMusic',
 			'string',
 			'Tea Time',
