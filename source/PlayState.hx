@@ -120,6 +120,8 @@ class PlayState extends MusicBeatState
 	public var dadMap:Map<String, Character> = new Map();
 	public var gfMap:Map<String, Character> = new Map();
 	public var variables:Map<String, Dynamic> = new Map();
+	// These are used mostly with LUA
+	//#if LUA_ALLOWED
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
@@ -131,6 +133,7 @@ class PlayState extends MusicBeatState
 	public var modchartMosaicEffects:Map<String, MosaicEffect> = new Map<String, MosaicEffect>();
 	public var modchartCAEffects:Map<String, effects.ChromaticAberration> = new Map<String, effects.ChromaticAberration>();
 	public var modchartColorOverlayEffects:Map<String, effects.ColorOverlay.ColorOverlay> = new Map<String, effects.ColorOverlay.ColorOverlay>();
+	//#end
 
 	// events one
 	public var sourceSprites:Map<String, FlxSprite> = new Map<String, FlxSprite>();
@@ -381,7 +384,7 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
-	// Notes per second
+	// Notes Per Second (it took me a while to understand it, no kidding :')
 	var nps(default, set):Int = 0;
 	var npsArray:Array<Date> = [];
 	var maxNPS:Int = 0;
@@ -3409,12 +3412,17 @@ class PlayState extends MusicBeatState
 		setOnLuas('curDecStep', curDecStep);
 		setOnLuas('curDecBeat', curDecBeat);
 
-		scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + combo + ' | NPS: ' + '$nps/$maxNPS'  + ' | Rating: ' + ratingName;
+		// If NPS is activated (this could cause A LOT OF LAG with songs with a lot of notes
+		if (ClientPrefs.nps)
+			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + combo + ' | NPS: ' + '$nps/$maxNPS'  + ' | Rating: ' + ratingName;
+		else
+			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + combo + ' | Rating: ' + ratingName;
+
 		if (ratingName != '?')
 			scoreTxt.text += ' (' + CoolUtil.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;
 
 		// for nps
-		//if(ClientPrefs.nps) { // i dont know man! This constantly causes me lag!
+		if(ClientPrefs.nps) { // i dont know man! This constantly causes me lag! <- (Prove)
 			var pooper = npsArray.length - 1;
 			while (pooper >= 0) {
 				var fondler:Date = npsArray[pooper];
@@ -3428,11 +3436,10 @@ class PlayState extends MusicBeatState
 			nps = npsArray.length;
 			if (nps > maxNPS)
 				maxNPS = nps;
-		//}
+		}
 
-		if (ClientPrefs.showHealth)
-			if (healthTxt != null)
-				healthTxt.text = "HEALTH: " + CoolUtil.floorDecimal(healthBar.percent, 2) + '%';
+		if (ClientPrefs.showHealth && healthTxt != null)
+			healthTxt.text = "HEALTH: " + CoolUtil.floorDecimal(healthBar.percent, 2) + '%';
 
 		if (botplayTxt.visible)
 		{
@@ -5337,7 +5344,7 @@ class PlayState extends MusicBeatState
 			if (cpuControlled && (note.ignoreNote || note.hitCausesMiss))
 				return;
 
-			if (!note.isSustainNote)
+			if (!note.isSustainNote && ClientPrefs.nps)
 				npsArray.unshift(Date.now());
 
 			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled && canPlayerLight)
@@ -6148,10 +6155,10 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	function set_nps(i:Int) {
-		if (i > maxNPS)
-			maxNPS = i;
-		return nps = i;
+	inline function set_nps(val:Int) {
+		if (ClientPrefs.nps && val > maxNPS)
+			maxNPS = val;
+		return nps = val;
 	}
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
