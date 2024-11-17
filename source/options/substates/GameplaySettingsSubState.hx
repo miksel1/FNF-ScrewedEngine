@@ -54,6 +54,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option({s: 'Activate Notes Per Second (NPS)', spanish: 'Activar el contador de Notas Por Segundo (NPS)'},
+			{s: 'If checked, a good-looking visualizer of your Notes Per Second\nwill apear at the ratings bar.', spanish: 'Si está activado, aparecerá un texto en la barra de puntuaciones\ncon las Notas Por Segundo.'},
+			'nps',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option({s: 'Disable Reset Button', spanish: 'Desactivar Botón de RESET'},
 			{s: "If checked, pressing Reset won't do anything.", spanish: 'Si está activado, cuando pulses el botón de\nRESET no morirás instantáneamente.'},
 			'noReset',

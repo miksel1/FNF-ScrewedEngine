@@ -39,6 +39,8 @@ class ClientPrefs {
 	public static var comboStacking:Bool = true;
 	public static var crazyCounter:Bool = true;
 	public static var maxNotes:Int = 5000;
+	// It determinates if the game should calculate notes per second
+	public static var nps:Bool = true;
 	public static var showHealth:Bool = true;
 	public static var timeBarDivisions:Int = 800;
 	public static var gameplaySettings:Map<String, Dynamic> = [
@@ -153,6 +155,7 @@ class ClientPrefs {
 		FlxG.save.data.checkForUpdates = checkForUpdates;
 		FlxG.save.data.comboStacking = comboStacking;
 		FlxG.save.data.language = language;
+		FlxG.save.data.nps = nps;
 	
 		FlxG.save.flush();
 
@@ -314,6 +317,9 @@ class ClientPrefs {
 		}
 		if (FlxG.save.data.comboStacking != null)
 			comboStacking = FlxG.save.data.comboStacking;
+
+		if(FlxG.save.data.nps != null)
+			nps = FlxG.save.data.nps;
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2', CoolUtil.getSavePath());
