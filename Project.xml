@@ -130,8 +130,8 @@
 
 	<haxelib name="flixel" version="5.5.0" />
 	<flixel version="5.5.0" />
-	<haxelib name="lime" version="8.1.2" />
-	<lime version="8.1.2" />
+	<haxelib name="lime" version="8.1.3" />
+	<lime version="8.1.3" />
 	<haxelib name="openfl" version="9.2.2" />
 	<haxedev set='webgl' />
 
@@ -141,7 +141,7 @@
 	<define name="hscriptPos" />
 
 	<!--In case you want to use the ui package-->
-	<haxelib name="flixel-ui" version="2.6.0" />
+	<haxelib name="flixel-ui" version="2.6.1" />
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="desktop"/>
